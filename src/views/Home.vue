@@ -9,8 +9,8 @@
             v-model="postcodeInputValue"
             placeholder="2000"
             type="number"
-            min="1000"
-            max="9999"
+            min="2000"
+            max="2999"
             required
           />
           <button>Let's find out →</button>
