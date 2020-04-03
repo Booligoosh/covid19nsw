@@ -60,6 +60,9 @@ const now = dayjs();
 
 export default {
   name: "PostcodePage",
+  created() {
+    document.title = `COVID-19 data for the postcode ${this.postcodeNumber}`;
+  },
   computed: {
     postcodeNumber() {
       return Number(this.$route.params.postcode);

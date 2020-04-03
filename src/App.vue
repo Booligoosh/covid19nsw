@@ -8,6 +8,16 @@
   </div>
 </template>
 
+<script>
+export default {
+  watch: {
+    $route(to) {
+      document.title = to.meta.title || "COVID-19 data for New South Wales";
+    }
+  }
+};
+</script>
+
 <style lang="scss">
 @import url("https://rsms.me/inter/inter.css");
 html {
