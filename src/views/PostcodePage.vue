@@ -53,6 +53,7 @@
       </button>
     </p>
     <hr />
+    <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <p class="small-screen-warning">
       <i>Note: This graph is best viewed on a larger screen</i>
     </p>
@@ -247,6 +248,17 @@ hr {
 .small-screen-warning {
   opacity: 0.5;
   display: none;
+}
+.add-to-home-screen {
+  font: inherit;
+  padding: 1rem;
+  width: 100%;
+  background: hsl(274, 100%, 66%);
+  color: hsl(0, 0%, 100%);
+  border: none;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 1367px) {
