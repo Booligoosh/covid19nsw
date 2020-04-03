@@ -78,20 +78,20 @@ export default {
     currentCases() {
       return this.allCasesInPostcode.length;
     },
-    last30Days() {
+    lastXDays() {
       return Array(30)
         .fill(0)
         .map((_, i) => now.subtract(i, "days"))
         .reverse();
     },
     chartLabels() {
-      return this.last30Days.map(date => date.format("D MMM"));
+      return this.lastXDays.map(date => date.format("D MMM"));
     },
     cumulativeValues() {
-      return this.last30Days.map(date => this.getCumulativeCasesOnDate(date));
+      return this.lastXDays.map(date => this.getCumulativeCasesOnDate(date));
     },
     newCaseValues() {
-      return this.last30Days.map(date => this.getNewCasesOnDate(date));
+      return this.lastXDays.map(date => this.getNewCasesOnDate(date));
     },
     chartData() {
       return [
