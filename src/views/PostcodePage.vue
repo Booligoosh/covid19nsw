@@ -24,10 +24,35 @@
       :height="300"
       :colors="['purple', 'light-blue', '#ffa3ef']"
       :dataSets="chartData"
-      :valuesOverPoints="1"
+      :valuesOverPoints="true"
       :tooltipOptions="{ formatTooltipY: n => n }"
     >
     </vue-frappe>
+    <p class="chart-time-period-changer">
+      Graph time period = &nbsp;&nbsp;
+      <button @click="chartNumDays = 7" :class="{ active: chartNumDays === 7 }">
+        1 week
+      </button>
+      <button
+        @click="chartNumDays = 14"
+        :class="{ active: chartNumDays === 14 }"
+      >
+        2 weeks
+      </button>
+      <button
+        @click="chartNumDays = 21"
+        :class="{ active: chartNumDays === 21 }"
+      >
+        3 weeks
+      </button>
+      <button
+        @click="chartNumDays = 28"
+        :class="{ active: chartNumDays === 28 }"
+      >
+        4 weeks
+      </button>
+    </p>
+    <hr />
     <p class="small-screen-warning">
       <i>Note: This graph is best viewed on a larger screen</i>
     </p>
@@ -66,6 +91,22 @@ export default {
   created() {
     document.title = `COVID-19 data for the postcode ${this.postcodeNumber}`;
   },
+  data() {
+    let chartNumDays;
+    if (window.innerWidth < 700) {
+      chartNumDays = 7;
+    } else if (window.innerWidth < 1000) {
+      chartNumDays = 14;
+    } else if (window.innerWidth < 1284) {
+      chartNumDays = 21;
+    } else {
+      chartNumDays = 28;
+    }
+
+    return {
+      chartNumDays
+    };
+  },
   computed: {
     postcodeNumber() {
       return Number(this.$route.params.postcode);
@@ -79,7 +120,7 @@ export default {
       return this.allCasesInPostcode.length;
     },
     lastXDays() {
-      return Array(30)
+      return Array(this.chartNumDays)
         .fill(0)
         .map((_, i) => now.subtract(i, "days"))
         .reverse();
@@ -167,6 +208,33 @@ export default {
   margin: -5px -30px;
   // margin-right calculated through trial-and-error
   margin-right: -23px;
+}
+.chart-time-period-changer {
+  button {
+    background: #eee;
+    border: none;
+    border-radius: 5px;
+    font: inherit;
+    color: inherit;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: #ddd;
+      outline: none;
+    }
+
+    &.active {
+      background: #ccc;
+    }
+  }
+}
+hr {
+  border-style: solid;
+  border-color: #ddd;
+  margin-top: -0.5rem;
 }
 .small-screen-warning {
   opacity: 0.5;
