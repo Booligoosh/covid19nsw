@@ -21,6 +21,10 @@ if (process.env.NODE_ENV === "production") {
     },
     updated() {
       console.log("New content is available; please refresh.");
+      // https://github.com/vuejs-templates/pwa/issues/177#issuecomment-454402196
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1);
     },
     offline() {
       console.log(
