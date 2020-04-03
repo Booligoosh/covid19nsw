@@ -165,6 +165,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.postcode-page-loading {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 .top-grid {
   display: grid;
   align-items: center;
@@ -226,7 +233,8 @@ export default {
       outline: none;
     }
 
-    &.active {
+    &.active,
+    &:active {
       background: #ccc;
     }
   }

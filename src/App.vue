@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="nav" v-if="$route.name !== 'Home'">
+      <router-link to="/">Home</router-link>
+      <!-- | <router-link to="/about">About</router-link> -->
     </div>
-    <router-view class="page" />
+    <div class="page-wrapper">
+      <router-view class="page" />
+    </div>
   </div>
 </template>
 
@@ -34,6 +36,10 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+}
+
 html,
 body,
 #app {
@@ -43,10 +49,16 @@ body,
 #app {
   display: flex;
   flex-direction: column;
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    flex-grow: 1;
+  }
 
   #nav,
   .page {
-    padding: 2rem;
+    padding: calc(2rem + 8px);
     width: 1400px;
     max-width: 100%;
     margin: 0 auto;
@@ -63,6 +75,9 @@ body,
       }
       text-decoration: none;
     }
+  }
+  .page {
+    padding-top: 2rem;
   }
 }
 

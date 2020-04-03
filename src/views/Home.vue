@@ -83,6 +83,17 @@ export default {
       padding: 0.5rem 1rem;
       border-radius: 5rem;
       float: right;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background: #ddd;
+        outline: none;
+      }
+
+      &:active {
+        background: #ccc;
+      }
     }
   }
 }
