@@ -25,6 +25,7 @@
       :colors="['purple', 'light-blue', '#ffa3ef']"
       :dataSets="chartData"
       :valuesOverPoints="1"
+      :tooltipOptions="{ formatTooltipY: n => n }"
     >
     </vue-frappe>
     <p>
