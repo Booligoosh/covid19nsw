@@ -97,4 +97,11 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 580px) {
+  .home .postcode-chooser button {
+    margin-top: 1.5rem;
+    float: unset;
+  }
+}
 </style>
