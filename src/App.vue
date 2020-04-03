@@ -4,29 +4,55 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <router-view class="page" />
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import url("https://rsms.me/inter/inter.css");
+html {
+  font-family: "Inter", sans-serif;
+  font-feature-settings: "ss01";
+}
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var", sans-serif;
+  }
 }
 
-#nav {
-  padding: 30px;
+html,
+body,
+#app {
+  height: 100%;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+#app {
+  display: flex;
+  flex-direction: column;
 
-    &.router-link-exact-active {
-      color: #42b983;
+  #nav,
+  .page {
+    padding: 2rem;
+    width: 1200px;
+    max-width: calc(100% - 4rem);
+    margin: 0 auto;
+  }
+  #nav {
+    padding-bottom: 0;
+    a {
+      font-weight: bold;
+      color: #2c3e50;
+      opacity: 0.75;
+
+      &.router-link-exact-active {
+        opacity: 1;
+      }
+      text-decoration: none;
     }
   }
+}
+
+h1 {
+  margin-top: 0;
 }
 </style>

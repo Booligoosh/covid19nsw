@@ -1,10 +1,22 @@
 <template>
   <div class="home">
-    <form @submit="formSubmitHandler">
-      Choose your postcode:
-      <input v-model="postcodeInputValue" placeholder="2000" />
-      <button>Let's go</button>
-    </form>
+    <div>
+      <h1>How is <i>your</i> suburb faring during the COVID-19 epidemic?</h1>
+      <form @submit="formSubmitHandler">
+        <div class="postcode-chooser">
+          My postcode is
+          <input
+            v-model="postcodeInputValue"
+            placeholder="2000"
+            type="number"
+            min="1000"
+            max="9999"
+            required
+          />
+          <button>Let's find out →</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -27,3 +39,51 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+
+  h1 {
+    font-weight: 600;
+  }
+  .postcode-chooser {
+    font-size: 1.5em;
+    opacity: 0.9;
+
+    input {
+      font: inherit;
+      color: inherit;
+      background: transparent;
+      padding: 0.25em;
+      border: none;
+      border-bottom: 2px solid #ccc;
+      color: #777;
+
+      &::placeholder {
+        color: #ccc;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #aaa;
+      }
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: none;
+      background: #eee;
+      font-size: 0.9em;
+      padding: 0.5rem 1rem;
+      border-radius: 5rem;
+      float: right;
+    }
+  }
+}
+</style>

@@ -3,10 +3,21 @@
     Loading&hellip;
   </div>
   <div class="postcode-page" v-else>
-    <h1>COVID-19 data for the postcode {{ postcodeNumber }}</h1>
-    <div>Current cases: {{ currentCases }}</div>
+    <div class="top-grid">
+      <h1>
+        <span
+          ><span class="not-postcode">COVID-19 data for the postcode</span>
+          {{ postcodeNumber }}</span
+        >
+      </h1>
+      <div class="current-cases">
+        <div class="num">{{ currentCases }}</div>
+        <div class="label">total cases</div>
+      </div>
+    </div>
     <vue-frappe
       id="test"
+      class="main-chart"
       :labels="chartLabels"
       title=""
       type="axis-mixed"
@@ -16,9 +27,26 @@
       :valuesOverPoints="1"
     >
     </vue-frappe>
-    <pre style="text-align: left">{{
+    <p>
+      The data above is official data provided by the NSW Ministry of Health,
+      and is fetched fresh every time you load this page.
+    </p>
+    <p>
+      You can view and download the raw data from the NSW Ministry of Health
+      <a
+        href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location"
+        target="_blank"
+        >here</a
+      >.
+    </p>
+    <p>
+      This site was built by
+      <a href="https://ethan.link" target="_blank">Ethan</a>, and is not
+      affiliated with the NSW government in any way.
+    </p>
+    <!-- <pre style="text-align: left">{{
       JSON.stringify(allCasesInPostcode, null, 2)
-    }}</pre>
+    }}</pre> -->
   </div>
 </template>
 
@@ -61,7 +89,7 @@ export default {
     chartData() {
       return [
         {
-          name: "Cumulative cases",
+          name: "Total cases",
           chartType: "line",
           values: this.cumulativeValues
         },
@@ -87,3 +115,58 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.top-grid {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto;
+
+  > * {
+    padding: 0 1rem;
+    border-right: 1px solid #eee;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  h1 {
+    margin: 0;
+    padding-left: 0;
+    font-weight: 900;
+    .not-postcode {
+      // opacity: 0.7;
+      font-weight: 600;
+    }
+  }
+  .current-cases {
+    padding-right: 0;
+    border: none;
+    text-align: center;
+    .num {
+      font-size: 3em;
+      font-weight: bold;
+    }
+    .label {
+      opacity: 0.5;
+      font-size: 0.9em;
+    }
+  }
+}
+.main-chart {
+  // Values from here (divided by -2)
+  // https://github.com/frappe/charts/issues/92
+  margin: -5px -30px;
+  // margin-right calculated through trial-and-error
+  margin-right: -23px;
+}
+
+@media screen and (max-width: 370px) {
+  .top-grid {
+    h1 {
+      font-size: 1.2em;
+    }
+  }
+}
+</style>
