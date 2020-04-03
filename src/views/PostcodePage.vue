@@ -28,6 +28,9 @@
       :tooltipOptions="{ formatTooltipY: n => n }"
     >
     </vue-frappe>
+    <p class="small-screen-warning">
+      <i>Note: This graph is best viewed on a larger screen</i>
+    </p>
     <p>
       The data above is official data provided by the NSW Ministry of Health,
       and is fetched fresh every time you load this page.
@@ -82,7 +85,7 @@ export default {
         .reverse();
     },
     chartLabels() {
-      return this.last30Days.map(date => date.format("DD MMM"));
+      return this.last30Days.map(date => date.format("D MMM"));
     },
     cumulativeValues() {
       return this.last30Days.map(date => this.getCumulativeCasesOnDate(date));
@@ -164,6 +167,16 @@ export default {
   margin: -5px -30px;
   // margin-right calculated through trial-and-error
   margin-right: -23px;
+}
+.small-screen-warning {
+  opacity: 0.5;
+  display: none;
+}
+
+@media screen and (max-width: 1367px) {
+  .small-screen-warning {
+    display: block;
+  }
 }
 
 @media screen and (max-width: 370px) {

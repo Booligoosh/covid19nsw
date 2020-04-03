@@ -47,7 +47,7 @@ body,
   #nav,
   .page {
     padding: 2rem;
-    width: 1264px;
+    width: 1400px;
     max-width: 100%;
     margin: 0 auto;
   }
