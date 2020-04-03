@@ -20,6 +20,10 @@ html {
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #app {
@@ -33,8 +37,8 @@ body,
   #nav,
   .page {
     padding: 2rem;
-    width: 1200px;
-    max-width: calc(100% - 4rem);
+    width: 1264px;
+    max-width: 100%;
     margin: 0 auto;
   }
   #nav {
