@@ -77,7 +77,7 @@
     </p>
     <p>
       This site was built by
-      <a href="https://ethan.link" target="_blank">Ethan</a>, and is not
+      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a>, and is not
       affiliated with the NSW government in any way.
     </p>
     <!-- <pre style="text-align: left">{{
