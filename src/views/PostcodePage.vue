@@ -4,9 +4,7 @@
   </div>
   <div
     class="postcode-page-loading"
-    v-else-if="
-      $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
-    "
+    v-else-if="$store.state.cases.length === 0 || !temporalCoverageTo"
   >
     Loading&hellip;
   </div>
@@ -103,7 +101,7 @@ export default {
     this.updateDescription();
   },
   watch: {
-    "$store.state.temporalCoverageTo": function() {
+    temporalCoverageTo: function() {
       this.updateDescription();
     }
   },
@@ -165,7 +163,10 @@ export default {
       ];
     },
     lastUpdatedString() {
-      return this.$store.state.temporalCoverageTo.format("D MMMM");
+      return this.temporalCoverageTo.format("D MMMM");
+    },
+    temporalCoverageTo() {
+      return this.$store.state.temporalCoverageTo;
     }
   },
   methods: {
@@ -180,8 +181,8 @@ export default {
       ).length;
     },
     updateDescription() {
-      if (this.$store.state.temporalCoverageTo) {
-        this.$store.state.pageDescription = `As of ${this.$store.state.temporalCoverageTo.format(
+      if (this.temporalCoverageTo) {
+        this.$store.state.pageDescription = `As of ${this.temporalCoverageTo.format(
           "D MMMM YYYY"
         )}, there are ${this.currentCases} cases of COVID-19 in the postcode ${
           this.postcodeNumber
