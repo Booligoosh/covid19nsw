@@ -21,7 +21,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
-    path: "/postcode/:postcode",
+    path: "/postcode/:postcode(2[0-9][0-9][0-9])",
     name: "PostcodePage",
     component: PostcodePage
   }
