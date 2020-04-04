@@ -12,7 +12,9 @@ const store = new Vuex.Store({
   state: {
     cases: [],
     error: null,
-    temporalCoverageTo: null
+    temporalCoverageTo: null,
+    pageTitle: "",
+    pageDescription: ""
   },
   getters: {
     postcodes(state) {

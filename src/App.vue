@@ -1,5 +1,13 @@
 <template>
   <div id="app">
+    <!-- Dynamic metadata -->
+    <title>{{ $store.state.pageTitle }}</title>
+    <meta name="twitter:title" :content="$store.state.pageTitle" />
+    <meta property="og:title" :content="$store.state.pageTitle" />
+    <meta name="description" :content="$store.state.pageDescription" />
+    <meta name="twitter:description" :content="$store.state.pageDescription" />
+    <meta property="og:description" :content="$store.state.pageDescription" />
+    <!-- End dynamic metadata -->
     <div id="nav" v-if="$route.name !== 'Home'">
       <router-link to="/">Home</router-link>
       <!-- | <router-link to="/about">About</router-link> -->
@@ -11,10 +19,14 @@
 </template>
 
 <script>
+import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "@/constants";
+
 export default {
   watch: {
     $route(to) {
-      document.title = to.meta.title || "COVID-19 data for New South Wales";
+      this.$store.state.pageTitle = to.meta.title || DEFAULT_PAGE_TITLE;
+      this.$store.state.pageDescription =
+        to.meta.description || DEFAULT_PAGE_DESCRIPTION;
     }
   },
   created() {
