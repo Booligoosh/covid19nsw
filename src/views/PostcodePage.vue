@@ -112,7 +112,7 @@ export default {
         {
           "@type": "ListItem",
           position: 1,
-          name: this.postcodeNumber,
+          name: this.postcodeNumber.toString(),
           item: `https://covid19nsw.ethan.link/postcode/${this.postcodeNumber}`
         }
       ]
