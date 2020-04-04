@@ -1,1 +1,5 @@
-/* / 200
+https://covid19nsw.netlify.com              https://covid19nsw.ethan.link
+https://covid19nsw.netlify.com/             https://covid19nsw.ethan.link/
+https://covid19nsw.netlify.com/about        https://covid19nsw.ethan.link/about
+https://covid19nsw.netlify.com/postcode/*   https://covid19nsw.ethan.link/postcode/:splat
+/*                                          / 200
