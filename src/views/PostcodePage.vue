@@ -1,5 +1,11 @@
 <template>
-  <div class="postcode-page-loading" v-if="$store.state.cases.length === 0">
+  <div class="postcode-page-error" v-if="$store.state.error">
+    ⚠ {{ $store.state.error }}
+  </div>
+  <div
+    class="postcode-page-loading"
+    v-else-if="$store.state.cases.length === 0"
+  >
     Loading&hellip;
   </div>
   <div class="postcode-page" v-else>
@@ -166,12 +172,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.postcode-page-loading {
+.postcode-page-loading,
+.postcode-page-error {
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+.postcode-page-error {
+  color: red;
 }
 .top-grid {
   display: grid;
