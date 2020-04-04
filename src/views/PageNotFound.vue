@@ -5,6 +5,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  created() {
+    document.querySelector("head").innerHTML +=
+      '<meta name="robots" content="noindex" />';
+  }
+};
+</script>
+
 <style lang="scss" scoped>
 .page-not-found {
   flex-grow: 1;
