@@ -4,11 +4,14 @@
   </div>
   <div
     class="postcode-page-loading"
-    v-else-if="$store.state.cases.length === 0 || !temporalCoverageTo"
+    v-else-if="
+      $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
+    "
   >
     Loading&hellip;
   </div>
   <div class="postcode-page" v-else>
+    <PostcodePageMetadataChanger :totalCases="currentCases" />
     <div class="top-grid">
       <h1>
         <span
@@ -90,21 +93,15 @@
 </template>
 
 <script>
+import PostcodePageMetadataChanger from "@/components/PostcodePageMetadataChanger.vue";
+
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 dayjs.extend(isSameOrBefore);
 
 export default {
   name: "PostcodePage",
-  created() {
-    this.$store.state.pageTitle = `COVID-19 data for the postcode ${this.postcodeNumber}, NSW, Australia`;
-    this.updateDescription();
-  },
-  watch: {
-    temporalCoverageTo: function() {
-      this.updateDescription();
-    }
-  },
+  components: { PostcodePageMetadataChanger },
   data() {
     let chartNumDays;
     if (window.innerWidth < 700) {
@@ -163,10 +160,7 @@ export default {
       ];
     },
     lastUpdatedString() {
-      return this.temporalCoverageTo.format("D MMMM");
-    },
-    temporalCoverageTo() {
-      return this.$store.state.temporalCoverageTo;
+      return this.$store.state.temporalCoverageTo.format("D MMMM");
     }
   },
   methods: {
@@ -179,15 +173,6 @@ export default {
       return this.allCasesInPostcode.filter(({ date }) =>
         date.isSame(dayjsDate, "day")
       ).length;
-    },
-    updateDescription() {
-      if (this.temporalCoverageTo) {
-        this.$store.state.pageDescription = `As of ${this.temporalCoverageTo.format(
-          "D MMMM YYYY"
-        )}, there are ${this.currentCases} cases of COVID-19 in the postcode ${
-          this.postcodeNumber
-        }. Click to see how this number has changed over time, as well as new cases per day.`;
-      }
     }
   }
 };
