@@ -1,5 +1,3 @@
-https://covid19nsw.netlify.com              https://covid19nsw.ethan.link                   301!
 https://covid19nsw.netlify.com/             https://covid19nsw.ethan.link/                  301!
-https://covid19nsw.netlify.com/about        https://covid19nsw.ethan.link/about             301!
-https://covid19nsw.netlify.com/postcode/*   https://covid19nsw.ethan.link/postcode/:splat   301!
+https://covid19nsw.netlify.com/*            https://covid19nsw.ethan.link/:splat            301
 /*                                          /                                               200
