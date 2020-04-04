@@ -100,11 +100,12 @@ export default {
   name: "PostcodePage",
   created() {
     this.$store.state.pageTitle = `COVID-19 data for the postcode ${this.postcodeNumber}, NSW, Australia`;
-    this.$store.state.pageDescription = `As of ${this.$store.state.temporalCoverageTo.format(
-      "D MMMM YYYY"
-    )}, there are ${this.currentCases} cases of COVID-19 in the postcode ${
-      this.postcodeNumber
-    }. Click to see how this number has changed over time, as well as new cases per day.`;
+    this.updateDescription();
+  },
+  watch: {
+    "$store.state.temporalCoverageTo": function() {
+      this.updateDescription();
+    }
   },
   data() {
     let chartNumDays;
@@ -177,6 +178,15 @@ export default {
       return this.allCasesInPostcode.filter(({ date }) =>
         date.isSame(dayjsDate, "day")
       ).length;
+    },
+    updateDescription() {
+      if (this.$store.state.temporalCoverageTo) {
+        this.$store.state.pageDescription = `As of ${this.$store.state.temporalCoverageTo.format(
+          "D MMMM YYYY"
+        )}, there are ${this.currentCases} cases of COVID-19 in the postcode ${
+          this.postcodeNumber
+        }. Click to see how this number has changed over time, as well as new cases per day.`;
+      }
     }
   }
 };
