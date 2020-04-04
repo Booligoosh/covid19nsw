@@ -4,7 +4,9 @@
   </div>
   <div
     class="postcode-page-loading"
-    v-else-if="$store.state.cases.length === 0"
+    v-else-if="
+      $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
+    "
   >
     Loading&hellip;
   </div>
@@ -57,6 +59,9 @@
       >
         4 weeks
       </button>
+      <span v-if="lastUpdatedString" class="last-updated">
+        Last updated {{ lastUpdatedString }}
+      </span>
     </p>
     <hr />
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
@@ -77,8 +82,8 @@
     </p>
     <p>
       This site was built by
-      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a>, and is not
-      affiliated with the NSW government in any way.
+      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a>, and is
+      not affiliated with the NSW government in any way.
     </p>
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCasesInPostcode, null, 2)
@@ -90,8 +95,6 @@
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 dayjs.extend(isSameOrBefore);
-
-const now = dayjs();
 
 export default {
   name: "PostcodePage",
@@ -129,7 +132,7 @@ export default {
     lastXDays() {
       return Array(this.chartNumDays)
         .fill(0)
-        .map((_, i) => now.subtract(i, "days"))
+        .map((_, i) => this.$store.state.temporalCoverageTo.subtract(i, "days"))
         .reverse();
     },
     chartLabels() {
@@ -154,6 +157,9 @@ export default {
           values: this.newCaseValues
         }
       ];
+    },
+    lastUpdatedString() {
+      return this.$store.state.temporalCoverageTo.format("D MMMM");
     }
   },
   methods: {
@@ -249,6 +255,10 @@ export default {
       background: #ccc;
     }
   }
+  .last-updated {
+    float: right;
+    opacity: 0.6;
+  }
 }
 hr {
   border-style: solid;
@@ -274,6 +284,15 @@ hr {
 @media screen and (max-width: 1367px) {
   .small-screen-warning {
     display: block;
+  }
+}
+@media screen and (max-width: 740px) {
+  .chart-time-period-changer {
+    .last-updated {
+      float: unset;
+      display: block;
+      margin-top: 1em;
+    }
   }
 }
 

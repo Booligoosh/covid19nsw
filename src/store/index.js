@@ -5,11 +5,14 @@ Vue.use(Vuex);
 
 import parse from "csv-parse/lib/sync";
 import dayjs from "dayjs";
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
 
 const store = new Vuex.Store({
   state: {
     cases: [],
-    error: null
+    error: null,
+    temporalCoverageTo: null
   },
   getters: {
     postcodes(state) {
@@ -22,18 +25,20 @@ const store = new Vuex.Store({
     },
     setError(state, error = "") {
       state.error = error;
+    },
+    setTemporalCoverageTo(state, temporalCoverageTo) {
+      state.temporalCoverageTo = temporalCoverageTo;
     }
   },
   actions: {
     async loadCsvData({ commit }) {
       try {
-        const url =
-          process.env.NODE_ENV === "production"
-            ? "https://covid19nsw.booligoosh.workers.dev/"
-            : "https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/covid-19-cases-by-notification-date-and-postcode-local-health-district-and-local-government-area.csv";
-        const text = await fetch(url).then(r => r.text());
-        console.log(text);
-        const parsed = parse(text, {
+        const url = "https://covid19nsw.booligoosh.workers.dev/v2";
+        const { temporalCoverageTo, csvData } = await fetch(url).then(r =>
+          r.json()
+        );
+        console.log(csvData);
+        const parsed = parse(csvData, {
           columns: true
         });
         console.log(parsed);
@@ -48,6 +53,10 @@ const store = new Vuex.Store({
         });
         console.log(cases);
         commit("setCases", cases);
+        commit(
+          "setTemporalCoverageTo",
+          dayjs(temporalCoverageTo, "DD MMMM YYYY")
+        );
       } catch (err) {
         commit("setError", err.toString());
       }
