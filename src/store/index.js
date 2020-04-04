@@ -8,13 +8,15 @@ import dayjs from "dayjs";
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
+import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
+
 const store = new Vuex.Store({
   state: {
     cases: [],
     error: null,
     temporalCoverageTo: null,
-    pageTitle: "",
-    pageDescription: ""
+    pageTitle: DEFAULT_PAGE_TITLE,
+    pageDescription: DEFAULT_PAGE_DESCRIPTION
   },
   getters: {
     postcodes(state) {
