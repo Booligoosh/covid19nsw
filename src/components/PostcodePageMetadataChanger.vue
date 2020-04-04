@@ -10,7 +10,7 @@ export default {
       "D MMMM YYYY"
     )}, there are ${this.totalCases} cases of COVID-19 in the postcode ${
       this.$route.params.postcode
-    }. Click to see how this number has changed over time, as well as new cases per day.`;
+    }. Click to see the latest data for your postcode, and view graphs of how it has changed over time.`;
   }
 };
 </script>
