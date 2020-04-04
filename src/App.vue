@@ -19,7 +19,10 @@ export default {
   },
   created() {
     if (window.location.origin === "https://covid19nsw.netlify.com") {
-      window.location.origin = "https://covid19nsw.ethan.link";
+      window.location.href = window.location.href.replace(
+        /^https:\/\/covid19nsw.netlify.com/,
+        "https://covid19nsw.ethan.link"
+      );
     }
   }
 };
