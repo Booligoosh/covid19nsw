@@ -1,13 +1,5 @@
 <template>
   <div id="app">
-    <!-- Dynamic metadata -->
-    <title>{{ $store.state.pageTitle }}</title>
-    <meta name="twitter:title" :content="$store.state.pageTitle" />
-    <meta property="og:title" :content="$store.state.pageTitle" />
-    <meta name="description" :content="$store.state.pageDescription" />
-    <meta name="twitter:description" :content="$store.state.pageDescription" />
-    <meta property="og:description" :content="$store.state.pageDescription" />
-    <!-- End dynamic metadata -->
     <div id="nav" v-if="$route.name !== 'Home'">
       <router-link to="/">Home</router-link>
       <!-- | <router-link to="/about">About</router-link> -->
@@ -27,6 +19,12 @@ export default {
       this.$store.state.pageTitle = to.meta.title || DEFAULT_PAGE_TITLE;
       this.$store.state.pageDescription =
         to.meta.description || DEFAULT_PAGE_DESCRIPTION;
+    },
+    "$store.state.pageTitle": function() {
+      this.updatePageTitle();
+    },
+    "$store.state.pageDescription": function() {
+      this.updatePageDescription();
     }
   },
   created() {
@@ -35,6 +33,23 @@ export default {
         /^https:\/\/covid19nsw.netlify.com/,
         "https://covid19nsw.ethan.link"
       );
+    }
+    this.updatePageTitle();
+    this.updatePageDescription();
+  },
+  methods: {
+    updatePageTitle() {
+      document.title = this.$store.state.pageTitle;
+      document
+        .querySelectorAll(".page-title-meta")
+        .forEach(el => el.setAttribute("content", this.$store.state.pageTitle));
+    },
+    updatePageDescription() {
+      document
+        .querySelectorAll(".page-description-meta")
+        .forEach(el =>
+          el.setAttribute("content", this.$store.state.pageDescription)
+        );
     }
   }
 };
