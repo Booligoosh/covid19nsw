@@ -16,6 +16,11 @@ export default {
     $route(to) {
       document.title = to.meta.title || "COVID-19 data for New South Wales";
     }
+  },
+  created() {
+    if (window.location.origin === "https://covid19nsw.netlify.com") {
+      window.location.origin = "https://covid19nsw.ethan.link";
+    }
   }
 };
 </script>
