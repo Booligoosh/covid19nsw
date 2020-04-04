@@ -102,6 +102,23 @@ dayjs.extend(isSameOrBefore);
 export default {
   name: "PostcodePage",
   components: { PostcodePageMetadataChanger },
+  created() {
+    const scriptEl = document.createElement("script");
+    scriptEl.setAttribute("type", "application/ld+json");
+    scriptEl.innerText = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: this.postcodeNumber,
+          item: `https://covid19nsw.ethan.link/postcode/${this.postcodeNumber}`
+        }
+      ]
+    });
+    document.querySelector("head").appendChild(scriptEl);
+  },
   data() {
     let chartNumDays;
     if (window.innerWidth < 700) {
