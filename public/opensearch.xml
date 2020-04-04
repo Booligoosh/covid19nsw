@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>COVID-19 cases by postcode</ShortName>
+  <ShortName>COVID19 Data NSW</ShortName>
   <LongName>COVID-19 data for New South Wales</LongName>
   <Description>COVID-19 cases by postcode for NSW</Description>
   <Tags>covid covid19 covid-19 corona coronavirus</Tags>
