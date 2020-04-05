@@ -14,16 +14,16 @@
     <sorted-table :values="postcodeRows" sort="totalCases" dir="desc">
       <thead>
         <tr>
-          <th scope="col" style="width: 6em">
+          <th scope="col">
             Postcode
           </th>
-          <th scope="col" style="width: 7em">
+          <th scope="col">
             <sort-link name="totalCases">Total cases</sort-link>
           </th>
-          <th scope="col" style="width: 12em">
+          <th scope="col">
             <sort-link name="newCasesThisWeek">New cases this week</sort-link>
           </th>
-          <th scope="col" style="width: 10em">
+          <th scope="col">
             <sort-link name="newCasesToday">New cases today</sort-link>
           </th>
           <th scope="col">
@@ -33,14 +33,11 @@
       </thead>
       <tbody slot="body" slot-scope="sort">
         <tr v-for="value in sort.values" :key="value.postcodeNumber">
-          <td>{{ value.postcodeNumber }}</td>
-          <td>{{ value.totalCases }}</td>
-          <td>{{ value.newCasesThisWeek }}</td>
-          <td>{{ value.newCasesToday }}</td>
-          <td>
-            <span class="suburbs-to-truncate">{{ value.suburbs }}</span>
-            <!-- <a href="#" @click="suburbsSeeMoreClickHandler">Show more</a> -->
-          </td>
+          <td class="postcode-number">{{ value.postcodeNumber }}</td>
+          <td class="value-number">{{ value.totalCases }}</td>
+          <td class="value-number">{{ value.newCasesThisWeek }}</td>
+          <td class="value-number">{{ value.newCasesToday }}</td>
+          <td>{{ value.suburbs }}</td>
         </tr>
       </tbody>
     </sorted-table>
@@ -106,24 +103,34 @@ export default {
 table {
   max-width: 100%;
   width: 100%;
+  border-collapse: collapse;
 
   th {
     text-align: left;
   }
 
+  th,
   td {
-    // width: max-content;
-    max-width: 0;
+    border: 1px solid;
+    width: 1px;
+    padding: 0.5rem 1rem;
+  }
 
-    &:not(.show-full) {
-      .suburbs-to-truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        // width: 50vw;
-        display: block;
-      }
-    }
+  th a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 2px solid;
+    padding: 1px 0;
+  }
+
+  td.value-number,
+  td.postcode-number {
+    font-size: 1.5em;
+    font-weight: 500;
+  }
+
+  td.postcode-number {
+    font-weight: 800;
   }
 }
 </style>
