@@ -17,13 +17,13 @@
           <th scope="col">
             Postcode
           </th>
-          <th scope="col">
+          <th scope="col" style="width: 9rem">
             <sort-link name="totalCases">Total cases</sort-link>
           </th>
-          <th scope="col">
+          <th scope="col" style="width: 14rem">
             <sort-link name="newCasesThisWeek">New cases this week</sort-link>
           </th>
-          <th scope="col">
+          <th scope="col" style="width: 12rem">
             <sort-link name="newCasesToday">New cases today</sort-link>
           </th>
           <th scope="col">
@@ -118,7 +118,6 @@ table {
   td {
     border-right: 1px solid;
     border-bottom: 1px solid;
-    width: 6rem;
     padding: 0.5rem 1rem;
   }
 
