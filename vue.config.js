@@ -10,5 +10,8 @@ module.exports = {
       skipWaiting: true,
       clientsClaim: true
     }
+  },
+  css: {
+    sourceMap: true
   }
 };
