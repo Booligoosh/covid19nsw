@@ -74,11 +74,11 @@
       and is fetched fresh every time you load this page.
     </p>
     <p>
-      You can view and download the raw data from the NSW Ministry of Health
+      You can view and download the raw data from the NSW Ministry of Health at
       <a
         href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location"
         target="_blank"
-        >here</a
+        >data.nsw.gov.au</a
       >.
     </p>
     <p>
