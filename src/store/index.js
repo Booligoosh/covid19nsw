@@ -20,7 +20,13 @@ const store = new Vuex.Store({
   },
   getters: {
     postcodes(state) {
-      return [...new Set(state.cases.map(state => state.postcode))].sort();
+      return [...new Set(state.cases.map(state => state.postcode))].filter(
+        // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
+        postcode =>
+          (postcode >= 2000 && postcode <= 2599) ||
+          (postcode >= 2619 && postcode <= 2899) ||
+          (postcode >= 2921 && postcode <= 2999)
+      );
     }
   },
   mutations: {
