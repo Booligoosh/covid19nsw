@@ -8,8 +8,10 @@
 <script>
 export default {
   created() {
-    document.querySelector("head").innerHTML +=
-      '<meta name="robots" content="noindex" />';
+    document.querySelector("head").innerHTML += `
+      <meta name="robots" content="noindex" />
+      <meta name="prerender-status-code" content="404" />
+    `;
   }
 };
 </script>
