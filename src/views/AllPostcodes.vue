@@ -103,15 +103,21 @@ export default {
 table {
   max-width: 100%;
   width: 100%;
-  border-collapse: collapse;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-spacing: 0;
 
   th {
     text-align: left;
+    position: sticky;
+    top: 0;
+    background: #eee;
   }
 
   th,
   td {
-    border: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
     width: 6rem;
     padding: 0.5rem 1rem;
   }
