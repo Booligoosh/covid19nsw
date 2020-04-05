@@ -20,6 +20,12 @@ const routes = [
       import(/* webpackChunkName: "postcodePage" */ "../views/PostcodePage.vue")
   },
   {
+    path: "/all",
+    name: "AllPostcodes",
+    component: () =>
+      import(/* webpackChunkName: "allPostcodes" */ "../views/AllPostcodes.vue")
+  },
+  {
     path: "*",
     component: () =>
       import(/* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue")
