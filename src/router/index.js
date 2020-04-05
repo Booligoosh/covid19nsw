@@ -13,12 +13,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue")
   },
   {
-    path: "/about",
-    name: "About",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
-  {
     path: "/postcode/:postcode(2[0-9][0-9][0-9])",
     name: "PostcodePage",
     component: () =>
@@ -26,7 +20,6 @@ const routes = [
   },
   {
     path: "*",
-
     component: () =>
       import(/* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue")
   }
