@@ -322,3 +322,10 @@ hr {
   }
 }
 </style>
+
+<style lang="scss">
+// Unscoped
+.postcode-page .frappe-chart.chart svg {
+  max-width: 100%;
+}
+</style>
