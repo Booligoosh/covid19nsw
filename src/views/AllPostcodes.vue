@@ -14,7 +14,7 @@
     <sorted-table :values="postcodeRows" sort="totalCases" dir="desc">
       <thead>
         <tr>
-          <th scope="col">
+          <th scope="col" style="width: 1rem">
             Postcode
           </th>
           <th scope="col" style="width: 9rem">
@@ -32,12 +32,24 @@
         </tr>
       </thead>
       <tbody slot="body" slot-scope="sort">
-        <tr v-for="value in sort.values" :key="value.postcodeNumber">
+        <tr
+          v-for="value in sort.values"
+          :key="value.postcodeNumber"
+          role="button"
+          @click="
+            $router.push({
+              name: 'PostcodePage',
+              params: { postcode: value.postcodeNumber }
+            })
+          "
+        >
           <td class="postcode-number">{{ value.postcodeNumber }}</td>
           <td class="value-number">{{ value.totalCases }}</td>
           <td class="value-number">{{ value.newCasesThisWeek }}</td>
           <td class="value-number">{{ value.newCasesToday }}</td>
-          <td>{{ value.suburbs }}</td>
+          <td>
+            <div class="truncate">{{ value.suburbs }}</div>
+          </td>
         </tr>
       </tbody>
     </sorted-table>
@@ -107,6 +119,10 @@ table {
   border-left: 1px solid;
   border-spacing: 0;
 
+  tbody tr {
+    cursor: pointer;
+  }
+
   th {
     text-align: left;
     position: sticky;
@@ -137,5 +153,15 @@ table {
   td.postcode-number {
     font-weight: 800;
   }
+
+  // td:not(:hover) {
+  //   max-width: 0;
+
+  //   .truncate {
+  //     white-space: nowrap;
+  //     overflow: hidden;
+  //     text-overflow: ellipsis;
+  //   }
+  // }
 }
 </style>
