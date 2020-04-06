@@ -53,7 +53,7 @@
             <router-link
               :to="{
                 name: 'PostcodePage',
-                params: { postcode: postcodeNumber }
+                params: { postcode: value.postcodeNumber }
               }"
               >{{ value.postcodeNumber }}</router-link
             >
