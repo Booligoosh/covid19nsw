@@ -12,7 +12,13 @@
   </div>
   <div class="all-page" v-else>
     <ExplainerText :is-above-data="true" />
-    <p>Last updated {{ lastUpdatedString }}.</p>
+    <p>
+      Postcodes with 0 cases are not shown.
+      <span class="last-updated-text"
+        >Last updated {{ lastUpdatedString
+        }}<span class="full-stop">.</span></span
+      >
+    </p>
     <p class="landscape-tip-text">
       ⚠ Please put your device in landscape mode!
     </p>
@@ -106,7 +112,7 @@ export default {
       });
     },
     lastUpdatedString() {
-      return this.$store.state.temporalCoverageTo.format("D MMMM YYYY");
+      return this.$store.state.temporalCoverageTo.format("D MMMM");
     }
   },
   methods: {
@@ -139,6 +145,26 @@ export default {
 @media screen and (max-width: 555px) {
   .landscape-tip-text {
     display: block;
+  }
+}
+
+.last-updated-text {
+  float: right;
+  opacity: 0.6;
+
+  .full-stop {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 595px) {
+  .last-updated-text {
+    float: unset;
+    // opacity: 1;
+
+    .full-stop {
+      display: inline;
+    }
   }
 }
 
