@@ -49,7 +49,15 @@
             })
           "
         >
-          <td class="postcode-number">{{ value.postcodeNumber }}</td>
+          <td class="postcode-number">
+            <router-link
+              :to="{
+                name: 'PostcodePage',
+                params: { postcode: postcodeNumber }
+              }"
+              >{{ value.postcodeNumber }}</router-link
+            >
+          </td>
           <td class="value-number">{{ value.totalCases }}</td>
           <td class="value-number">{{ value.newCasesThisWeek }}</td>
           <td class="value-number">{{ value.newCasesToday }}</td>
@@ -174,6 +182,13 @@ table {
 
   td.postcode-number {
     font-weight: 800;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 2px solid;
+      // padding: 1px 0;
+    }
   }
 
   // td:not(:hover) {
