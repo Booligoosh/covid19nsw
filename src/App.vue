@@ -1,7 +1,16 @@
 <template>
   <div id="app">
-    <div id="nav" v-if="$route.name !== 'Home'">
+    <div id="nav">
       <router-link to="/">Home</router-link>
+      |
+      <router-link to="/all"
+        >All postcodes
+        <span class="beta"
+          ><span class="bracket">(</span>beta<span class="bracket"
+            >)</span
+          ></span
+        ></router-link
+      >
       <!-- | <router-link to="/about">About</router-link> -->
     </div>
     <div class="page-wrapper">
@@ -113,10 +122,30 @@ body,
   }
   .page {
     padding-top: 2rem;
+    > :first-child,
+    > :first-child > :first-child {
+      margin-top: 0;
+    }
   }
 }
 
 h1 {
   margin-top: 0;
+}
+</style>
+
+<style lang="scss" scoped>
+.beta {
+  text-transform: uppercase;
+  font-size: 0.7em;
+  padding: 0.2rem 0.5rem;
+  background: #ccc;
+  border-radius: 5px;
+  font-weight: 500;
+  margin-left: 0.25rem;
+
+  .bracket {
+    display: none;
+  }
 }
 </style>

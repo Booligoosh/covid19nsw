@@ -69,23 +69,7 @@
     <p class="small-screen-warning">
       <i>Note: This graph is best viewed on a larger screen</i>
     </p>
-    <p>
-      The data above is official data provided by the NSW Ministry of Health,
-      and is fetched fresh every time you load this page.
-    </p>
-    <p>
-      You can view and download the raw data from the NSW Ministry of Health at
-      <a
-        href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location"
-        target="_blank"
-        >data.nsw.gov.au</a
-      >.
-    </p>
-    <p>
-      This site was built by
-      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a>, and is
-      not affiliated with the NSW government in any way.
-    </p>
+    <ExplainerText />
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCasesInPostcode, null, 2)
     }}</pre> -->
@@ -94,6 +78,7 @@
 
 <script>
 import PostcodePageMetadataChanger from "@/components/PostcodePageMetadataChanger.vue";
+import ExplainerText from "@/components/ExplainerText.vue";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -101,7 +86,10 @@ dayjs.extend(isSameOrBefore);
 
 export default {
   name: "PostcodePage",
-  components: { PostcodePageMetadataChanger },
+  components: {
+    PostcodePageMetadataChanger,
+    ExplainerText
+  },
   created() {
     const scriptEl = document.createElement("script");
     scriptEl.setAttribute("type", "application/ld+json");

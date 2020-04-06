@@ -11,6 +11,12 @@
     Loading&hellip;
   </div>
   <div class="all-page" v-else>
+    <ExplainerText :is-above-data="true" />
+    <p>Last updated {{ lastUpdatedString }}.</p>
+    <p class="landscape-tip-text">
+      ⚠ Please put your device in landscape mode!
+    </p>
+    <br />
     <sorted-table :values="postcodeRows" sort="totalCases" dir="desc">
       <thead>
         <tr>
@@ -57,12 +63,14 @@
 </template>
 
 <script>
-// import dayjs from "dayjs";
-
+import ExplainerText from "@/components/ExplainerText.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 export default {
   name: "AllPostcodes",
+  components: {
+    ExplainerText
+  },
   computed: {
     postcodeRows() {
       const oneWeekAgo = this.$store.state.temporalCoverageTo.subtract(
@@ -88,6 +96,9 @@ export default {
           suburbs: suburbsForPostcode[postcodeNumber].join(", ")
         };
       });
+    },
+    lastUpdatedString() {
+      return this.$store.state.temporalCoverageTo.format("D MMMM YYYY");
     }
   },
   methods: {
@@ -110,6 +121,17 @@ export default {
 }
 .all-page-error {
   color: red;
+}
+
+.landscape-tip-text {
+  display: none;
+  color: red;
+}
+
+@media screen and (max-width: 555px) {
+  .landscape-tip-text {
+    display: block;
+  }
 }
 
 table {
