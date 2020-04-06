@@ -20,8 +20,8 @@
     <sorted-table :values="postcodeRows" sort="totalCases" dir="desc">
       <thead>
         <tr>
-          <th scope="col" style="width: 1rem">
-            Postcode
+          <th scope="col" style="width: 8rem">
+            <sort-link name="postcodeNumber">Postcode</sort-link>
           </th>
           <th scope="col" style="width: 9rem">
             <sort-link name="totalCases">Total cases</sort-link>
