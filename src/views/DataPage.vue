@@ -1,11 +1,11 @@
 <!-- This file resolves the /postcode and /council routes -->
 
 <template>
-  <div class="postcode-page-error" v-if="$store.state.error">
+  <div class="data-page-error" v-if="$store.state.error">
     ⚠ {{ $store.state.error }}
   </div>
   <div
-    class="postcode-page-loading"
+    class="data-page-loading"
     v-else-if="
       $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
     "
@@ -13,21 +13,21 @@
     Loading&hellip;
   </div>
   <PageNotFound v-else-if="allCases.length === 0" :isOnCouncilPage="true" />
-  <div class="postcode-page" v-else>
-    <PostcodePageMetadataChanger
+  <div class="data-page" v-else>
+    <DataPageMetadataChanger
       :totalCases="currentCases"
       :councilName="councilName"
     />
     <div class="top-grid">
       <h1 v-if="isCouncil">
         <span
-          ><span class="not-postcode">COVID-19 data for </span>
+          ><span class="not-bold">COVID-19 data for </span>
           {{ councilName }}</span
         >
       </h1>
       <h1 v-else>
         <span
-          ><span class="not-postcode">COVID-19 data for the postcode</span>
+          ><span class="not-bold">COVID-19 data for the postcode</span>
           {{ postcodeNumber }}</span
         >
       </h1>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import PostcodePageMetadataChanger from "@/components/PostcodePageMetadataChanger.vue";
+import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
 import ExplainerText from "@/components/ExplainerText.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 
@@ -100,7 +100,7 @@ dayjs.extend(isSameOrBefore);
 export default {
   name: "DataPage",
   components: {
-    PostcodePageMetadataChanger,
+    DataPageMetadataChanger,
     ExplainerText,
     PageNotFound
   },
@@ -211,15 +211,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.postcode-page-loading,
-.postcode-page-error {
+.data-page-loading,
+.data-page-error {
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-.postcode-page-error {
+.data-page-error {
   color: red;
 }
 .top-grid {
@@ -240,7 +240,7 @@ export default {
     margin: 0;
     padding-left: 0;
     font-weight: 900;
-    .not-postcode {
+    .not-bold {
       // opacity: 0.7;
       font-weight: 600;
     }
@@ -340,7 +340,7 @@ hr {
 
 <style lang="scss">
 // Unscoped
-.postcode-page .chart-container svg.frappe-chart.chart {
+.data-page .chart-container svg.frappe-chart.chart {
   max-width: 100%;
 }
 </style>
