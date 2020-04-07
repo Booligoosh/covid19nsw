@@ -61,7 +61,14 @@ const store = new Vuex.Store({
           const date = dayjs(caseRow.notification_date);
           const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
           const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
-          return { postcode, date, councilName, councilSlug };
+          const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
+          return {
+            postcode,
+            date,
+            councilName,
+            councilSlug,
+            councilIsCityCouncil
+          };
         });
         console.log(cases);
         commit("setCases", cases);

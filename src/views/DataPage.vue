@@ -142,7 +142,10 @@ export default {
       return Number(this.$route.params.postcode);
     },
     councilName() {
-      return `${this.allCases[0].councilName} Council`;
+      const oneCase = this.allCases[0] || {};
+      return `${oneCase.councilName}${
+        oneCase.councilIsCityCouncil ? " City" : ""
+      } Council`;
     },
     allCases() {
       if (this.isCouncil) {
