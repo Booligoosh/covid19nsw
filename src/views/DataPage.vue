@@ -21,8 +21,8 @@
     <div class="top-grid">
       <h1 v-if="isCouncil">
         <span
-          ><span class="not-bold">COVID-19 data for </span>
-          {{ councilName }}</span
+          ><span class="not-bold">COVID-19 data for the</span>
+          {{ councilName }} <span class="not-bold">area</span></span
         >
       </h1>
       <h1 v-else>
