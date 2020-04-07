@@ -1,3 +1,5 @@
+<!-- This file resolves the /postcode and /council routes -->
+
 <template>
   <div class="postcode-page-error" v-if="$store.state.error">
     ⚠ {{ $store.state.error }}
@@ -11,9 +13,18 @@
     Loading&hellip;
   </div>
   <div class="postcode-page" v-else>
-    <PostcodePageMetadataChanger :totalCases="currentCases" />
+    <PostcodePageMetadataChanger
+      :totalCases="currentCases"
+      :councilName="councilName"
+    />
     <div class="top-grid">
-      <h1>
+      <h1 v-if="isCouncil">
+        <span
+          ><span class="not-postcode">COVID-19 data for </span>
+          {{ councilName }}</span
+        >
+      </h1>
+      <h1 v-else>
         <span
           ><span class="not-postcode">COVID-19 data for the postcode</span>
           {{ postcodeNumber }}</span
@@ -71,7 +82,7 @@
     </p>
     <ExplainerText />
     <!-- <pre style="text-align: left">{{
-      JSON.stringify(allCasesInPostcode, null, 2)
+      JSON.stringify(allCases, null, 2)
     }}</pre> -->
   </div>
 </template>
@@ -85,7 +96,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 dayjs.extend(isSameOrBefore);
 
 export default {
-  name: "PostcodePage",
+  name: "DataPage",
   components: {
     PostcodePageMetadataChanger,
     ExplainerText
@@ -124,16 +135,28 @@ export default {
     };
   },
   computed: {
+    isCouncil() {
+      return this.$route.name === "CouncilPage";
+    },
     postcodeNumber() {
       return Number(this.$route.params.postcode);
     },
-    allCasesInPostcode() {
-      return this.$store.state.cases.filter(
-        ({ postcode }) => postcode === this.postcodeNumber
-      );
+    councilName() {
+      return `${this.allCases[0].councilName} Council`;
+    },
+    allCases() {
+      if (this.isCouncil) {
+        return this.$store.state.cases.filter(
+          ({ councilSlug }) => councilSlug === this.$route.params.councilSlug
+        );
+      } else {
+        return this.$store.state.cases.filter(
+          ({ postcode }) => postcode === this.postcodeNumber
+        );
+      }
     },
     currentCases() {
-      return this.allCasesInPostcode.length;
+      return this.allCases.length;
     },
     lastXDays() {
       return Array(this.chartNumDays)
@@ -170,14 +193,12 @@ export default {
   },
   methods: {
     getCumulativeCasesOnDate(dayjsDate) {
-      return this.allCasesInPostcode.filter(({ date }) =>
-        date.isSameOrBefore(dayjsDate)
-      ).length;
+      return this.allCases.filter(({ date }) => date.isSameOrBefore(dayjsDate))
+        .length;
     },
     getNewCasesOnDate(dayjsDate) {
-      return this.allCasesInPostcode.filter(({ date }) =>
-        date.isSame(dayjsDate, "day")
-      ).length;
+      return this.allCases.filter(({ date }) => date.isSame(dayjsDate, "day"))
+        .length;
     }
   }
 };
