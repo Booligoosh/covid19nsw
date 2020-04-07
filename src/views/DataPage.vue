@@ -12,7 +12,10 @@
   >
     Loading&hellip;
   </div>
-  <PageNotFound v-else-if="allCases.length === 0" :isOnCouncilPage="true" />
+  <PageNotFound
+    v-else-if="isCouncil && allCases.length === 0"
+    :isOnCouncilPage="true"
+  />
   <div class="data-page" v-else>
     <DataPageMetadataChanger
       :totalCases="currentCases"
