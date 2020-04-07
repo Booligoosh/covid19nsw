@@ -1,12 +1,25 @@
 <template>
   <div class="page-not-found">
-    <h1>Page not found.</h1>
+    <h1>
+      {{
+        isOnCouncilPage
+          ? "No cases were found for this council."
+          : "Page not found."
+      }}
+    </h1>
     <router-link to="/">Back to home</router-link>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    isOnCouncilPage: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   created() {
     document.querySelector("head").innerHTML += `
       <meta name="robots" content="noindex" />

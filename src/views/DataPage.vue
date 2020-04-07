@@ -12,6 +12,7 @@
   >
     Loading&hellip;
   </div>
+  <PageNotFound v-else-if="allCases.length === 0" :isOnCouncilPage="true" />
   <div class="postcode-page" v-else>
     <PostcodePageMetadataChanger
       :totalCases="currentCases"
@@ -90,6 +91,7 @@
 <script>
 import PostcodePageMetadataChanger from "@/components/PostcodePageMetadataChanger.vue";
 import ExplainerText from "@/components/ExplainerText.vue";
+import PageNotFound from "@/views/PageNotFound.vue";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -99,7 +101,8 @@ export default {
   name: "DataPage",
   components: {
     PostcodePageMetadataChanger,
-    ExplainerText
+    ExplainerText,
+    PageNotFound
   },
   created() {
     const scriptEl = document.createElement("script");
