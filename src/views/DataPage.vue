@@ -208,10 +208,14 @@ export default {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
     },
     allTimeDays() {
-      const earliestDate = dayjs.min(this.allCases.map(({ date }) => date));
-      const startDate = earliestDate.subtract(1, "day");
-      console.log({ earliestDate });
-      return dayjs().diff(startDate, "day");
+      if (this.allCases.length === 0) {
+        return 1;
+      } else {
+        const earliestDate = dayjs.min(this.allCases.map(({ date }) => date));
+        const startDate = earliestDate.subtract(1, "day");
+        console.log({ earliestDate });
+        return dayjs().diff(startDate, "day");
+      }
     }
   },
   methods: {
