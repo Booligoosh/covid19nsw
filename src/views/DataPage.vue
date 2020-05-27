@@ -213,7 +213,6 @@ export default {
       } else {
         const earliestDate = dayjs.min(this.allCases.map(({ date }) => date));
         const startDate = earliestDate.subtract(1, "day");
-        console.log({ earliestDate });
         return dayjs().diff(startDate, "day");
       }
     }
