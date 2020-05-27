@@ -48,7 +48,7 @@
       :height="300"
       :colors="['purple', 'light-blue', '#ffa3ef']"
       :dataSets="chartData"
-      :valuesOverPoints="true"
+      :valuesOverPoints="chartNumDays < allTimeDays"
       :tooltipOptions="{ formatTooltipY: n => n }"
     >
     </vue-frappe>
@@ -75,6 +75,12 @@
       >
         4 weeks
       </button>
+      <button
+        @click="chartNumDays = allTimeDays"
+        :class="{ active: chartNumDays === allTimeDays }"
+      >
+        All time
+      </button>
       <span v-if="lastUpdatedString" class="last-updated">
         Last updated {{ lastUpdatedString }}
       </span>
@@ -98,7 +104,9 @@ import PageNotFound from "@/views/PageNotFound.vue";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import minMax from "dayjs/plugin/minMax";
 dayjs.extend(isSameOrBefore);
+dayjs.extend(minMax);
 
 export default {
   name: "DataPage",
@@ -198,6 +206,12 @@ export default {
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
+    },
+    allTimeDays() {
+      const earliestDate = dayjs.min(this.allCases.map(({ date }) => date));
+      const startDate = earliestDate.subtract(1, "day");
+      console.log({ earliestDate });
+      return dayjs().diff(startDate, "day");
     }
   },
   methods: {
