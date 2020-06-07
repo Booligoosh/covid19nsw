@@ -34,7 +34,10 @@ const store = new Vuex.Store({
       state.cases = cases;
     },
     setError(state, error = "") {
-      state.error = error;
+      state.error = error.replace(
+        "TypeError: Failed to fetch",
+        "Failed to fetch data. This could be because data.nsw.gov.au isn't working, or you're not connected to the internet."
+      );
     },
     setTemporalCoverageTo(state, temporalCoverageTo) {
       state.temporalCoverageTo = temporalCoverageTo;
