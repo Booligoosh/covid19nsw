@@ -47,7 +47,7 @@ const store = new Vuex.Store({
     async loadCsvData({ commit }) {
       try {
         const url = "https://covid19nsw.booligoosh.workers.dev/v2";
-        const { temporalCoverageTo, csvData } = await fetch(url).then(r =>
+        const { metadata_modified, csvData } = await fetch(url).then(r =>
           r.json()
         );
         console.log(csvData);
@@ -75,10 +75,7 @@ const store = new Vuex.Store({
         });
         console.log(cases);
         commit("setCases", cases);
-        commit(
-          "setTemporalCoverageTo",
-          dayjs(temporalCoverageTo, "DD MMMM YYYY")
-        );
+        commit("setTemporalCoverageTo", dayjs(metadata_modified));
       } catch (err) {
         commit("setError", err.toString());
       }
