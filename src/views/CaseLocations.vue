@@ -16,9 +16,23 @@
           case locations and sort by how far away they are.
           <em>Your location details will never leave your device.</em>
         </p>
-        <button @click="getLocation" v-if="!hasLocationPermission">
+        <button v-if="!hasLocationPermission" @click="getLocation">
           Allow location access
         </button>
+        <p v-if="!hasLocationPermission">
+          Or, choose your suburb below for approximate locations:
+        </p>
+        <input
+          v-if="!hasLocationPermission"
+          list="suburbs-datalist"
+          placeholder="Start typing your suburb name"
+          v-model="suburbNameInput"
+        />
+        <datalist v-if="!hasLocationPermission" id="suburbs-datalist">
+          <option v-for="suburbName of suburbNames" :key="suburbName">
+            {{ suburbName }}
+          </option>
+        </datalist>
         <ExplainerText :isAboveData="true" />
       </div>
       <div
@@ -61,6 +75,7 @@
 <script>
 import ExplainerText from "../components/ExplainerText.vue";
 import getDistance from "geolib/es/getDistance";
+import latLongForSuburbs from "../data/latLongForSuburbs.json";
 
 export default {
   name: "CaseLocations",
@@ -69,9 +84,10 @@ export default {
   },
   data() {
     return {
-      latitude: null,
-      longitude: null,
+      gpsLatitude: null,
+      gpsLongitude: null,
       hasLocationPermission: false,
+      suburbNameInput: "",
     };
   },
   async created() {
@@ -85,6 +101,15 @@ export default {
     }
   },
   computed: {
+    suburbLatLong() {
+      return latLongForSuburbs[this.suburbNameInput] || [];
+    },
+    latitude() {
+      return this.gpsLatitude || this.suburbLatLong[0] || null;
+    },
+    longitude() {
+      return this.gpsLongitude || this.suburbLatLong[1] || null;
+    },
     caseLocationRows() {
       console.log("Calculating caseLocationRows");
       console.log(this.latitude, this.longitude);
@@ -115,7 +140,7 @@ export default {
         }
       );
 
-      if (this.hasLocationPermission) {
+      if (this.hasLocationPermission || this.suburbLatLong.length > 0) {
         return unsortedCaseLocations.sort((a, b) => a.distance - b.distance);
       } else {
         return unsortedCaseLocations;
@@ -124,14 +149,17 @@ export default {
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
     },
+    suburbNames() {
+      return Object.keys(latLongForSuburbs);
+    },
   },
   methods: {
     async getLocation() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.hasLocationPermission = true;
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
+          this.gpsLatitude = position.coords.latitude;
+          this.gpsLongitude = position.coords.longitude;
         },
         (err) => {
           // See https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError/code
@@ -182,7 +210,12 @@ export default {
     padding-bottom: 1rem;
     border-bottom: 1px solid hsl(0, 0%, 95%);
 
+    button,
     p {
+      margin-top: 1rem;
+    }
+
+    p:first-child {
       margin: 0;
 
       em {
@@ -190,8 +223,13 @@ export default {
       }
     }
 
-    button {
-      margin-top: 1rem;
+    input {
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      border-radius: 5px;
+      border: 1px solid hsl(0, 0%, 75%);
+      padding: 0.25rem;
     }
   }
 
