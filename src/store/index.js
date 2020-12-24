@@ -81,7 +81,9 @@ const store = new Vuex.Store({
         commit("setCases", cases);
         commit(
           "setTemporalCoverageTo",
-          dayjs(metadataModified).subtract(1, "day")
+          dayjs(metadataModified)
+            .startOf("day")
+            .subtract(1, "day")
         );
         commit("setCaseLocations", caseLocations);
       } catch (err) {
