@@ -102,7 +102,21 @@ export default {
   },
   computed: {
     suburbLatLong() {
-      return latLongForSuburbs[this.suburbNameInput] || [];
+      // Check case-sensitively (fastest) first
+      let suburbLatLong = latLongForSuburbs[this.suburbNameInput] || null;
+      // Check case-insensitively as a backup for browsers that don't support datalist
+      if (!suburbLatLong)
+        suburbLatLong =
+          latLongForSuburbs[
+            this.suburbNames.find(
+              (n) => this.suburbNameInput.toLowerCase() === n.toLowerCase()
+            )
+          ] || null;
+
+      // Fall back to empty array (so checking an index of it never throws an error)
+      if (!suburbLatLong) suburbLatLong = [];
+      // Return the suburbLatLong in the format [latNum, longNum]
+      return suburbLatLong;
     },
     latitude() {
       return this.gpsLatitude || this.suburbLatLong[0] || null;
