@@ -134,7 +134,7 @@ export default {
           this.longitude = position.coords.longitude;
         },
         () => {
-          console.log("Position could not be determined.");
+          alert("We couldn’t determine your location!");
         }
       );
     },
