@@ -133,8 +133,25 @@ export default {
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
         },
-        () => {
-          alert("We couldn’t determine your location!");
+        (err) => {
+          // See https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError/code
+          switch (err.code) {
+            case 1:
+              alert(
+                "We don't have permission to access your location. Please enable location permission for this site manually (search up how to do it in your browser if unsure) and try again."
+              );
+              break;
+            case 2:
+              alert(
+                "We couldn’t determine your location: Your position is unavailable."
+              );
+              break;
+            case 3:
+              alert(
+                "We couldn’t determine your location: The location request timed out."
+              );
+              break;
+          }
         }
       );
     },
