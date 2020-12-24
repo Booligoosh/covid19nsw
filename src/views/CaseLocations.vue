@@ -16,7 +16,7 @@
           case locations and sort by how far away they are.
           <em>Your location details will never leave your device.</em>
         </p>
-        <button @click="getLocation" v-if="!hasLocationPermission">
+        <button @click="getLocation()" v-if="!hasLocationPermission">
           Allow location access
         </button>
         <ExplainerText :isAboveData="true" />
@@ -75,13 +75,21 @@ export default {
     };
   },
   async created() {
-    const locationPermission = await navigator.permissions.query({
-      name: "geolocation",
-    });
+    if (navigator.permissions) {
+      const locationPermission = await navigator.permissions.query({
+        name: "geolocation",
+      });
 
-    if (locationPermission.state === "granted") {
-      this.hasLocationPermission = true;
-      this.getLocation();
+      if (locationPermission.state === "granted") {
+        this.hasLocationPermission = true;
+        this.getLocation();
+      }
+    } else {
+      // If permission API is not supported, request location immediately on load.
+      // If they deny it immediately, they can usually allow it later.
+      // Suppress visible error messages since we're doing it without user interaction
+      // and don't already have location permission.
+      this.getLocation(true);
     }
   },
   computed: {
@@ -126,7 +134,7 @@ export default {
     },
   },
   methods: {
-    async getLocation() {
+    async getLocation(supressErrors = false) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.hasLocationPermission = true;
@@ -134,7 +142,11 @@ export default {
           this.longitude = position.coords.longitude;
         },
         () => {
-          alert("We couldn’t determine your location!");
+          if (supressErrors) {
+            console.log("Couldn't determine location");
+          } else {
+            alert("We couldn’t determine your location!");
+          }
         }
       );
     },
