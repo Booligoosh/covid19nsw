@@ -1,12 +1,11 @@
 <template>
   <div>
     <p>
-      The data {{ isAboveData ? "below" : "above" }} is official data provided
-      by the NSW Ministry of Health, and is fetched fresh every time you load
-      this page.
+      This site uses official data provided by NSW Health, which is fetched
+      fresh every time you load this page.
     </p>
     <p>
-      You can view and download the raw data from the NSW Ministry of Health at
+      You can view and download the raw data at
       <a
         href="https://data.nsw.gov.au/nsw-government-covid-19-data-program"
         target="_blank"
@@ -15,8 +14,8 @@
     </p>
     <p>
       This site was built by
-      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a>, and is
-      not affiliated with the NSW government in any way.
+      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a> and is
+      not affiliated with the NSW government.
     </p>
   </div>
 </template>
@@ -26,8 +25,8 @@ export default {
   props: {
     isAboveData: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
