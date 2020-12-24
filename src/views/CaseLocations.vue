@@ -162,6 +162,7 @@ export default {
           this.gpsLongitude = position.coords.longitude;
         },
         (err) => {
+          this.hasLocationPermission = false;
           // See https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError/code
           switch (err.code) {
             case 1:
