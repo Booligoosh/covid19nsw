@@ -32,6 +32,12 @@ const routes = [
       import(/* webpackChunkName: "allPostcodes" */ "../views/AllPostcodes.vue")
   },
   {
+    path: "/locations",
+    name: "CaseLocations",
+    component: () =>
+      import(/* webpackChunkName: "caseLocations" */ "../views/CaseLocations.vue")
+  },
+  {
     path: "*",
     component: () =>
       import(/* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue")

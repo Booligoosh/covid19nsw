@@ -1,9 +1,18 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>
+      <router-link to="/">🏠</router-link>
       |
       <router-link to="/all">All postcodes</router-link>
+      |
+      <router-link to="/locations">
+        Case locations
+        <!-- <span class="beta"
+          ><span class="bracket">(</span>beta<span class="bracket"
+            >)</span
+          ></span
+        > -->
+      </router-link>
       <!-- | <router-link to="/about">About</router-link> -->
     </div>
     <div class="page-wrapper">

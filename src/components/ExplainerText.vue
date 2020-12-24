@@ -8,7 +8,7 @@
     <p>
       You can view and download the raw data from the NSW Ministry of Health at
       <a
-        href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location"
+        href="https://data.nsw.gov.au/nsw-government-covid-19-data-program"
         target="_blank"
         >data.nsw.gov.au</a
       >.

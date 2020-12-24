@@ -15,6 +15,7 @@ const store = new Vuex.Store({
     cases: [],
     error: null,
     temporalCoverageTo: null,
+    caseLocations: [],
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION
   },
@@ -41,15 +42,18 @@ const store = new Vuex.Store({
     },
     setTemporalCoverageTo(state, temporalCoverageTo) {
       state.temporalCoverageTo = temporalCoverageTo;
-    }
+    },
+    setCaseLocations(state, caseLocations = []) {
+      state.caseLocations = caseLocations;
+    },
   },
   actions: {
     async loadCsvData({ commit }) {
       try {
         const url = "https://covid19nsw.booligoosh.workers.dev/v2";
-        const { metadataModified, csvData } = await fetch(url).then(r =>
-          r.json()
-        );
+        const { metadataModified, csvData, caseLocations } = await fetch(
+          url
+        ).then(r => r.json());
         console.log(csvData);
         const parsed = parse(csvData, {
           columns: true
@@ -79,6 +83,7 @@ const store = new Vuex.Store({
           "setTemporalCoverageTo",
           dayjs(metadataModified).subtract(1, "day")
         );
+        commit("setCaseLocations", caseLocations);
       } catch (err) {
         commit("setError", err.toString());
       }
