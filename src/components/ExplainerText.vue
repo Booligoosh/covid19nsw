@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'is-above-data': isAboveData }">
     <p>
       This site uses official data provided by NSW Health, which is fetched
       fresh every time you load this page.
@@ -30,3 +30,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.is-above-data:first-child > :first-child {
+  margin-top: 0;
+}
+</style>
