@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     cases: [],
     error: null,
     temporalCoverageTo: null,
-    caseLocations: [],
+    caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION
   },
@@ -43,7 +43,7 @@ const store = new Vuex.Store({
     setTemporalCoverageTo(state, temporalCoverageTo) {
       state.temporalCoverageTo = temporalCoverageTo;
     },
-    setCaseLocations(state, caseLocations = []) {
+    setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
     },
   },

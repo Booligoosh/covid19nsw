@@ -4,7 +4,7 @@
   </div>
   <div
     class="case-locations-page-loading"
-    v-else-if="$store.state.caseLocations.length === 0"
+    v-else-if="!$store.state.caseLocations"
   >
     Loading&hellip;
   </div>
@@ -68,6 +68,9 @@
         </div>
         <!-- LAT,LON: <span style="user-select:all">{{ caseLocation.Lat }},{{ caseLocation.Lon }}</span> -->
       </div>
+      <div class="no-locations-placeholder">
+        There aren&rsquo;t any current case location alerts. Great job NSW! 🥳
+      </div>
     </div>
   </div>
 </template>
@@ -128,7 +131,7 @@ export default {
       console.log("Calculating caseLocationRows");
       console.log(this.latitude, this.longitude);
 
-      const unsortedCaseLocations = this.$store.state.caseLocations.map(
+      const unsortedCaseLocations = (this.$store.state.caseLocations || []).map(
         (caseLocation) => {
           // Temporary workaround for incorrect Westfield Bondi Junction coordinates
           if (caseLocation.Venue === "Westfield Bondi Junction") {
@@ -299,5 +302,15 @@ export default {
       }
     }
   }
+}
+
+.no-locations-placeholder {
+  padding: 2.5rem 1rem;
+  border: 1px solid hsl(0, 0%, 90%);
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 500;
+  color: hsl(0, 0%, 40%);
+  line-height: 1.5;
 }
 </style>
