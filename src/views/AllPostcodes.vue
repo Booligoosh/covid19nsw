@@ -23,7 +23,7 @@
       ⚠ Please put your device in landscape mode!
     </p>
     <br />
-    <sorted-table :values="postcodeRows" sort="totalCases" dir="desc">
+    <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
         <tr>
           <th scope="col" style="width: 8rem">
