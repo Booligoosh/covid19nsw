@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div>
-      <h1>How is <i>your</i> suburb faring during the COVID-19 epidemic?</h1>
+      <h1>How is <i>your</i> suburb faring during the COVID-19 pandemic?</h1>
       <form @submit="formSubmitHandler">
         <div class="postcode-chooser">
           My postcode is
@@ -13,7 +13,7 @@
             max="2999"
             required
           />
-          <button>Let's find out →</button>
+          <button>Let&rsquo;s find out →</button>
         </div>
       </form>
     </div>
