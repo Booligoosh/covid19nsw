@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-import parse from "csv-parse/lib/sync";
+import { parse } from "lil-csv";
 import dayjs from "dayjs";
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
@@ -55,9 +55,7 @@ const store = new Vuex.Store({
           url
         ).then(r => r.json());
         console.log(csvData);
-        const parsed = parse(csvData, {
-          columns: true
-        });
+        const parsed = parse(csvData);
         console.log(parsed);
         const cases = parsed.map(caseRow => {
           const postcode = Number(caseRow.postcode);
