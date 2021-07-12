@@ -94,7 +94,7 @@
         All time
       </button>
       <span v-if="lastUpdatedString" class="last-updated">
-        Last updated {{ lastUpdatedString }}
+        Data as of {{ lastUpdatedString }}
       </span>
     </p>
     <hr />

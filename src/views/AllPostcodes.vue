@@ -15,7 +15,7 @@
     <p>
       Postcodes with 0 cases are not shown.
       <span class="last-updated-text"
-        >Last updated {{ lastUpdatedString
+        >Data as of {{ lastUpdatedString
         }}<span class="full-stop">.</span></span
       >
     </p>
