@@ -50,59 +50,79 @@
       class="main-chart"
       :labels="chartLabels"
       title=""
-      type="axis-mixed"
+      :type="sourceMode ? 'bar' : 'line'"
       :height="300"
-      :colors="['purple', 'light-blue', '#ffa3ef']"
+      :colors="
+        sourceMode
+          ? ['blue', 'orange', 'light-green']
+          : ['purple', 'light-blue']
+      "
       :dataSets="chartData"
-      :valuesOverPoints="chartNumDays < allTimeDays"
+      :valuesOverPoints="!sourceMode && !allTimeMode"
       :tooltipOptions="{ formatTooltipY: (n) => n }"
-      :lineOptions="{ regionFill: 1, hideDots: isAllTimeMode ? 1 : 0 }"
+      :lineOptions="{
+        regionFill: 1,
+        hideDots: allTimeMode ? 1 : 0,
+      }"
       :axisOptions="{
         xIsSeries: true,
-        xAxisMode: isAllTimeMode ? 'tick' : 'span',
+        xAxisMode: allTimeMode ? 'tick' : 'span',
       }"
-      :key="isAllTimeMode"
+      :barOptions="{ stacked: sourceMode ? 1 : 0 }"
+      :key="chartKey"
     >
     </vue-frappe>
-    <p class="chart-time-period-changer">
-      Graph time period = &nbsp;&nbsp;
-      <button @click="chartNumDays = 7" :class="{ active: chartNumDays === 7 }">
-        1 week
-      </button>
-      <button
-        @click="chartNumDays = 14"
-        :class="{ active: chartNumDays === 14 }"
-      >
-        2 weeks
-      </button>
-      <button
-        @click="chartNumDays = 21"
-        :class="{ active: chartNumDays === 21 }"
-      >
-        3 weeks
-      </button>
-      <button
-        @click="chartNumDays = 28"
-        :class="{ active: chartNumDays === 28 }"
-      >
-        4 weeks
-      </button>
-      <button
-        @click="chartNumDays = allTimeDays"
-        :class="{ active: isAllTimeMode }"
-      >
-        All time
-      </button>
-      <span v-if="lastUpdatedString" class="last-updated">
-        Data as of {{ lastUpdatedString }}
-      </span>
-    </p>
+    <div class="chart-config">
+      <div class="chart-config-row">
+        Graph type = &nbsp;
+        <button @click="sourceMode = false" :class="{ active: !sourceMode }">
+          Total & New cases
+        </button>
+        <button @click="sourceMode = true" :class="{ active: sourceMode }">
+          Total cases by source
+        </button>
+      </div>
+      <div class="chart-config-row">
+        Graph time period = &nbsp;
+        <button
+          @click="chartNumDays = 7"
+          :class="{ active: chartNumDays === 7 }"
+        >
+          1 week
+        </button>
+        <button
+          @click="chartNumDays = 14"
+          :class="{ active: chartNumDays === 14 }"
+        >
+          2 weeks
+        </button>
+        <button
+          @click="chartNumDays = 21"
+          :class="{ active: chartNumDays === 21 }"
+        >
+          3 weeks
+        </button>
+        <button
+          @click="chartNumDays = 28"
+          :class="{ active: chartNumDays === 28 }"
+        >
+          4 weeks
+        </button>
+        <button
+          @click="chartNumDays = allTimeDays"
+          :class="{ active: allTimeMode }"
+        >
+          All time
+        </button>
+      </div>
+    </div>
     <hr />
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <ExplainerText />
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCases, null, 2)
     }}</pre> -->
+    <!-- <pre>{{ JSON.stringify(chartData, null, 2) }}</pre> -->
   </div>
 </template>
 
@@ -156,6 +176,7 @@ export default {
 
     return {
       chartNumDays,
+      sourceMode: false,
     };
   },
   computed: {
@@ -203,19 +224,32 @@ export default {
     newCaseValues() {
       return this.lastXDays.map((date) => this.getNewCasesOnDate(date));
     },
-    chartData() {
+    normalChartData() {
       return [
         {
           name: "Total cases",
-          chartType: "line",
           values: this.cumulativeValues,
         },
         {
           name: "New cases",
-          chartType: "line",
           values: this.newCaseValues,
         },
       ];
+    },
+    sourceChartData() {
+      return ["Local", "Interstate", "Overseas"].map((targetSource) => ({
+        name: targetSource,
+        values: this.lastXDays.map(
+          (colDate) =>
+            this.allCases.filter(
+              ({ date, source }) =>
+                source === targetSource && date.isSameOrBefore(colDate)
+            ).length
+        ),
+      }));
+    },
+    chartData() {
+      return this.sourceMode ? this.sourceChartData : this.normalChartData;
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
@@ -229,8 +263,11 @@ export default {
         return dayjs().diff(startDate, "day");
       }
     },
-    isAllTimeMode() {
+    allTimeMode() {
       return this.chartNumDays === this.allTimeDays;
+    },
+    chartKey() {
+      return this.allTimeMode.toString() + this.sourceMode.toString();
     },
   },
   methods: {
@@ -339,31 +376,31 @@ $top-grid-breakpoint: 480px;
   // margin-right calculated through trial-and-error
   margin-right: -23px;
 }
-.chart-time-period-changer {
-  button {
-    background: #eee;
-    border: none;
-    border-radius: 5px;
-    font: inherit;
-    color: inherit;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
+.chart-config {
+  margin: 1rem 0;
 
-    &:hover,
-    &:focus {
-      background: #ddd;
-      outline: none;
-    }
+  &-row {
+    button {
+      background: #eee;
+      border: none;
+      border-radius: 5px;
+      font: inherit;
+      color: inherit;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
 
-    &.active,
-    &:active {
-      background: #ccc;
+      &:hover,
+      &:focus {
+        background: #ddd;
+        outline: none;
+      }
+
+      &.active,
+      &:active {
+        background: #ccc;
+      }
     }
-  }
-  .last-updated {
-    float: right;
-    opacity: 0.6;
   }
 }
 hr {

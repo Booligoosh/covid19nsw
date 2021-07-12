@@ -66,12 +66,18 @@ const store = new Vuex.Store({
           const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
           const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
           const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
+          const source = caseRow.likely_source_of_infection.startsWith(
+            "Locally acquired"
+          )
+            ? "Local"
+            : caseRow.likely_source_of_infection;
           return {
             postcode,
             date,
             councilName,
             councilSlug,
             councilIsCityCouncil,
+            source,
           };
         });
         console.log(cases);
