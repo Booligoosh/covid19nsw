@@ -50,9 +50,8 @@ const store = new Vuex.Store({
   actions: {
     async loadCsvData({ commit }) {
       try {
-        const url = "https://covid19nsw.booligoosh.workers.dev/v2";
         const { metadataModified, csvData, caseLocations } = await fetch(
-          url
+          "https://covid19nsw.ethan.link/worker"
         ).then((r) => r.json());
         console.log(csvData);
         const parsed = parse(csvData);
