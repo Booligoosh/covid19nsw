@@ -139,6 +139,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$compact-breakpoint: 492px;
+
 .all-page-loading,
 .all-page-error {
   flex-grow: 1;
@@ -155,7 +157,7 @@ export default {
   color: red;
   display: none;
 
-  @media screen and (max-width: 492px) {
+  @media screen and (max-width: 405px) {
     display: block;
   }
 }
@@ -188,6 +190,11 @@ table {
   border-left: 1px solid;
   border-spacing: 0;
 
+  @media screen and (max-width: $compact-breakpoint) {
+    margin-left: calc(-2rem - 8px);
+    width: calc(100% + 4rem + 16px);
+  }
+
   tbody tr {
     cursor: pointer;
   }
@@ -215,6 +222,10 @@ table {
     border-right: 1px solid;
     border-bottom: 1px solid;
     padding: 0.5rem 1rem;
+
+    @media screen and (max-width: $compact-breakpoint) {
+      padding: 0.4rem;
+    }
   }
 
   td.value-number,
