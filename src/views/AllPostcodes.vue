@@ -204,8 +204,6 @@ table {
 
   th a {
     color: inherit;
-    text-decoration: none;
-    border-bottom: 2px solid;
     padding: 1px 0;
   }
 
@@ -220,8 +218,6 @@ table {
 
     a {
       color: inherit;
-      text-decoration: none;
-      border-bottom: 2px solid;
       // padding: 1px 0;
     }
   }
