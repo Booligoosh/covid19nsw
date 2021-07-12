@@ -215,24 +215,48 @@ export default {
         .map((_, i) => this.$store.state.temporalCoverageTo.subtract(i, "days"))
         .reverse();
     },
+    rawDates() {
+      return this.lastXDays.map((date) => date.format("YYYY-MM-DD"));
+    },
     chartLabels() {
       return this.lastXDays.map((date) => date.format("D MMM"));
     },
-    cumulativeValues() {
-      return this.lastXDays.map((date) => this.getCumulativeCasesOnDate(date));
-    },
-    newCaseValues() {
-      return this.lastXDays.map((date) => this.getNewCasesOnDate(date));
-    },
     normalChartData() {
+      console.log(
+        this.chartNumDays,
+        this.currentCases,
+        "Requires",
+        this.chartNumDays * this.currentCases,
+        "operations"
+      );
+
+      let cumulativeValues = [];
+      let newCaseValues = [];
+      const caseRawDates = this.allCases.map((c) => c.rawDate);
+
+      // Interate through each date
+      this.rawDates.forEach((date) => {
+        let cumulativeCases = 0;
+        let newCases = 0;
+
+        // Iterate through the dates corresponding to each case
+        caseRawDates.forEach((rawDate) => {
+          if (rawDate <= date) cumulativeCases++;
+          if (rawDate === date) newCases++;
+        });
+
+        cumulativeValues.push(cumulativeCases);
+        newCaseValues.push(newCases);
+      });
+
       return [
         {
           name: "Total cases",
-          values: this.cumulativeValues,
+          values: cumulativeValues,
         },
         {
           name: "New cases",
-          values: this.newCaseValues,
+          values: newCaseValues,
         },
       ];
     },

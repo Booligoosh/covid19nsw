@@ -62,7 +62,8 @@ const store = new Vuex.Store({
           // date.setHours(0);
           // date.setMinutes(0);
           // date.setSeconds(0);
-          const date = dayjs(caseRow.notification_date);
+          const rawDate = caseRow.notification_date;
+          const date = dayjs(rawDate);
           const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
           const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
           const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
@@ -73,6 +74,7 @@ const store = new Vuex.Store({
             : caseRow.likely_source_of_infection;
           return {
             postcode,
+            rawDate,
             date,
             councilName,
             councilSlug,
