@@ -99,9 +99,6 @@
     </p>
     <hr />
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
-    <p class="small-screen-warning">
-      <i>Note: This graph is best viewed on a larger screen</i>
-    </p>
     <ExplainerText />
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCases, null, 2)
@@ -374,10 +371,6 @@ hr {
   border-color: #ddd;
   margin-top: -0.5rem;
 }
-.small-screen-warning {
-  opacity: 0.5;
-  display: none;
-}
 .add-to-home-screen {
   font: inherit;
   padding: 1rem;
@@ -390,11 +383,6 @@ hr {
   cursor: pointer;
 }
 
-@media screen and (max-width: 1367px) {
-  .small-screen-warning {
-    display: block;
-  }
-}
 @media screen and (max-width: 740px) {
   .chart-time-period-changer {
     .last-updated {
