@@ -85,29 +85,40 @@ export default {
   },
   computed: {
     postcodeRows() {
-      const oneWeekAgo = this.$store.state.temporalCoverageTo.subtract(
-        7,
-        "days"
-      );
-      return this.$store.getters.postcodes.map((postcodeNumber) => {
-        const allCases = this.$store.state.cases.filter(
-          ({ postcode }) => postcode === postcodeNumber
-        );
-        const newCasesThisWeek = allCases.filter(({ date }) =>
-          date.isAfter(oneWeekAgo)
-        ).length;
-        const newCasesToday = allCases.filter(({ date }) =>
-          date.isSame(this.$store.state.temporalCoverageTo)
-        ).length;
+      // Initialise objects
+      const totalCases = {};
+      const newCasesThisWeek = {};
+      const newCasesToday = {};
 
-        return {
-          postcodeNumber,
-          totalCases: allCases.length,
-          newCasesThisWeek,
-          newCasesToday,
-          suburbs: suburbsForPostcode[postcodeNumber].join(", "),
-        };
+      // Calculate dates to compare to
+      const today = this.$store.state.temporalCoverageTo.format("YYYY-MM-DD");
+      const oneWeekAgo = this.$store.state.temporalCoverageTo
+        .subtract(7, "days")
+        .format("YYYY-MM-DD");
+
+      // Iterate through each case
+      this.$store.state.cases.forEach(({ postcode, rawDate }) => {
+        // Add the case to its postcode's total cases
+        totalCases[postcode] = (totalCases[postcode] || 0) + 1;
+        // If the case is today, add it to its postcode's cases today & this week
+        if (rawDate === today) {
+          newCasesToday[postcode] = (newCasesToday[postcode] || 0) + 1;
+          newCasesThisWeek[postcode] = (newCasesThisWeek[postcode] || 0) + 1;
+        }
+        // Otherwise if the case is this week, add it to its postcode's casesthis week
+        else if (rawDate > oneWeekAgo) {
+          newCasesThisWeek[postcode] = (newCasesThisWeek[postcode] || 0) + 1;
+        }
       });
+
+      // Return postcodes using precalculated values
+      return this.$store.getters.postcodes.map((postcodeNumber) => ({
+        postcodeNumber,
+        totalCases: totalCases[postcodeNumber] || 0,
+        newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
+        newCasesToday: newCasesToday[postcodeNumber] || 0,
+        suburbs: suburbsForPostcode[postcodeNumber].join(", "),
+      }));
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
