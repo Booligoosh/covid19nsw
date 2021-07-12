@@ -261,15 +261,30 @@ export default {
       ];
     },
     sourceChartData() {
-      return ["Local", "Interstate", "Overseas"].map((targetSource) => ({
+      const SOURCES = ["Local", "Interstate", "Overseas"];
+
+      let values = {};
+      SOURCES.forEach(
+        (source) => (values[source] = new Array(this.chartNumDays).fill(0))
+      );
+
+      const caseRawDates = this.allCases.map((c) => c.rawDate);
+      const caseSources = this.allCases.map((c) => c.source);
+
+      // Interate through each date
+      this.rawDates.forEach((date, dateIndex) => {
+        console.log(dateIndex);
+        // Iterate through the sources corresponding to each case
+        caseSources.forEach((source, i) => {
+          if (caseRawDates[i] <= date) values[source][dateIndex]++;
+        });
+      });
+
+      console.log(values);
+
+      return SOURCES.map((targetSource) => ({
         name: targetSource,
-        values: this.lastXDays.map(
-          (colDate) =>
-            this.allCases.filter(
-              ({ date, source }) =>
-                source === targetSource && date.isSameOrBefore(colDate)
-            ).length
-        ),
+        values: values[targetSource],
       }));
     },
     chartData() {
