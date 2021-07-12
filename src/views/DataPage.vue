@@ -49,11 +49,11 @@
       :colors="['purple', 'light-blue', '#ffa3ef']"
       :dataSets="chartData"
       :valuesOverPoints="chartNumDays < allTimeDays"
-      :tooltipOptions="{ formatTooltipY: n => n }"
+      :tooltipOptions="{ formatTooltipY: (n) => n }"
       :lineOptions="{ regionFill: 1, hideDots: isAllTimeMode ? 1 : 0 }"
       :axisOptions="{
         xIsSeries: true,
-        xAxisMode: isAllTimeMode ? 'tick' : 'span'
+        xAxisMode: isAllTimeMode ? 'tick' : 'span',
       }"
       :key="isAllTimeMode"
     >
@@ -119,7 +119,7 @@ export default {
   components: {
     DataPageMetadataChanger,
     ExplainerText,
-    PageNotFound
+    PageNotFound,
   },
   created() {
     const scriptEl = document.createElement("script");
@@ -132,9 +132,9 @@ export default {
           "@type": "ListItem",
           position: 1,
           name: this.postcodeNumber.toString(),
-          item: `https://covid19nsw.ethan.link/postcode/${this.postcodeNumber}`
-        }
-      ]
+          item: `https://covid19nsw.ethan.link/postcode/${this.postcodeNumber}`,
+        },
+      ],
     });
     document.querySelector("head").appendChild(scriptEl);
   },
@@ -151,7 +151,7 @@ export default {
     }
 
     return {
-      chartNumDays
+      chartNumDays,
     };
   },
   computed: {
@@ -188,26 +188,26 @@ export default {
         .reverse();
     },
     chartLabels() {
-      return this.lastXDays.map(date => date.format("D MMM"));
+      return this.lastXDays.map((date) => date.format("D MMM"));
     },
     cumulativeValues() {
-      return this.lastXDays.map(date => this.getCumulativeCasesOnDate(date));
+      return this.lastXDays.map((date) => this.getCumulativeCasesOnDate(date));
     },
     newCaseValues() {
-      return this.lastXDays.map(date => this.getNewCasesOnDate(date));
+      return this.lastXDays.map((date) => this.getNewCasesOnDate(date));
     },
     chartData() {
       return [
         {
           name: "Total cases",
           chartType: "line",
-          values: this.cumulativeValues
+          values: this.cumulativeValues,
         },
         {
           name: "New cases",
           chartType: "line",
-          values: this.newCaseValues
-        }
+          values: this.newCaseValues,
+        },
       ];
     },
     lastUpdatedString() {
@@ -224,7 +224,7 @@ export default {
     },
     isAllTimeMode() {
       return this.chartNumDays === this.allTimeDays;
-    }
+    },
   },
   methods: {
     getCumulativeCasesOnDate(dayjsDate) {
@@ -234,8 +234,8 @@ export default {
     getNewCasesOnDate(dayjsDate) {
       return this.allCases.filter(({ date }) => date.isSame(dayjsDate, "day"))
         .length;
-    }
-  }
+    },
+  },
 };
 </script>
 
