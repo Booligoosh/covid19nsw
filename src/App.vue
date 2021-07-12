@@ -31,12 +31,12 @@ export default {
       this.$store.state.pageDescription =
         to.meta.description || DEFAULT_PAGE_DESCRIPTION;
     },
-    "$store.state.pageTitle": function() {
+    "$store.state.pageTitle": function () {
       this.updatePageTitle();
     },
-    "$store.state.pageDescription": function() {
+    "$store.state.pageDescription": function () {
       this.updatePageDescription();
-    }
+    },
   },
   created() {
     if (window.location.origin === "https://covid19nsw.netlify.com") {
@@ -53,16 +53,18 @@ export default {
       document.title = this.$store.state.pageTitle;
       document
         .querySelectorAll(".page-title-meta")
-        .forEach(el => el.setAttribute("content", this.$store.state.pageTitle));
+        .forEach((el) =>
+          el.setAttribute("content", this.$store.state.pageTitle)
+        );
     },
     updatePageDescription() {
       document
         .querySelectorAll(".page-description-meta")
-        .forEach(el =>
+        .forEach((el) =>
           el.setAttribute("content", this.$store.state.pageDescription)
         );
-    }
-  }
+    },
+  },
 };
 </script>
 

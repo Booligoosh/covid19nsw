@@ -2,7 +2,7 @@ module.exports = {
   pwa: {
     name: "COVID-19 data for New South Wales",
     manifestOptions: {
-      short_name: "COVID-19 Data"
+      short_name: "COVID-19 Data",
     },
     workboxOptions: {
       exclude: [
@@ -11,14 +11,14 @@ module.exports = {
         /.map$/,
         "sitemap.xml",
         "opensearch.xml",
-        "robots.txt"
+        "robots.txt",
       ],
       // https://forum.vuejs.org/t/vue-cli-3-project-with-pwa-not-busting-cache-on-new-builds/50252/7
       skipWaiting: true,
-      clientsClaim: true
-    }
+      clientsClaim: true,
+    },
   },
   css: {
-    sourceMap: true
-  }
+    sourceMap: true,
+  },
 };

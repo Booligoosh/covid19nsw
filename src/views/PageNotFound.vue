@@ -17,15 +17,15 @@ export default {
     isOnCouncilPage: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   created() {
     document.querySelector("head").innerHTML += `
       <meta name="robots" content="noindex" />
       <meta name="prerender-status-code" content="404" />
     `;
-  }
+  },
 };
 </script>
 

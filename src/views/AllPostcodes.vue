@@ -38,9 +38,7 @@
           <th scope="col" style="width: 12rem">
             <sort-link name="newCasesToday">New cases today</sort-link>
           </th>
-          <th scope="col">
-            Suburb(s) in the postcode
-          </th>
+          <th scope="col">Suburb(s) in the postcode</th>
         </tr>
       </thead>
       <tbody slot="body" slot-scope="sort">
@@ -51,7 +49,7 @@
           @click="
             $router.push({
               name: 'PostcodePage',
-              params: { postcode: value.postcodeNumber }
+              params: { postcode: value.postcodeNumber },
             })
           "
         >
@@ -59,7 +57,7 @@
             <router-link
               :to="{
                 name: 'PostcodePage',
-                params: { postcode: value.postcodeNumber }
+                params: { postcode: value.postcodeNumber },
               }"
               >{{ value.postcodeNumber }}</router-link
             >
@@ -83,7 +81,7 @@ import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 export default {
   name: "AllPostcodes",
   components: {
-    ExplainerText
+    ExplainerText,
   },
   computed: {
     postcodeRows() {
@@ -91,7 +89,7 @@ export default {
         7,
         "days"
       );
-      return this.$store.getters.postcodes.map(postcodeNumber => {
+      return this.$store.getters.postcodes.map((postcodeNumber) => {
         const allCases = this.$store.state.cases.filter(
           ({ postcode }) => postcode === postcodeNumber
         );
@@ -107,20 +105,20 @@ export default {
           totalCases: allCases.length,
           newCasesThisWeek,
           newCasesToday,
-          suburbs: suburbsForPostcode[postcodeNumber].join(", ")
+          suburbs: suburbsForPostcode[postcodeNumber].join(", "),
         };
       });
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
-    }
+    },
   },
   methods: {
     suburbsSeeMoreClickHandler(event) {
       event.preventDefault();
       event.target.parentElement.classList.add("show-full");
-    }
-  }
+    },
+  },
 };
 </script>
 

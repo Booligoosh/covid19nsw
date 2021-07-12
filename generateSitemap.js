@@ -2,7 +2,7 @@ const postcodeRanges = [
   // From https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
   [2000, 2599],
   [2619, 2899],
-  [2921, 2999]
+  [2921, 2999],
 ];
 
 let sitemap = "";

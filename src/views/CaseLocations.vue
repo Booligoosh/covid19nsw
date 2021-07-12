@@ -68,7 +68,10 @@
         </div>
         <!-- LAT,LON: <span style="user-select:all">{{ caseLocation.Lat }},{{ caseLocation.Lon }}</span> -->
       </div>
-      <div class="no-locations-placeholder" v-if="$store.state.caseLocations.length === 0">
+      <div
+        class="no-locations-placeholder"
+        v-if="$store.state.caseLocations.length === 0"
+      >
         There aren&rsquo;t any current case location alerts. Great job NSW! 🥳
       </div>
     </div>

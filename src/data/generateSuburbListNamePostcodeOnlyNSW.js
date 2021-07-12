@@ -3,11 +3,11 @@ const array = JSON.parse(
 );
 const final = JSON.stringify(
   array
-    .filter(x => x.STATE_NAME === "NSW")
-    .map(x => ({
+    .filter((x) => x.STATE_NAME === "NSW")
+    .map((x) => ({
       // Use n and p instead of name and postcode to reduce file size
       n: x.NAME,
-      p: x.POSTCODE
+      p: x.POSTCODE,
     }))
 );
 // console.log(final);

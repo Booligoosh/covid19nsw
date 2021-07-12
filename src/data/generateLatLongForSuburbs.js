@@ -3,8 +3,8 @@ const array = JSON.parse(
 );
 const obj = {};
 array
-  .filter(x => x.STATE_NAME === "NSW")
-  .forEach(x => (obj[x.NAME] = [x.LATITUDE, x.LONGITUDE]));
+  .filter((x) => x.STATE_NAME === "NSW")
+  .forEach((x) => (obj[x.NAME] = [x.LATITUDE, x.LONGITUDE]));
 
 const final = JSON.stringify(obj);
 

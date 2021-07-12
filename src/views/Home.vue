@@ -25,7 +25,7 @@ export default {
   name: "Home",
   data() {
     return {
-      postcodeInputValue: ""
+      postcodeInputValue: "",
     };
   },
   methods: {
@@ -33,10 +33,10 @@ export default {
       event.preventDefault();
       this.$router.push({
         name: "PostcodePage",
-        params: { postcode: this.postcodeInputValue }
+        params: { postcode: this.postcodeInputValue },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

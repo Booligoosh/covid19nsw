@@ -2,7 +2,7 @@
 export default {
   props: {
     totalCases: Number,
-    councilName: String
+    councilName: String,
   },
   created() {
     if (this.$route.name === "CouncilPage") {
@@ -22,6 +22,6 @@ export default {
         this.$route.params.postcode
       }. Click to see the latest data for your postcode.`;
     }
-  }
+  },
 };
 </script>
