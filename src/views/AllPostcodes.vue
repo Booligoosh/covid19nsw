@@ -32,11 +32,11 @@
           <th scope="col" style="width: 9rem">
             <sort-link name="totalCases">Total cases</sort-link>
           </th>
-          <th scope="col" style="width: 14rem">
-            <sort-link name="newCasesThisWeek">New cases this week</sort-link>
+          <th scope="col" style="width: 11.5rem">
+            <sort-link name="newCasesThisWeek">Cases this week</sort-link>
           </th>
-          <th scope="col" style="width: 12rem">
-            <sort-link name="newCasesToday">New cases today</sort-link>
+          <th scope="col" style="width: 9.5rem">
+            <sort-link name="newCasesToday">Cases today</sort-link>
           </th>
           <th scope="col">Suburb(s) in the postcode</th>
         </tr>
