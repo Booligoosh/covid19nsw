@@ -33,6 +33,12 @@
           ><span class="not-bold">COVID-19 data for the postcode</span>
           {{ postcodeNumber }}</span
         >
+        <div class="suburbs-text">
+          Suburbs in this postcode:
+          <span class="suburbs-text-suburbs">
+            {{ suburbsText }}
+          </span>
+        </div>
       </h1>
       <div class="current-cases">
         <div class="num">{{ currentCases }}</div>
@@ -107,6 +113,7 @@
 import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
 import ExplainerText from "@/components/ExplainerText.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -160,6 +167,9 @@ export default {
     },
     postcodeNumber() {
       return Number(this.$route.params.postcode);
+    },
+    suburbsText() {
+      return suburbsForPostcode[this.postcodeNumber].join(", ");
     },
     councilName() {
       const oneCase = this.allCases[0] || {};
@@ -240,6 +250,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$top-grid-breakpoint: 480px;
+
 .data-page-loading,
 .data-page-error {
   flex-grow: 1;
@@ -255,27 +267,62 @@ export default {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr auto;
+  @media screen and (max-width: $top-grid-breakpoint) {
+    display: block;
+  }
 
   > * {
     padding: 0 1rem;
-    border-right: 1px solid #eee;
+    border: 1px none #eee;
+    border-right-style: solid;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    @media screen and (max-width: $top-grid-breakpoint) {
+      border-right-style: none;
+      border-bottom-style: solid;
+      padding: 1rem 0;
+    }
   }
 
   h1 {
     margin: 0;
     padding-left: 0;
+    padding-top: 0;
     font-weight: 900;
     .not-bold {
       // opacity: 0.7;
       font-weight: 600;
     }
+
+    @media screen and (max-width: $top-grid-breakpoint) {
+      text-align: center;
+    }
+
+    @media screen and (max-width: 370px) {
+      font-size: 1.5em;
+    }
+
+    .suburbs-text {
+      font-weight: normal;
+      opacity: 0.8;
+      font-size: 0.95rem;
+      margin-top: 0.2rem;
+
+      @media screen and (max-width: $top-grid-breakpoint) {
+        margin-top: 0.7rem;
+      }
+
+      &-suburbs {
+        font-weight: 500;
+      }
+    }
   }
   .current-cases {
     padding-right: 0;
+    padding-bottom: 0;
     border: none;
     text-align: center;
     .num {
@@ -354,14 +401,6 @@ hr {
       float: unset;
       display: block;
       margin-top: 1em;
-    }
-  }
-}
-
-@media screen and (max-width: 370px) {
-  .top-grid {
-    h1 {
-      font-size: 1.2em;
     }
   }
 }
