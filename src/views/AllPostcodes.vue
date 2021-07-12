@@ -26,7 +26,7 @@
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
         <tr>
-          <th scope="col" style="width: 8rem">
+          <th scope="col">
             <sort-link name="postcodeNumber" title="Sort by Postcode">
               Postcode
             </sort-link>
@@ -46,7 +46,6 @@
               Cases today
             </sort-link>
           </th>
-          <th scope="col">Suburb(s) in the postcode</th>
         </tr>
       </thead>
       <tbody slot="body" slot-scope="sort">
@@ -69,13 +68,11 @@
               }"
               >{{ value.postcodeNumber }}</router-link
             >
+            <div class="suburbs">{{ value.suburbs }}</div>
           </td>
           <td class="value-number">{{ value.totalCases }}</td>
           <td class="value-number">{{ value.newCasesThisWeek }}</td>
           <td class="value-number">{{ value.newCasesToday }}</td>
-          <td>
-            <div class="truncate">{{ value.suburbs }}</div>
-          </td>
         </tr>
       </tbody>
     </sorted-table>
@@ -201,6 +198,17 @@ table {
     position: sticky;
     top: 0;
     background: #eee;
+    z-index: 1;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      padding: 1px 0;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   th,
@@ -208,11 +216,6 @@ table {
     border-right: 1px solid;
     border-bottom: 1px solid;
     padding: 0.5rem 1rem;
-  }
-
-  th a {
-    color: inherit;
-    padding: 1px 0;
   }
 
   td.value-number,
@@ -226,18 +229,15 @@ table {
 
     a {
       color: inherit;
-      // padding: 1px 0;
+      text-decoration: none;
+    }
+
+    .suburbs {
+      font-weight: normal;
+      margin-top: 0.2rem;
+      opacity: 0.7;
+      font-size: 0.9rem;
     }
   }
-
-  // td:not(:hover) {
-  //   max-width: 0;
-
-  //   .truncate {
-  //     white-space: nowrap;
-  //     overflow: hidden;
-  //     text-overflow: ellipsis;
-  //   }
-  // }
 }
 </style>
