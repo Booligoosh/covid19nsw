@@ -50,7 +50,7 @@
       :dataSets="chartData"
       :valuesOverPoints="chartNumDays < allTimeDays"
       :tooltipOptions="{ formatTooltipY: n => n }"
-      :lineOptions="{ hideDots: isAllTimeMode ? 1 : 0 }"
+      :lineOptions="{ regionFill: 1, hideDots: isAllTimeMode ? 1 : 0 }"
       :axisOptions="{
         xIsSeries: true,
         xAxisMode: isAllTimeMode ? 'tick' : 'span'
