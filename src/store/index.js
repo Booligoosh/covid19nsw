@@ -17,18 +17,18 @@ const store = new Vuex.Store({
     temporalCoverageTo: null,
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
-    pageDescription: DEFAULT_PAGE_DESCRIPTION
+    pageDescription: DEFAULT_PAGE_DESCRIPTION,
   },
   getters: {
     postcodes(state) {
-      return [...new Set(state.cases.map(state => state.postcode))].filter(
+      return [...new Set(state.cases.map((state) => state.postcode))].filter(
         // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
-        postcode =>
+        (postcode) =>
           (postcode >= 2000 && postcode <= 2599) ||
           (postcode >= 2619 && postcode <= 2899) ||
           (postcode >= 2921 && postcode <= 2999)
       );
-    }
+    },
   },
   mutations: {
     setCases(state, cases = []) {
@@ -53,11 +53,11 @@ const store = new Vuex.Store({
         const url = "https://covid19nsw.booligoosh.workers.dev/v2";
         const { metadataModified, csvData, caseLocations } = await fetch(
           url
-        ).then(r => r.json());
+        ).then((r) => r.json());
         console.log(csvData);
         const parsed = parse(csvData);
         console.log(parsed);
-        const cases = parsed.map(caseRow => {
+        const cases = parsed.map((caseRow) => {
           const postcode = Number(caseRow.postcode);
           // const date = new Date(caseRow.notification_date);
           // date.setHours(0);
@@ -72,7 +72,7 @@ const store = new Vuex.Store({
             date,
             councilName,
             councilSlug,
-            councilIsCityCouncil
+            councilIsCityCouncil,
           };
         });
         console.log(cases);
@@ -87,9 +87,9 @@ const store = new Vuex.Store({
       } catch (err) {
         commit("setError", err.toString());
       }
-    }
+    },
   },
-  modules: {}
+  modules: {},
 });
 
 store.dispatch("loadCsvData");
