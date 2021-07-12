@@ -181,8 +181,9 @@ export default {
 }
 
 table {
-  max-width: 100%;
   width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   border-top: 1px solid;
   border-left: 1px solid;
   border-spacing: 0;
