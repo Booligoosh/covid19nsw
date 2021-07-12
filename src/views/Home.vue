@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div>
+    <div class="home-inner">
       <h1>How is <i>your</i> suburb faring during the COVID-19 pandemic?</h1>
       <form @submit="formSubmitHandler">
         <div class="postcode-chooser">
@@ -48,51 +48,56 @@ export default {
   align-items: center;
   flex-grow: 1;
 
-  h1 {
-    font-weight: 600;
-  }
-  .postcode-chooser {
-    font-size: 1.5em;
-    opacity: 0.9;
+  &-inner {
+    max-width: 100%;
 
-    input {
-      font: inherit;
-      color: inherit;
-      background: transparent;
-      padding: 0.25em;
-      border: none;
-      border-bottom: 2px solid #ccc;
-      color: #777;
-
-      &::placeholder {
-        color: #ccc;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: #aaa;
-      }
+    h1 {
+      font-weight: 600;
     }
+    .postcode-chooser {
+      font-size: 1.5em;
+      opacity: 0.9;
 
-    button {
-      font: inherit;
-      color: inherit;
-      border: none;
-      background: #eee;
-      font-size: 0.9em;
-      padding: 0.5rem 1rem;
-      border-radius: 5rem;
-      float: right;
-      cursor: pointer;
+      input {
+        max-width: 100%;
+        font: inherit;
+        color: inherit;
+        background: transparent;
+        padding: 0.25em;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        color: #777;
 
-      &:hover,
-      &:focus {
-        background: #ddd;
-        outline: none;
+        &::placeholder {
+          color: #ccc;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #aaa;
+        }
       }
 
-      &:active {
-        background: #ccc;
+      button {
+        font: inherit;
+        color: inherit;
+        border: none;
+        background: #eee;
+        font-size: 0.9em;
+        padding: 0.5rem 1rem;
+        border-radius: 5rem;
+        float: right;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+          background: #ddd;
+          outline: none;
+        }
+
+        &:active {
+          background: #ccc;
+        }
       }
     }
   }
