@@ -27,16 +27,24 @@
       <thead>
         <tr>
           <th scope="col" style="width: 8rem">
-            <sort-link name="postcodeNumber">Postcode</sort-link>
+            <sort-link name="postcodeNumber" title="Sort by Postcode">
+              Postcode
+            </sort-link>
           </th>
           <th scope="col" style="width: 9rem">
-            <sort-link name="totalCases">Total cases</sort-link>
+            <sort-link name="totalCases" title="Sort by Total cases">
+              Total cases
+            </sort-link>
           </th>
           <th scope="col" style="width: 11.5rem">
-            <sort-link name="newCasesThisWeek">Cases this week</sort-link>
+            <sort-link name="newCasesThisWeek" title="Sort by Cases this week">
+              Cases this week
+            </sort-link>
           </th>
           <th scope="col" style="width: 9.5rem">
-            <sort-link name="newCasesToday">Cases today</sort-link>
+            <sort-link name="newCasesToday" title="Sort by Cases today">
+              Cases today
+            </sort-link>
           </th>
           <th scope="col">Suburb(s) in the postcode</th>
         </tr>
