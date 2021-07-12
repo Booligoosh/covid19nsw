@@ -152,12 +152,10 @@ export default {
 }
 
 .landscape-tip-text {
-  display: none;
   color: red;
-}
+  display: none;
 
-@media screen and (max-width: 555px) {
-  .landscape-tip-text {
+  @media screen and (max-width: 492px) {
     display: block;
   }
 }
