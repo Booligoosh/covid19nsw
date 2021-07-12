@@ -50,6 +50,12 @@
       :dataSets="chartData"
       :valuesOverPoints="chartNumDays < allTimeDays"
       :tooltipOptions="{ formatTooltipY: n => n }"
+      :lineOptions="{ hideDots: isAllTimeMode ? 1 : 0 }"
+      :axisOptions="{
+        xIsSeries: true,
+        xAxisMode: isAllTimeMode ? 'tick' : 'span'
+      }"
+      :key="isAllTimeMode"
     >
     </vue-frappe>
     <p class="chart-time-period-changer">
@@ -77,7 +83,7 @@
       </button>
       <button
         @click="chartNumDays = allTimeDays"
-        :class="{ active: chartNumDays === allTimeDays }"
+        :class="{ active: isAllTimeMode }"
       >
         All time
       </button>
@@ -215,6 +221,9 @@ export default {
         const startDate = earliestDate.subtract(1, "day");
         return dayjs().diff(startDate, "day");
       }
+    },
+    isAllTimeMode() {
+      return this.chartNumDays === this.allTimeDays;
     }
   },
   methods: {
