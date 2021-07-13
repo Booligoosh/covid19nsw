@@ -33,6 +33,10 @@ const routes = [
   },
   {
     path: "/locations",
+    redirect: "/alerts",
+  },
+  {
+    path: "/alerts",
     name: "CaseLocations",
     component: () =>
       import(

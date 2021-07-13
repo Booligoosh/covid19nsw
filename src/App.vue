@@ -22,8 +22,8 @@
       </div>
       <nav class="nav-links">
         <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
-        <router-link to="/locations">
-          Locations
+        <router-link :to="{ name: 'CaseLocations' }">
+          Alerts
           <!-- <span class="beta"
           ><span class="bracket">(</span>beta<span class="bracket"
             >)</span
