@@ -416,6 +416,10 @@ $top-grid-breakpoint: 480px;
 }
 .chart-config {
   margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
 
   &-row {
     button {
