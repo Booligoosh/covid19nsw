@@ -11,7 +11,7 @@
     Loading&hellip;
   </div>
   <div class="all-page" v-else>
-    <ExplainerText :is-above-data="true" />
+    <ExplainerText />
     <h1 class="table-title">COVID-19 cases by postcode</h1>
     <div class="table-subtitle">
       Data as of {{ lastUpdatedString }}. Postcodes with 0 cases are not shown.

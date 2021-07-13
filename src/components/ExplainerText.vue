@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'explainer-text': true, 'is-above-data': isAboveData }">
+  <div class="explainer-text">
     <p>
       This site was built by
       <a href="https://ethan.link" target="_blank">Ethan</a> and is not
@@ -15,17 +15,6 @@
     </p>
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    isAboveData: {
-      type: Boolean,
-      default: false,
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .explainer-text {

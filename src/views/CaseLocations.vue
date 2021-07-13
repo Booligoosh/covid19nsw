@@ -11,7 +11,7 @@
   <div class="case-locations-page" v-else>
     <div class="case-locations">
       <div class="case-locations-gps-box">
-        <ExplainerText :isAboveData="true" />
+        <ExplainerText />
         <p v-if="!hasLocationPermission">
           Please allow access to your location so we can show your distance from
           case locations and sort by how far away they are.
