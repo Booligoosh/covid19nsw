@@ -2,7 +2,13 @@
   <div id="app">
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
-      <img src="@/assets/logo.svg" class="nav-logo" title="COVID19NSW" />
+      <img
+        src="@/assets/logo.svg"
+        class="nav-logo"
+        title="COVID19NSW"
+        width="450"
+        height="450"
+      />
       <div>
         <div class="nav-title">COVID-19 NSW</div>
         <nav class="nav-links">
@@ -122,6 +128,7 @@ body,
     align-items: center;
 
     &-logo {
+      width: auto;
       height: 2.5rem;
       vertical-align: middle;
       margin-right: 0px;
