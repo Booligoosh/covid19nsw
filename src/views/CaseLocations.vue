@@ -218,7 +218,7 @@ export default {
 
   &-gps-box {
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
     border-bottom: 1px solid hsl(0, 0%, 95%);
 
     button,
@@ -245,7 +245,7 @@ export default {
   }
 
   &-location {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     border: 1px solid hsl(0, 0%, 90%);
     border-radius: 10px;
