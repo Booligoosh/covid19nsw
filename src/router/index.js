@@ -1,14 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "AllPostcodes",
+    component: () =>
+      import(
+        /* webpackChunkName: "allPostcodes" */ "../views/AllPostcodes.vue"
+      ),
   },
   {
     path: "/postcode/:postcode(2[0-9][0-9][0-9])",
@@ -27,11 +29,7 @@ const routes = [
   },
   {
     path: "/all",
-    name: "AllPostcodes",
-    component: () =>
-      import(
-        /* webpackChunkName: "allPostcodes" */ "../views/AllPostcodes.vue"
-      ),
+    redirect: "/",
   },
   {
     path: "/locations",

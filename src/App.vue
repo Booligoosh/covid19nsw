@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">🏠</router-link>
-      |
-      <router-link to="/all">All postcodes</router-link>
+      <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
       |
       <router-link to="/locations">
         Case locations
