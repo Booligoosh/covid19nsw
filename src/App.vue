@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
+      <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
+      <img src="@/assets/logo.svg" class="logo" title="COVID19NSW" />
       <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
       |
       <router-link to="/locations">
@@ -111,6 +113,14 @@ body,
   }
   #nav {
     padding-bottom: 0;
+
+    .logo {
+      height: 2.5rem;
+      vertical-align: middle;
+      margin-right: 0px;
+      margin-right: 0.5rem;
+    }
+
     a {
       font-weight: bold;
       color: #2c3e50;
@@ -123,7 +133,6 @@ body,
     }
   }
   .page {
-    padding-top: 2rem;
     > :first-child,
     > :first-child > :first-child {
       margin-top: 0;
