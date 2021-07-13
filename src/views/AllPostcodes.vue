@@ -19,9 +19,6 @@
         }}<span class="full-stop">.</span></span
       >
     </p>
-    <p class="landscape-tip-text">
-      ⚠ Please put your device in landscape mode!
-    </p>
     <br />
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
@@ -151,15 +148,6 @@ $compact-breakpoint: 492px;
 }
 .all-page-error {
   color: red;
-}
-
-.landscape-tip-text {
-  color: red;
-  display: none;
-
-  @media screen and (max-width: 405px) {
-    display: block;
-  }
 }
 
 .last-updated-text {
