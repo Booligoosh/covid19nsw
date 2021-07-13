@@ -10,25 +10,20 @@
   </div>
   <div class="case-locations-page" v-else>
     <div class="case-locations">
-      <div class="case-locations-gps-box">
-        <p v-if="!hasLocationPermission">
+      <div class="case-locations-gps-box" v-if="!hasLocationPermission">
+        <p>
           Please allow access to your location so we can show your distance from
           case locations and sort by how far away they are.
           <em>Your location details will never leave your device.</em>
         </p>
-        <button v-if="!hasLocationPermission" @click="getLocation">
-          Allow location access
-        </button>
-        <p v-if="!hasLocationPermission">
-          Or, choose your suburb below for approximate locations:
-        </p>
+        <button @click="getLocation">Allow location access</button>
+        <p>Or, choose your suburb below for approximate locations:</p>
         <input
-          v-if="!hasLocationPermission"
           list="suburbs-datalist"
           placeholder="Start typing your suburb name"
           v-model="suburbNameInput"
         />
-        <datalist v-if="!hasLocationPermission" id="suburbs-datalist">
+        <datalist id="suburbs-datalist">
           <option v-for="suburbName of suburbNames" :key="suburbName">
             {{ suburbName }}
           </option>
