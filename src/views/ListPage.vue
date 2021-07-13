@@ -91,7 +91,7 @@
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 export default {
-  name: "AllPostcodes",
+  name: "ListPage",
   data() {
     return {
       postcodeInputValue: "",

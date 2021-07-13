@@ -6,11 +6,9 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "AllPostcodes",
+    name: "ListPage",
     component: () =>
-      import(
-        /* webpackChunkName: "allPostcodes" */ "../views/AllPostcodes.vue"
-      ),
+      import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
   },
   {
     path: "/postcode/:postcode(2[0-9][0-9][0-9])",

@@ -10,7 +10,7 @@
           width="450"
           height="450"
         />
-        <div class="nav-logo-title" :to="{ name: 'AllPostcodes' }">
+        <div class="nav-logo-title" :to="{ name: 'ListPage' }">
           COVID-19 NSW
           <router-link
             :to="{ name: 'About' }"
@@ -21,7 +21,7 @@
         </div>
       </div>
       <nav class="nav-links">
-        <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
+        <router-link :to="{ name: 'ListPage' }">Postcodes</router-link>
         <router-link :to="{ name: 'AlertsPage' }">
           Alerts
           <!-- <span class="beta"
