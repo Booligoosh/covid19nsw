@@ -218,12 +218,12 @@ $table-title-breakpoint: 460px;
       border-right: none;
       border-radius: 10px 0 0 10px;
       min-width: 4em;
+      width: 257px; // Firefox default
 
       // Hide number input arrows, see:
       // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
-      // For Firefox
-      -moz-appearance: textfield;
-      // For Chrome, Safari, Edge, Opera
+      -moz-appearance: textfield; // For Firefox
+      // For Chrome, Safari, Edge, Opera:
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
         -webkit-appearance: none;
