@@ -164,11 +164,12 @@ export default {
   },
   data() {
     let chartNumDays;
-    if (window.innerWidth < 700) {
+    if (window.innerWidth < 480) {
+      // Same as $top-grid-breakpoint
       chartNumDays = 7;
-    } else if (window.innerWidth < 1000) {
+    } else if (window.innerWidth < 650) {
       chartNumDays = 14;
-    } else if (window.innerWidth < 1284) {
+    } else if (window.innerWidth < 800) {
       chartNumDays = 21;
     } else {
       chartNumDays = 28;
