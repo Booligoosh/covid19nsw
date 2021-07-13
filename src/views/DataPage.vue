@@ -432,6 +432,10 @@ $top-grid-breakpoint: 480px;
       margin-bottom: 0.5rem;
       cursor: pointer;
 
+      &:last-child {
+        margin-right: 0;
+      }
+
       &:hover,
       &:focus {
         background: #ddd;
