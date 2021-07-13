@@ -172,17 +172,27 @@ $compact-breakpoint: 492px;
   }
 }
 
+$table-title-breakpoint: 460px;
 .table-title {
   margin-bottom: 0;
   margin-top: 2rem;
   text-align: center;
   font-size: 1.8rem;
+
+  @media screen and (max-width: $table-title-breakpoint) {
+    font-size: 1.4rem;
+  }
 }
 .table-subtitle {
   margin-top: 0.1rem;
   margin-bottom: 2rem;
   text-align: center;
   opacity: 0.8;
+
+  @media screen and (max-width: $table-title-breakpoint) {
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+  }
 }
 
 table {
