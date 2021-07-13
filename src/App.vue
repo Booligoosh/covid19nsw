@@ -4,7 +4,7 @@
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <img src="@/assets/logo.svg" class="nav-logo" title="COVID19NSW" />
       <div>
-        <div class="nav-title">COVID19NSW</div>
+        <div class="nav-title">COVID-19 NSW</div>
         <nav class="nav-links">
           <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
           &bull;
