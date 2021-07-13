@@ -2,33 +2,35 @@
   <div id="app">
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
-      <router-link :to="{ name: 'AllPostcodes' }">
+      <div class="nav-logo">
         <img
           src="@/assets/logo.svg"
-          class="nav-logo"
+          class="nav-logo-img"
           title="COVID-19 NSW"
           width="450"
           height="450"
         />
-      </router-link>
-      <div>
-        <router-link class="nav-title" :to="{ name: 'AllPostcodes' }">
+        <div class="nav-logo-title" :to="{ name: 'AllPostcodes' }">
           COVID-19 NSW
-        </router-link>
-        <nav class="nav-links">
-          <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
-          &bull;
-          <router-link to="/locations">
-            Case locations
-            <!-- <span class="beta"
+          <router-link
+            :to="{ name: 'About' }"
+            class="nav-logo-title-help"
+            title="About this site"
+            >?</router-link
+          >
+        </div>
+      </div>
+      <nav class="nav-links">
+        <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
+        <router-link to="/locations">
+          Locations
+          <!-- <span class="beta"
           ><span class="bracket">(</span>beta<span class="bracket"
             >)</span
           ></span
         > -->
-          </router-link>
-          <!-- | <router-link to="/about">About</router-link> -->
-        </nav>
-      </div>
+        </router-link>
+      </nav>
     </div>
     <div class="page-wrapper">
       <router-view class="page" />
@@ -128,36 +130,83 @@ body,
   }
   .nav {
     padding-bottom: 0;
-    display: flex;
-    align-items: center;
 
     &-logo {
-      width: auto;
-      height: 2.5rem;
-      vertical-align: middle;
-      margin-right: 0px;
-      margin-right: 0.5rem;
-    }
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    &-title {
-      font-weight: bold;
-      color: inherit;
-      text-decoration: none;
+      &-img {
+        width: auto;
+        height: 2.5rem;
+        vertical-align: middle;
+        margin-right: 0px;
+        margin-right: 0.5rem;
+      }
+      &-title {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+
+        &-help {
+          width: 1.3em;
+          height: 1.3em;
+          border-radius: 50%;
+          background: hsl(0, 0%, 60%);
+          color: white;
+          font-size: 0.8rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-left: 0.6rem;
+          text-decoration: none;
+
+          &:hover {
+            background: hsl(0, 0%, 50%);
+          }
+          &:active {
+            background: hsl(0, 0%, 45%);
+          }
+        }
+      }
     }
 
     &-links {
       // display: none;
       font-size: 0.9rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 0.5rem;
+      width: max-content;
+      margin: 0 auto;
+      margin-top: 1rem;
+
+      @media screen and (max-width: 700px) {
+        width: 100%;
+      }
 
       a {
-        // font-weight: bold;
-        color: #2c3e50;
-        opacity: 0.75;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: inherit;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        background: hsl(0, 0%, 97%);
+        border-radius: 7px;
+        border: 1px solid hsl(0, 0%, 80%);
+        margin: 0 auto;
+        font-size: 0.9rem;
+
+        &:hover {
+          background: hsl(0, 0%, 96%);
+        }
 
         &.router-link-exact-active {
-          opacity: 1;
+          background: hsl(0, 0%, 92%);
         }
-        text-decoration: none;
       }
     }
   }
