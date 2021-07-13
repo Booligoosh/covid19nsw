@@ -24,7 +24,7 @@
       <thead>
         <tr>
           <th scope="col">
-            <sort-link name="postcodeNumber" title="Sort by Postcode">
+            <sort-link name="postcodeNumberNeg" title="Sort by Postcode">
               Postcode
             </sort-link>
           </th>
@@ -116,6 +116,8 @@ export default {
       // Return postcodes using precalculated values
       return this.$store.getters.postcodes.map((postcodeNumber) => ({
         postcodeNumber,
+        // Negative version of postcode so default desc cases sort === asc postcodes sort
+        postcodeNumberNeg: postcodeNumber * -1,
         totalCases: totalCases[postcodeNumber] || 0,
         newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
         newCasesToday: newCasesToday[postcodeNumber] || 0,
