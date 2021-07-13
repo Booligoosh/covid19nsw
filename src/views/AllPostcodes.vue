@@ -247,3 +247,11 @@ table {
   }
 }
 </style>
+
+<style lang="scss">
+// Must be outside of scoped styles as the span is
+// within the table component rather than this one.
+table.table th a > span {
+  font-size: 0.75em;
+}
+</style>
