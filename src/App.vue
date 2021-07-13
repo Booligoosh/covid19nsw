@@ -1,19 +1,24 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
-      <img src="@/assets/logo.svg" class="logo" title="COVID19NSW" />
-      <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
-      |
-      <router-link to="/locations">
-        Case locations
-        <!-- <span class="beta"
+      <img src="@/assets/logo.svg" class="nav-logo" title="COVID19NSW" />
+      <div>
+        <div class="nav-title">COVID19NSW</div>
+        <nav class="nav-links">
+          <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
+          &bull;
+          <router-link to="/locations">
+            Case locations
+            <!-- <span class="beta"
           ><span class="bracket">(</span>beta<span class="bracket"
             >)</span
           ></span
         > -->
-      </router-link>
-      <!-- | <router-link to="/about">About</router-link> -->
+          </router-link>
+          <!-- | <router-link to="/about">About</router-link> -->
+        </nav>
+      </div>
     </div>
     <div class="page-wrapper">
       <router-view class="page" />
@@ -104,25 +109,36 @@ body,
     flex-grow: 1;
   }
 
-  #nav,
+  .nav,
   .page {
     padding: 1.5rem;
     width: 1400px;
     max-width: 100%;
     margin: 0 auto;
   }
-  #nav {
+  .nav {
     padding-bottom: 0;
+    display: flex;
+    align-items: center;
 
-    .logo {
+    &-logo {
       height: 2.5rem;
       vertical-align: middle;
       margin-right: 0px;
       margin-right: 0.5rem;
     }
 
-    a {
+    &-title {
       font-weight: bold;
+    }
+
+    &-links {
+      // display: none;
+      font-size: 0.9rem;
+    }
+
+    a {
+      // font-weight: bold;
       color: #2c3e50;
       opacity: 0.75;
 
