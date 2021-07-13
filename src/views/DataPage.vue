@@ -273,7 +273,6 @@ export default {
 
       // Interate through each date
       this.rawDates.forEach((date, dateIndex) => {
-        console.log(dateIndex);
         // Iterate through the sources corresponding to each case
         caseSources.forEach((source, i) => {
           if (caseRawDates[i] <= date) values[source][dateIndex]++;
