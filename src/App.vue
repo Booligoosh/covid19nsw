@@ -22,7 +22,7 @@
       </div>
       <nav class="nav-links">
         <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
-        <router-link :to="{ name: 'CaseLocations' }">
+        <router-link :to="{ name: 'AlertsPage' }">
           Alerts
           <!-- <span class="beta"
           ><span class="bracket">(</span>beta<span class="bracket"

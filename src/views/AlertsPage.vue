@@ -77,7 +77,7 @@ import getDistance from "geolib/es/getDistance";
 import latLongForSuburbs from "../data/latLongForSuburbs.json";
 
 export default {
-  name: "CaseLocations",
+  name: "AlertsPage",
   data() {
     return {
       gpsLatitude: null,

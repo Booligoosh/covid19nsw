@@ -37,11 +37,9 @@ const routes = [
   },
   {
     path: "/alerts",
-    name: "CaseLocations",
+    name: "AlertsPage",
     component: () =>
-      import(
-        /* webpackChunkName: "caseLocations" */ "../views/CaseLocations.vue"
-      ),
+      import(/* webpackChunkName: "alertsPage" */ "../views/AlertsPage.vue"),
   },
   {
     path: "/about",
