@@ -14,7 +14,8 @@
     <ExplainerText />
     <h1 class="table-title">COVID-19 cases by postcode</h1>
     <div class="table-subtitle">
-      Data as of {{ lastUpdatedString }}. Postcodes with 0 cases are not shown.
+      Data as of <mark>{{ lastUpdatedString }}</mark
+      >. Postcodes with 0 cases are not shown.
     </div>
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
@@ -192,6 +193,11 @@ $table-title-breakpoint: 460px;
   @media screen and (max-width: $table-title-breakpoint) {
     font-size: 0.95rem;
     margin-top: 0.3rem;
+  }
+
+  mark {
+    font-weight: 500;
+    background: hsl(0, 0%, 90%);
   }
 }
 
