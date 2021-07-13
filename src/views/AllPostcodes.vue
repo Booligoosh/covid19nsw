@@ -141,6 +141,10 @@ export default {
 <style lang="scss" scoped>
 $compact-breakpoint: 492px;
 
+.all-page {
+  width: 980px !important;
+}
+
 .all-page-loading,
 .all-page-error {
   flex-grow: 1;
@@ -180,7 +184,6 @@ $compact-breakpoint: 492px;
 
 table {
   width: 100%;
-  max-width: 900px;
   margin: 0 auto;
   border-top: 1px solid;
   border-left: 1px solid;
