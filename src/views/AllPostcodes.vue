@@ -193,6 +193,14 @@ table {
 
   tbody tr {
     cursor: pointer;
+
+    &:hover {
+      background: hsl(0, 0%, 98%);
+    }
+
+    &:active {
+      background: hsl(0, 0%, 97%);
+    }
   }
 
   th {
