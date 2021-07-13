@@ -1,14 +1,12 @@
 <template>
   <div :class="{ 'is-above-data': isAboveData }">
     <p>
-      This site uses official data provided by NSW Health, which is fetched
-      fresh every time you load this page.
-    </p>
-    <p>
-      You can view and download the raw data at
+      This site uses the
       <a href="https://data.nsw.gov.au/nsw-covid-19-data" target="_blank"
-        >data.nsw.gov.au</a
-      >.
+        >official data</a
+      >
+      provided by NSW Health, which is fetched fresh every time you load this
+      page.
     </p>
     <p>
       This site was built by
