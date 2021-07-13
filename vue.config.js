@@ -4,6 +4,8 @@ module.exports = {
     manifestOptions: {
       short_name: "COVID-19 Data",
     },
+    themeColor: "#FFFFFF",
+    msTileColor: "#FFFFFF",
     iconPaths: {
       favicon32: null,
       favicon16: null,
