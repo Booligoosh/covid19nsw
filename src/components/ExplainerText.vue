@@ -21,7 +21,7 @@
   display: block;
   padding: 1rem;
   background: hsl(0, 0%, 97%);
-  border-radius: 5px;
+  border-radius: 7px;
   border: 1px solid hsl(0, 0%, 80%);
   margin: 0 auto;
   font-size: 0.9rem;

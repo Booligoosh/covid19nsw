@@ -12,6 +12,21 @@
   </div>
   <div class="all-page" v-else>
     <ExplainerText />
+    <div class="chooser">
+      <h2 class="chooser-title">See data for your postcode&hellip;</h2>
+      <form @submit.prevent="formSubmitHandler" class="chooser-form">
+        <input
+          v-model="postcodeInputValue"
+          placeholder="2000"
+          type="number"
+          min="2000"
+          max="2999"
+          autofocus
+          required
+        />
+        <button>Go →</button>
+      </form>
+    </div>
     <h1 class="table-title">COVID-19 cases by postcode</h1>
     <div class="table-subtitle">
       Data as of <mark>{{ lastUpdatedString }}</mark
@@ -82,6 +97,11 @@ export default {
   components: {
     ExplainerText,
   },
+  data() {
+    return {
+      postcodeInputValue: "",
+    };
+  },
   computed: {
     postcodeRows() {
       // Initialise objects
@@ -126,6 +146,12 @@ export default {
     },
   },
   methods: {
+    formSubmitHandler() {
+      this.$router.push({
+        name: "PostcodePage",
+        params: { postcode: this.postcodeInputValue },
+      });
+    },
     suburbsSeeMoreClickHandler(event) {
       event.preventDefault();
       event.target.parentElement.classList.add("show-full");
@@ -136,6 +162,7 @@ export default {
 
 <style lang="scss" scoped>
 $compact-breakpoint: 492px;
+$table-title-breakpoint: 460px;
 
 .all-page {
   width: 948px !important;
@@ -152,8 +179,94 @@ $compact-breakpoint: 492px;
 .all-page-error {
   color: red;
 }
+.chooser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: 7px;
 
-$table-title-breakpoint: 460px;
+  &-title {
+    margin: 0;
+    font-weight: 500;
+    text-align: center;
+    font-size: 1.3rem;
+
+    @media screen and (max-width: $table-title-breakpoint) {
+      // Shrinks font-size by ~77%, about the
+      // same as the table title font size
+      font-size: 1rem;
+    }
+  }
+
+  &-form {
+    opacity: 0.9;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+
+    input {
+      font: inherit;
+      color: inherit;
+      background: transparent;
+      padding: 0.25em;
+      border: 1px solid hsl(0, 0%, 70%);
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      min-width: 4em;
+
+      // Hide number input arrows, see:
+      // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
+      // For Firefox
+      -moz-appearance: textfield;
+      // For Chrome, Safari, Edge, Opera
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &::placeholder {
+        color: hsl(0, 0%, 70%);
+        opacity: 1;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #aaa;
+      }
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: none;
+      background: #eee;
+      font-size: 0.9em;
+      padding: 0.5rem 1rem;
+      border-radius: 5rem;
+      cursor: pointer;
+      border: 1px solid hsl(0, 0%, 70%);
+      border-radius: 0 10px 10px 0;
+      flex-shrink: 0;
+
+      &:hover,
+      &:focus {
+        background: #ddd;
+        outline: none;
+      }
+
+      &:active {
+        background: #ccc;
+      }
+    }
+  }
+}
+
 .table-title {
   margin-bottom: 0;
   margin-top: 2rem;
