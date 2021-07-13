@@ -12,15 +12,10 @@
   </div>
   <div class="all-page" v-else>
     <ExplainerText :is-above-data="true" />
-    <p>
-      Postcodes with 0 cases are not shown.
-      <span class="last-updated-text"
-        >Data as of {{ lastUpdatedString
-        }}<span class="full-stop">.</span></span
-      >
-    </p>
-    <br />
     <h1 class="table-title">COVID-19 cases by postcode</h1>
+    <div class="table-subtitle">
+      Data as of {{ lastUpdatedString }}. Postcodes with 0 cases are not shown.
+    </div>
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
         <tr>
@@ -178,8 +173,16 @@ $compact-breakpoint: 492px;
 }
 
 .table-title {
+  margin-bottom: 0;
+  margin-top: 2rem;
   text-align: center;
   font-size: 1.8rem;
+}
+.table-subtitle {
+  margin-top: 0.1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  opacity: 0.8;
 }
 
 table {
