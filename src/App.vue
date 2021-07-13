@@ -106,7 +106,7 @@ body,
 
   #nav,
   .page {
-    padding: calc(2rem + 8px);
+    padding: 1.5rem;
     width: 1400px;
     max-width: 100%;
     margin: 0 auto;

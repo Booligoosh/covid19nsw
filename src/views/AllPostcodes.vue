@@ -137,7 +137,7 @@ export default {
 $compact-breakpoint: 492px;
 
 .all-page {
-  width: 980px !important;
+  width: 948px !important;
 }
 
 .all-page-loading,
@@ -193,8 +193,8 @@ table {
   border-spacing: 0;
 
   @media screen and (max-width: $compact-breakpoint) {
-    margin-left: calc(-2rem - 8px);
-    width: calc(100% + 4rem + 16px);
+    margin-left: -1.5rem;
+    width: calc(100% + 3rem);
   }
 
   tbody tr {
