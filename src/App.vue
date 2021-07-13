@@ -13,7 +13,7 @@
         <div class="nav-logo-title" :to="{ name: 'ListPage' }">
           COVID-19 NSW
           <router-link
-            :to="{ name: 'About' }"
+            :to="{ name: 'AboutPage' }"
             class="nav-logo-title-help"
             title="About this site"
             >?</router-link
