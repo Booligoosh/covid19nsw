@@ -4,6 +4,13 @@ module.exports = {
     manifestOptions: {
       short_name: "COVID-19 Data",
     },
+    iconPaths: {
+      favicon32: null,
+      favicon16: null,
+      appleTouchIcon: "img/icons/apple-touch-icon-180x180.png",
+      maskIcon: null,
+      msTileImage: null,
+    },
     workboxOptions: {
       exclude: [
         "_redirects",
