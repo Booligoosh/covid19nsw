@@ -215,7 +215,11 @@ table {
       text-decoration: none;
       padding: 1px 0;
 
-      display: flex;
+      // Use a grid layout so the space for the sort arrow is preserved even when
+      // it's not there, preventing columns resizing when sorting is changed.
+      display: grid;
+      // 13px for size of sort arrow
+      grid-template-columns: auto 13px;
       justify-content: space-between;
       align-items: center;
     }
