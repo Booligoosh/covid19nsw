@@ -323,7 +323,7 @@ table {
     text-align: left;
     position: sticky;
     top: 0;
-    background: #eee;
+    background: hsl(0, 0%, 95%);
     z-index: 1;
 
     a {
