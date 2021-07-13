@@ -292,13 +292,17 @@ $table-title-breakpoint: 460px;
 table {
   width: 100%;
   margin: 0 auto;
-  border-top: 1px solid;
-  border-left: 1px solid;
+  border: 1px solid;
   border-spacing: 0;
+  border-radius: 7px;
+  overflow: hidden;
 
   @media screen and (max-width: $compact-breakpoint) {
     margin-left: -1.5rem;
     width: calc(100% + 3rem);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 
   tbody tr {
@@ -337,12 +341,22 @@ table {
 
   th,
   td {
-    border-right: 1px solid;
-    border-bottom: 1px solid;
     padding: 0.5rem 1rem;
+
+    &:not(:last-child) {
+      border-right: 1px solid;
+    }
 
     @media screen and (max-width: $compact-breakpoint) {
       padding: 0.4rem;
+    }
+  }
+
+  thead tr,
+  tbody tr:not(:last-child) {
+    th,
+    td {
+      border-bottom: 1px solid;
     }
   }
 
