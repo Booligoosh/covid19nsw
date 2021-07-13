@@ -11,7 +11,6 @@
   <div class="case-locations-page" v-else>
     <div class="case-locations">
       <div class="case-locations-gps-box">
-        <ExplainerText />
         <p v-if="!hasLocationPermission">
           Please allow access to your location so we can show your distance from
           case locations and sort by how far away they are.
@@ -79,15 +78,11 @@
 </template>
 
 <script>
-import ExplainerText from "../components/ExplainerText.vue";
 import getDistance from "geolib/es/getDistance";
 import latLongForSuburbs from "../data/latLongForSuburbs.json";
 
 export default {
   name: "CaseLocations",
-  components: {
-    ExplainerText,
-  },
   data() {
     return {
       gpsLatitude: null,

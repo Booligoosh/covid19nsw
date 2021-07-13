@@ -117,7 +117,6 @@
       </div>
     </div>
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
-    <ExplainerText />
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCases, null, 2)
     }}</pre> -->
@@ -127,7 +126,6 @@
 
 <script>
 import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
-import ExplainerText from "@/components/ExplainerText.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
@@ -141,7 +139,6 @@ export default {
   name: "DataPage",
   components: {
     DataPageMetadataChanger,
-    ExplainerText,
     PageNotFound,
   },
   created() {

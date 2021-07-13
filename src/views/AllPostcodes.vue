@@ -11,7 +11,6 @@
     Loading&hellip;
   </div>
   <div class="all-page" v-else>
-    <ExplainerText />
     <div class="chooser">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <form @submit.prevent="formSubmitHandler" class="chooser-form">
@@ -89,14 +88,10 @@
 </template>
 
 <script>
-import ExplainerText from "@/components/ExplainerText.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 export default {
   name: "AllPostcodes",
-  components: {
-    ExplainerText,
-  },
   data() {
     return {
       postcodeInputValue: "",
