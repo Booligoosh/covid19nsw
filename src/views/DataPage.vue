@@ -187,7 +187,7 @@ export default {
       return Number(this.$route.params.postcode);
     },
     suburbsText() {
-      return suburbsForPostcode[this.postcodeNumber].join(", ");
+      return suburbsForPostcode[this.postcodeNumber]?.join(", ") || "Unknown";
     },
     councilName() {
       const oneCase = this.allCases[0] || {};
