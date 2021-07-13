@@ -5,7 +5,7 @@
       <img
         src="@/assets/logo.svg"
         class="nav-logo"
-        title="COVID19NSW"
+        title="COVID-19 NSW"
         width="450"
         height="450"
       />
