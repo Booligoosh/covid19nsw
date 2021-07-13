@@ -6,6 +6,10 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: "/postcodes",
+  },
+  {
+    path: "/postcodes",
     name: "PostcodesPage",
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
@@ -33,7 +37,7 @@ const routes = [
   },
   {
     path: "/all",
-    redirect: "/",
+    redirect: "/postcodes",
   },
   {
     path: "/locations",
