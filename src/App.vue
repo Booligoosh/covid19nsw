@@ -2,15 +2,19 @@
   <div id="app">
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
-      <img
-        src="@/assets/logo.svg"
-        class="nav-logo"
-        title="COVID-19 NSW"
-        width="450"
-        height="450"
-      />
+      <router-link :to="{ name: 'AllPostcodes' }">
+        <img
+          src="@/assets/logo.svg"
+          class="nav-logo"
+          title="COVID-19 NSW"
+          width="450"
+          height="450"
+        />
+      </router-link>
       <div>
-        <div class="nav-title">COVID-19 NSW</div>
+        <router-link class="nav-title" :to="{ name: 'AllPostcodes' }">
+          COVID-19 NSW
+        </router-link>
         <nav class="nav-links">
           <router-link :to="{ name: 'AllPostcodes' }">Postcodes</router-link>
           &bull;
@@ -137,22 +141,24 @@ body,
 
     &-title {
       font-weight: bold;
+      color: inherit;
+      text-decoration: none;
     }
 
     &-links {
       // display: none;
       font-size: 0.9rem;
-    }
 
-    a {
-      // font-weight: bold;
-      color: #2c3e50;
-      opacity: 0.75;
+      a {
+        // font-weight: bold;
+        color: #2c3e50;
+        opacity: 0.75;
 
-      &.router-link-exact-active {
-        opacity: 1;
+        &.router-link-exact-active {
+          opacity: 1;
+        }
+        text-decoration: none;
       }
-      text-decoration: none;
     }
   }
   .page {
