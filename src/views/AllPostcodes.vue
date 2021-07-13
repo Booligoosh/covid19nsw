@@ -153,26 +153,6 @@ $compact-breakpoint: 492px;
   color: red;
 }
 
-.last-updated-text {
-  float: right;
-  opacity: 0.6;
-
-  .full-stop {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 595px) {
-  .last-updated-text {
-    float: unset;
-    // opacity: 1;
-
-    .full-stop {
-      display: inline;
-    }
-  }
-}
-
 $table-title-breakpoint: 460px;
 .table-title {
   margin-bottom: 0;
