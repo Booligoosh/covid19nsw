@@ -116,7 +116,6 @@
         </button>
       </div>
     </div>
-    <hr />
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <ExplainerText />
     <!-- <pre style="text-align: left">{{
@@ -441,11 +440,6 @@ $top-grid-breakpoint: 480px;
       }
     }
   }
-}
-hr {
-  border-style: solid;
-  border-color: #ddd;
-  margin-top: -0.5rem;
 }
 .add-to-home-screen {
   font: inherit;

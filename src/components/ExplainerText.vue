@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'is-above-data': isAboveData }">
+  <div :class="{ 'explainer-text': true, 'is-above-data': isAboveData }">
     <p>
       This site was built by
       <a href="https://ethan.link" target="_blank">Ethan</a> and is not
@@ -28,7 +28,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.is-above-data:first-child > :first-child {
-  margin-top: 0;
+.explainer-text {
+  display: block;
+  padding: 1rem;
+  background: hsl(0, 0%, 97%);
+  border-radius: 5px;
+  border: 1px solid hsl(0, 0%, 80%);
+  margin: 0 auto;
+  font-size: 0.9rem;
+
+  :first-child {
+    margin-top: 0;
+  }
+  :last-child {
+    margin-bottom: 0;
+  }
 }
 </style>
