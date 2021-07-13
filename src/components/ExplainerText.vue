@@ -10,8 +10,8 @@
     </p>
     <p>
       This site was built by
-      <a href="https://twitter.com/Booligoosh" target="_blank">Ethan</a> and is
-      not affiliated with the NSW government.
+      <a href="https://ethan.link" target="_blank">Ethan</a> and is not
+      affiliated with the NSW government.
     </p>
   </div>
 </template>
