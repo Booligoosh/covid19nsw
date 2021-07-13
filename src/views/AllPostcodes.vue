@@ -20,6 +20,7 @@
       >
     </p>
     <br />
+    <h1 class="table-title">COVID-19 cases by postcode</h1>
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
         <tr>
@@ -30,17 +31,17 @@
           </th>
           <th scope="col" style="width: 9rem">
             <sort-link name="totalCases" title="Sort by Total cases">
-              Total cases
+              Total
             </sort-link>
           </th>
-          <th scope="col" style="width: 11.5rem">
+          <th scope="col" style="width: 9rem">
             <sort-link name="newCasesThisWeek" title="Sort by Cases this week">
-              Cases this week
+              This week
             </sort-link>
           </th>
-          <th scope="col" style="width: 9.5rem">
+          <th scope="col" style="width: 9rem">
             <sort-link name="newCasesToday" title="Sort by Cases today">
-              Cases today
+              Today
             </sort-link>
           </th>
         </tr>
@@ -170,6 +171,11 @@ $compact-breakpoint: 492px;
       display: inline;
     }
   }
+}
+
+.table-title {
+  text-align: center;
+  font-size: 1.8rem;
 }
 
 table {
