@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "ListPage",
+    name: "PostcodesPage",
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
   },
@@ -18,6 +18,12 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
+  },
+  {
+    path: "/councils",
+    name: "CouncilsPage",
+    component: () =>
+      import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
   },
   {
     path: "/council/:councilSlug",

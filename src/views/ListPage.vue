@@ -11,7 +11,7 @@
     Loading&hellip;
   </div>
   <div class="all-page" v-else>
-    <div class="chooser">
+    <div class="chooser" v-if="!councilMode">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <form @submit.prevent="formSubmitHandler" class="chooser-form">
         <input
@@ -26,16 +26,26 @@
         <button>Go →</button>
       </form>
     </div>
-    <h1 class="table-title">COVID-19 cases by postcode</h1>
+    <h1 class="table-title">
+      COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
+    </h1>
     <div class="table-subtitle">
       Data as of <mark>{{ lastUpdatedString }}</mark
-      >. Postcodes with 0 cases are not shown.
+      >. {{ councilMode ? "Councils" : "Postcodes" }} with 0 cases are not
+      shown.
     </div>
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
         <tr>
           <th scope="col">
-            <sort-link name="postcodeNumberNeg" title="Sort by Postcode">
+            <sort-link
+              v-if="councilMode"
+              name="councilName"
+              title="Sort by Council/LGA"
+            >
+              Council/LGA
+            </sort-link>
+            <sort-link v-else name="postcodeNumberNeg" title="Sort by Postcode">
               Postcode
             </sort-link>
           </th>
@@ -62,13 +72,29 @@
           :key="value.postcodeNumber"
           role="button"
           @click="
-            $router.push({
-              name: 'PostcodePage',
-              params: { postcode: value.postcodeNumber },
-            })
+            $router.push(
+              councilMode
+                ? {
+                    name: 'CouncilPage',
+                    params: { councilSlug: value.councilSlug },
+                  }
+                : {
+                    name: 'PostcodePage',
+                    params: { postcode: value.postcodeNumber },
+                  }
+            )
           "
         >
-          <td class="postcode-number">
+          <td class="council-name" v-if="councilMode">
+            <router-link
+              :to="{
+                name: 'CouncilPage',
+                params: { councilSlug: value.councilSlug },
+              }"
+              >{{ value.councilName }}</router-link
+            >
+          </td>
+          <td class="postcode-number" v-else>
             <router-link
               :to="{
                 name: 'PostcodePage',
@@ -98,6 +124,18 @@ export default {
     };
   },
   computed: {
+    councilMode() {
+      return (
+        this.$route.name === "CouncilsPage" ||
+        // This second line prevents a complex bug where, when clicking on the
+        // router-link, the @click handler on the <tr> fires before the router-link
+        // click is recorded, changing this.$route.name away from CouncilsPage to
+        // CouncilPage before the click. This means that without the line below,
+        // the router-link click would register after councilMode becomes false,
+        // meaning it wrongly navigates to the PostcodePage.
+        this.$route.name === "CouncilPage"
+      );
+    },
     postcodeRows() {
       // Initialise objects
       const totalCases = {};
@@ -110,31 +148,46 @@ export default {
         .subtract(7, "days")
         .format("YYYY-MM-DD");
 
+      const identifierKey = this.councilMode ? "councilName" : "postcode";
+
       // Iterate through each case
-      this.$store.state.cases.forEach(({ postcode, rawDate }) => {
-        // Add the case to its postcode's total cases
-        totalCases[postcode] = (totalCases[postcode] || 0) + 1;
-        // If the case is today, add it to its postcode's cases today & this week
-        if (rawDate === today) {
-          newCasesToday[postcode] = (newCasesToday[postcode] || 0) + 1;
-          newCasesThisWeek[postcode] = (newCasesThisWeek[postcode] || 0) + 1;
+      this.$store.state.cases.forEach((caseObj) => {
+        const identifier = caseObj[identifierKey];
+        // Add the case to its postcode/council's total cases
+        totalCases[identifier] = (totalCases[identifier] || 0) + 1;
+        // If the case is today, add it to its postcode/council's cases today & this week
+        if (caseObj.rawDate === today) {
+          newCasesToday[identifier] = (newCasesToday[identifier] || 0) + 1;
+          newCasesThisWeek[identifier] =
+            (newCasesThisWeek[identifier] || 0) + 1;
         }
-        // Otherwise if the case is this week, add it to its postcode's casesthis week
-        else if (rawDate > oneWeekAgo) {
-          newCasesThisWeek[postcode] = (newCasesThisWeek[postcode] || 0) + 1;
+        // Otherwise if the case is this week, add it to its postcode/council's cases this week
+        else if (caseObj.rawDate > oneWeekAgo) {
+          newCasesThisWeek[identifier] =
+            (newCasesThisWeek[identifier] || 0) + 1;
         }
       });
 
-      // Return postcodes using precalculated values
-      return this.$store.getters.postcodes.map((postcodeNumber) => ({
-        postcodeNumber,
-        // Negative version of postcode so default desc cases sort === asc postcodes sort
-        postcodeNumberNeg: postcodeNumber * -1,
-        totalCases: totalCases[postcodeNumber] || 0,
-        newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
-        newCasesToday: newCasesToday[postcodeNumber] || 0,
-        suburbs: suburbsForPostcode[postcodeNumber].join(", "),
-      }));
+      // Return postcodes/councils using precalculated values
+      if (this.councilMode) {
+        return this.$store.getters.councilNames.map((councilName) => ({
+          councilName,
+          councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
+          totalCases: totalCases[councilName] || 0,
+          newCasesThisWeek: newCasesThisWeek[councilName] || 0,
+          newCasesToday: newCasesToday[councilName] || 0,
+        }));
+      } else {
+        return this.$store.getters.postcodes.map((postcodeNumber) => ({
+          postcodeNumber,
+          // Negative version of postcode so default desc cases sort === asc postcodes sort
+          postcodeNumberNeg: postcodeNumber * -1,
+          totalCases: totalCases[postcodeNumber] || 0,
+          newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
+          newCasesToday: newCasesToday[postcodeNumber] || 0,
+          suburbs: suburbsForPostcode[postcodeNumber].join(", "),
+        }));
+      }
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
@@ -363,12 +416,14 @@ table {
   }
 
   td.value-number,
-  td.postcode-number {
+  td.postcode-number,
+  td.council-name {
     font-size: 1.5em;
     font-weight: 500;
   }
 
-  td.postcode-number {
+  td.postcode-number,
+  td.council-name {
     font-weight: 800;
 
     a {
@@ -381,6 +436,12 @@ table {
       margin-top: 0.2rem;
       opacity: 0.7;
       font-size: 0.9rem;
+    }
+  }
+
+  td.council-name {
+    @media screen and (max-width: 528px) {
+      font-size: 1.2rem;
     }
   }
 }

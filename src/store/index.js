@@ -29,6 +29,11 @@ const store = new Vuex.Store({
           (postcode >= 2921 && postcode <= 2999)
       );
     },
+    councilNames(state) {
+      return [...new Set(state.cases.map((state) => state.councilName))].filter(
+        (c) => !!c
+      );
+    },
   },
   mutations: {
     setCases(state, cases = []) {
@@ -86,9 +91,7 @@ const store = new Vuex.Store({
         commit("setCases", cases);
         commit(
           "setTemporalCoverageTo",
-          dayjs(metadataModified)
-            .startOf("day")
-            .subtract(1, "day")
+          dayjs(metadataModified).startOf("day").subtract(1, "day")
         );
         commit("setCaseLocations", caseLocations);
       } catch (err) {

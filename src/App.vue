@@ -10,7 +10,7 @@
           width="450"
           height="450"
         />
-        <div class="nav-logo-title" :to="{ name: 'ListPage' }">
+        <div class="nav-logo-title">
           COVID-19 NSW
           <router-link
             :to="{ name: 'AboutPage' }"
@@ -21,7 +21,8 @@
         </div>
       </div>
       <nav class="nav-links">
-        <router-link :to="{ name: 'ListPage' }">Postcodes</router-link>
+        <router-link :to="{ name: 'PostcodesPage' }">Postcodes</router-link>
+        <router-link :to="{ name: 'CouncilsPage' }">Councils</router-link>
         <router-link :to="{ name: 'AlertsPage' }">
           Alerts
           <!-- <span class="beta"
@@ -175,7 +176,7 @@ body,
       // display: none;
       font-size: 0.9rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       grid-gap: 0.5rem;
       width: max-content;
       margin: 0 auto;
