@@ -289,10 +289,12 @@ $table-title-breakpoint: 460px;
   }
 }
 
+$table-border-color: hsl(0, 0%, 50%);
+
 table {
   width: 100%;
   margin: 0 auto;
-  border: 1px solid;
+  border: 1px solid $table-border-color;
   border-spacing: 0;
   border-radius: 7px;
   overflow: hidden;
@@ -344,7 +346,7 @@ table {
     padding: 0.5rem 1rem;
 
     &:not(:last-child) {
-      border-right: 1px solid;
+      border-right: 1px solid $table-border-color;
     }
 
     @media screen and (max-width: $compact-breakpoint) {
@@ -356,7 +358,7 @@ table {
   tbody tr:not(:last-child) {
     th,
     td {
-      border-bottom: 1px solid;
+      border-bottom: 1px solid $table-border-color;
     }
   }
 
