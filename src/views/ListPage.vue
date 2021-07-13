@@ -50,8 +50,8 @@
             </sort-link>
           </th>
           <th scope="col" style="width: 9rem">
-            <sort-link name="totalCases" title="Sort by Total cases">
-              Total
+            <sort-link name="newCasesToday" title="Sort by Cases today">
+              Today
             </sort-link>
           </th>
           <th scope="col" style="width: 9rem">
@@ -60,8 +60,8 @@
             </sort-link>
           </th>
           <th scope="col" style="width: 9rem">
-            <sort-link name="newCasesToday" title="Sort by Cases today">
-              Today
+            <sort-link name="totalCases" title="Sort by Total cases">
+              Total
             </sort-link>
           </th>
         </tr>
@@ -104,9 +104,9 @@
             >
             <div class="suburbs">{{ value.suburbs }}</div>
           </td>
-          <td class="value-number">{{ value.totalCases }}</td>
-          <td class="value-number">{{ value.newCasesThisWeek }}</td>
           <td class="value-number">{{ value.newCasesToday }}</td>
+          <td class="value-number">{{ value.newCasesThisWeek }}</td>
+          <td class="value-number">{{ value.totalCases }}</td>
         </tr>
       </tbody>
     </sorted-table>
