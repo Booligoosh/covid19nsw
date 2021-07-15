@@ -44,10 +44,10 @@
           <button v-else disabled>✅ Location access granted</button>
         </div>
         <div v-if="locationType === 'postcode'">
-          <p>Enter your postcode below:</p>
           <PostcodePicker
             :value="postcode"
             :fullwidth="true"
+            :textPlaceholder="true"
             @submit="postcodeSubmitHandler"
           />
         </div>

@@ -2,7 +2,7 @@
   <form @submit.prevent="formSubmitHandler" class="postcode-picker">
     <input
       v-model="inputValue"
-      placeholder="2000"
+      :placeholder="textPlaceholder ? 'Enter a postcode' : '2000'"
       type="number"
       min="2000"
       max="2999"
@@ -24,6 +24,11 @@ export default {
       default: "",
     },
     fullwidth: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    textPlaceholder: {
       type: Boolean,
       required: false,
       default: false,
