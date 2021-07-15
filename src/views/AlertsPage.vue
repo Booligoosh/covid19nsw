@@ -10,15 +10,21 @@
   </div>
   <div class="case-locations-page" v-else>
     <div class="case-locations">
-      <div class="case-locations-gps-box" v-if="!hasLocationPermission">
+      <div class="case-locations-gps-box">
         <p>
           Please allow access to your location so we can show alerts closest to
           you.
-          <em>Your location details will never leave your device.</em>
+          <em>Your location details won&rsquo;t leave your device.</em>
         </p>
-        <button @click="getLocation">Allow location access</button>
-        <p>Or, enter your postcode below for an approximate location:</p>
+        <button v-if="!hasLocationPermission" @click="getLocation">
+          Allow location access
+        </button>
+        <button v-else disabled>✅ Location access granted</button>
+        <p v-if="!hasLocationPermission">
+          Or, enter your postcode below for an approximate location:
+        </p>
         <input
+          v-if="!hasLocationPermission"
           v-model="postcodeInput"
           placeholder="2000"
           type="number"
@@ -193,10 +199,7 @@ export default {
   margin-right: auto;
 
   &-gps-box {
-    margin: 0 -1.5rem;
-    padding: 0 1.5rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid hsl(0, 0%, 90%);
 
     button,
     p {
@@ -234,7 +237,7 @@ export default {
   &-location {
     margin: 0 -1.5rem;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid hsl(0, 0%, 90%);
+    border-top: 1px solid hsl(0, 0%, 90%);
 
     &-place {
       font-weight: 600;
