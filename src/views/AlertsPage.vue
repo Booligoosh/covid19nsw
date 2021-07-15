@@ -32,26 +32,29 @@
             Suburb
           </button> -->
         </div>
-        <div v-if="locationType === 'gps'">
+        <div v-if="locationType === 'gps' && !hasLocationPermission">
           <p>
             Please allow access to your location so we can show alerts closest
             to you.
             <em>Your location details won&rsquo;t leave your device.</em>
           </p>
-          <button v-if="!hasLocationPermission" @click="getLocation">
-            Allow location access
-          </button>
-          <button v-else disabled>✅ Location access granted</button>
+          <button @click="getLocation">Allow location access</button>
         </div>
         <div v-if="locationType === 'postcode'">
           <PostcodePicker
-            :value="postcode"
             :fullwidth="true"
             :textPlaceholder="true"
             @submit="postcodeSubmitHandler"
+            :key="postcode"
           />
         </div>
       </div>
+      <h1 class="case-locations-title" v-if="latitude && longitude">
+        Alerts near
+        {{
+          locationType === "gps" ? "your location" : `the postcode ${postcode}`
+        }}
+      </h1>
       <div
         class="case-locations-location"
         v-for="caseLocation of caseLocationRows"
@@ -259,8 +262,6 @@ export default {
   margin-right: auto;
 
   &-location-picker {
-    padding-bottom: 2rem;
-
     &-type-buttons {
       width: 100%;
       display: grid;
@@ -309,6 +310,14 @@ export default {
         font-weight: 600;
       }
     }
+  }
+
+  &-title {
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.3rem;
+    text-align: center;
   }
 
   &-location {
