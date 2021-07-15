@@ -30,7 +30,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
 
   h1 {
     font-size: 1.5rem;
