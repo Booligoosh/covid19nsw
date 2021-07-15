@@ -299,10 +299,6 @@ export default {
         &.active {
           background: hsl(0, 0%, 95%);
         }
-
-        &:active {
-          background: hsl(0, 0%, 94%);
-        }
       }
     }
 
