@@ -3,6 +3,7 @@
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-logo">
+        <div class="nav-logo-spacer left" />
         <img
           src="@/assets/logo.svg"
           class="nav-logo-img"
@@ -10,15 +11,11 @@
           width="450"
           height="450"
         />
-        <div class="nav-logo-title">
-          COVID-19 NSW
-          <router-link
-            :to="{ name: 'AboutPage' }"
-            class="nav-logo-title-help"
-            title="About this site"
-            >?</router-link
-          >
-        </div>
+        <div class="nav-logo-title">COVID-19 NSW</div>
+        <div class="nav-logo-spacer right" />
+        <router-link :to="{ name: 'AboutPage' }" class="nav-logo-about"
+          >About this site</router-link
+        >
       </div>
       <nav class="nav-links">
         <router-link :to="{ name: 'PostcodesPage' }">Postcodes</router-link>
@@ -122,6 +119,8 @@ body,
     flex-grow: 1;
   }
 
+  $about-width: 7rem;
+
   .nav,
   .page {
     padding: 1.5rem;
@@ -137,38 +136,35 @@ body,
       justify-content: center;
       align-items: center;
 
+      &-spacer {
+        flex-grow: 1;
+
+        &.left {
+          margin-left: $about-width;
+
+          @media screen and (max-width: 700px) {
+            display: none;
+          }
+        }
+      }
       &-img {
         width: auto;
         height: 2.5rem;
         vertical-align: middle;
-        margin-right: 0px;
         margin-right: 0.5rem;
       }
       &-title {
         font-weight: bold;
         display: flex;
         align-items: center;
-
-        &-help {
-          width: 1.3em;
-          height: 1.3em;
-          border-radius: 50%;
-          background: hsl(0, 0%, 60%);
-          color: white;
-          font-size: 0.8rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-left: 0.6rem;
-          text-decoration: none;
-
-          &:hover {
-            background: hsl(0, 0%, 50%);
-          }
-          &:active {
-            background: hsl(0, 0%, 45%);
-          }
-        }
+      }
+      &-about {
+        font-weight: normal;
+        font-size: 0.9rem;
+        color: inherit;
+        opacity: 0.6;
+        width: $about-width;
+        margin-left: auto;
       }
     }
 
