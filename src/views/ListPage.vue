@@ -31,8 +31,9 @@
     </h1>
     <div class="table-subtitle">
       Data as of <mark>{{ lastUpdatedString }}</mark
-      >. {{ councilMode ? "Councils" : "Postcodes" }} with 0 cases are not
-      shown.
+      >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
+      shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
+      more stats, click on column headers to sort.
     </div>
     <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
       <thead>
@@ -334,6 +335,12 @@ $table-title-breakpoint: 460px;
   @media screen and (max-width: $table-title-breakpoint) {
     font-size: 0.95rem;
     margin-top: 0.3rem;
+  }
+
+  br {
+    @media screen and (max-width: 500px) {
+      display: none;
+    }
   }
 
   mark {
