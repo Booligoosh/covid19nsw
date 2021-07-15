@@ -42,10 +42,11 @@
         </div>
         <div v-if="locationType === 'postcode'">
           <PostcodePicker
+            :key="postcode"
+            :autofocus="false"
             :fullwidth="true"
             :textPlaceholder="true"
             @submit="postcodeSubmitHandler"
-            :key="postcode"
           />
         </div>
       </div>

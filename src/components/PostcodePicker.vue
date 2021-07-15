@@ -6,7 +6,7 @@
       type="number"
       min="2000"
       max="2999"
-      autofocus
+      :autofocus="autofocus"
       required
       :class="{ fullwidth }"
     />
@@ -22,6 +22,11 @@ export default {
       type: String,
       required: false,
       default: "",
+    },
+    autofocus: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     fullwidth: {
       type: Boolean,
