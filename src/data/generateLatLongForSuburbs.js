@@ -9,4 +9,4 @@ array
 const final = JSON.stringify(obj);
 
 // console.log(final);
-require("fs").writeFileSync(__dirname + "/latLongForSuburbOnlyNSW.json", final);
+require("fs").writeFileSync(__dirname + "/latLongForSuburbs.json", final);

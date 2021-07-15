@@ -12,22 +12,19 @@
     <div class="case-locations">
       <div class="case-locations-gps-box" v-if="!hasLocationPermission">
         <p>
-          Please allow access to your location so we can show your distance from
-          case locations and sort by how far away they are.
+          Please allow access to your location so we can show alerts closest to
+          you.
           <em>Your location details will never leave your device.</em>
         </p>
         <button @click="getLocation">Allow location access</button>
-        <p>Or, choose your suburb below for approximate locations:</p>
+        <p>Or, enter your postcode below for an approximate location:</p>
         <input
-          list="suburbs-datalist"
-          placeholder="Start typing your suburb name"
-          v-model="suburbNameInput"
+          v-model="postcodeInput"
+          placeholder="2000"
+          type="number"
+          min="2000"
+          max="2999"
         />
-        <datalist id="suburbs-datalist">
-          <option v-for="suburbName of suburbNames" :key="suburbName">
-            {{ suburbName }}
-          </option>
-        </datalist>
       </div>
       <div
         class="case-locations-location"
@@ -76,7 +73,7 @@
 
 <script>
 import getDistance from "geolib/es/getDistance";
-import latLongForSuburbs from "../data/latLongForSuburbs.json";
+import latLongForPostcodes from "../data/latLongForPostcodes.json";
 
 export default {
   name: "AlertsPage",
@@ -85,7 +82,7 @@ export default {
       gpsLatitude: null,
       gpsLongitude: null,
       hasLocationPermission: false,
-      suburbNameInput: "",
+      postcodeInput: "",
     };
   },
   async created() {
@@ -99,28 +96,14 @@ export default {
     }
   },
   computed: {
-    suburbLatLong() {
-      // Check case-sensitively (fastest) first
-      let suburbLatLong = latLongForSuburbs[this.suburbNameInput] || null;
-      // Check case-insensitively as a backup for browsers that don't support datalist
-      if (!suburbLatLong)
-        suburbLatLong =
-          latLongForSuburbs[
-            this.suburbNames.find(
-              (n) => this.suburbNameInput.toLowerCase() === n.toLowerCase()
-            )
-          ] || null;
-
-      // Fall back to empty array (so checking an index of it never throws an error)
-      if (!suburbLatLong) suburbLatLong = [];
-      // Return the suburbLatLong in the format [latNum, longNum]
-      return suburbLatLong;
+    postcodeLatLong() {
+      return latLongForPostcodes[this.postcodeInput] || [];
     },
     latitude() {
-      return this.gpsLatitude || this.suburbLatLong[0] || null;
+      return this.gpsLatitude || this.postcodeLatLong[0] || null;
     },
     longitude() {
-      return this.gpsLongitude || this.suburbLatLong[1] || null;
+      return this.gpsLongitude || this.postcodeLatLong[1] || null;
     },
     caseLocationRows() {
       console.log("Calculating caseLocationRows");
@@ -152,7 +135,7 @@ export default {
         }
       );
 
-      if (this.hasLocationPermission || this.suburbLatLong.length > 0) {
+      if (this.hasLocationPermission || this.postcodeLatLong.length > 0) {
         return unsortedCaseLocations.sort((a, b) => a.distance - b.distance);
       } else {
         return unsortedCaseLocations;
@@ -160,9 +143,6 @@ export default {
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
-    },
-    suburbNames() {
-      return Object.keys(latLongForSuburbs);
     },
   },
   methods: {
@@ -244,6 +224,16 @@ export default {
       border-radius: 5px;
       border: 1px solid hsl(0, 0%, 75%);
       padding: 0.25rem;
+
+      // Hide number input arrows, see:
+      // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
+      -moz-appearance: textfield; // For Firefox
+      // For Chrome, Safari, Edge, Opera:
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
     }
   }
 
