@@ -14,6 +14,12 @@
         <a href="https://ethan.link" target="_blank">Ethan</a> and is not
         affiliated with the NSW government.
       </p>
+      <p>
+        It&rsquo;s also open source &mdash; you can see the source code
+        <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">
+          on GitHub.
+        </a>
+      </p>
     </div>
   </div>
 </template>
