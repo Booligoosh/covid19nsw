@@ -35,7 +35,9 @@
         :key="caseLocation.id"
       >
         <div class="case-locations-location-place">
-          {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
+          <span :title="caseLocation.Address">
+            {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
+          </span>
 
           <span
             class="case-locations-location-place-distance"
@@ -217,9 +219,10 @@ export default {
   margin-right: auto;
 
   &-gps-box {
-    margin-bottom: 2rem;
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid hsl(0, 0%, 95%);
+    border-bottom: 1px solid hsl(0, 0%, 90%);
 
     button,
     p {
@@ -245,14 +248,16 @@ export default {
   }
 
   &-location {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border: 1px solid hsl(0, 0%, 90%);
-    border-radius: 10px;
+    margin: 0 -1.5rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid hsl(0, 0%, 90%);
 
     &-place {
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
 
       &-distance {
         font-size: 0.8rem;
@@ -261,12 +266,14 @@ export default {
         background: hsl(0, 0%, 85%);
         border-radius: 5px;
         margin-left: 0.2rem;
+        flex-shrink: 0;
       }
     }
 
     &-date-time {
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
 
       &-connector {
         // opacity: .8;
@@ -275,12 +282,16 @@ export default {
     }
 
     &-address {
+      display: none;
       font-style: italic;
+      font-size: 0.9rem;
       opacity: 0.5;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
     }
 
     &-alert {
+      font-size: 0.9rem;
+
       &.alert-type-isolate {
         color: hsl(0, 100%, 38%);
       }
