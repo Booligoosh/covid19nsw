@@ -164,6 +164,7 @@ body,
         color: inherit;
         opacity: 0.6;
         width: $about-width;
+        text-align: right;
         margin-left: auto;
       }
     }
