@@ -106,11 +106,13 @@ export default {
       return this.gpsLongitude || this.postcodeLatLong[1] || null;
     },
     caseLocationRows() {
+      if (!this.latitude || !this.longitude) return [];
+
       console.log("Calculating caseLocationRows");
       console.log(this.latitude, this.longitude);
 
-      const unsortedCaseLocations = (this.$store.state.caseLocations || []).map(
-        (caseLocation) => {
+      return (this.$store.state.caseLocations || [])
+        .map((caseLocation) => {
           // Temporary workaround for incorrect Westfield Bondi Junction coordinates
           if (caseLocation.Venue === "Westfield Bondi Junction") {
             caseLocation.Lat = -33.892139;
@@ -119,27 +121,19 @@ export default {
 
           // Distance from current location in km
           caseLocation.distance =
-            this.latitude && this.longitude
-              ? getDistance(
-                  {
-                    latitude: this.latitude,
-                    longitude: this.longitude,
-                  },
-                  {
-                    latitude: caseLocation.Lat,
-                    longitude: caseLocation.Lon,
-                  }
-                ) / 1000
-              : null;
+            getDistance(
+              {
+                latitude: this.latitude,
+                longitude: this.longitude,
+              },
+              {
+                latitude: caseLocation.Lat,
+                longitude: caseLocation.Lon,
+              }
+            ) / 1000;
           return caseLocation;
-        }
-      );
-
-      if (this.hasLocationPermission || this.postcodeLatLong.length > 0) {
-        return unsortedCaseLocations.sort((a, b) => a.distance - b.distance);
-      } else {
-        return unsortedCaseLocations;
-      }
+        })
+        .sort((a, b) => a.distance - b.distance);
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
