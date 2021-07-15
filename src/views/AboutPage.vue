@@ -3,17 +3,16 @@
     <div>
       <h1>About this site</h1>
       <p>
-        This site was built by
-        <a href="https://ethan.link" target="_blank">Ethan</a> and is not
-        affiliated with the NSW government.
+        This site uses the latest
+        <a href="https://data.nsw.gov.au/nsw-covid-19-data" target="_blank"
+          >official COVID-19 data</a
+        >
+        provided by NSW Health.
       </p>
       <p>
-        It uses the
-        <a href="https://data.nsw.gov.au/nsw-covid-19-data" target="_blank"
-          >official data</a
-        >
-        provided by NSW Health, which is fetched fresh every time you load this
-        page.
+        It’s built and maintained by
+        <a href="https://ethan.link" target="_blank">Ethan</a> and is not
+        affiliated with the NSW government.
       </p>
     </div>
   </div>
