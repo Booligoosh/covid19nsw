@@ -202,7 +202,7 @@ body,
           background: hsl(0, 0%, 96%);
         }
 
-        &.router-link-exact-active {
+        &.router-link-active {
           background: hsl(0, 0%, 92%);
         }
       }

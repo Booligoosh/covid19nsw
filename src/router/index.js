@@ -50,6 +50,12 @@ const routes = [
       import(/* webpackChunkName: "alertsPage" */ "../views/AlertsPage.vue"),
   },
   {
+    path: "/alerts/postcode/:postcode(2[0-9][0-9][0-9])",
+    name: "PostcodeAlertsPage",
+    component: () =>
+      import(/* webpackChunkName: "alertsPage" */ "../views/AlertsPage.vue"),
+  },
+  {
     path: "/about",
     name: "AboutPage",
     component: () =>

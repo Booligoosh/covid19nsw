@@ -10,27 +10,47 @@
   </div>
   <div class="case-locations-page" v-else>
     <div class="case-locations">
-      <div class="case-locations-gps-box">
-        <p>
-          Please allow access to your location so we can show alerts closest to
-          you.
-          <em>Your location details won&rsquo;t leave your device.</em>
-        </p>
-        <button v-if="!hasLocationPermission" @click="getLocation">
-          Allow location access
-        </button>
-        <button v-else disabled>✅ Location access granted</button>
-        <p v-if="!hasLocationPermission">
-          Or, enter your postcode below for an approximate location:
-        </p>
-        <input
-          v-if="!hasLocationPermission"
-          v-model="postcodeInput"
-          placeholder="2000"
-          type="number"
-          min="2000"
-          max="2999"
-        />
+      <div class="case-locations-location-picker">
+        Search nearby alerts using:
+        <div class="case-locations-location-picker-type-buttons">
+          <button
+            :class="{ active: locationType === 'gps' }"
+            @click="setLocationType('gps')"
+          >
+            GPS
+          </button>
+          <button
+            :class="{ active: locationType === 'postcode' }"
+            @click="setLocationType('postcode')"
+          >
+            Postcode
+          </button>
+          <!-- <button
+            :class="{ active: locationType === 'suburb' }"
+            @click="locationType = 'suburb'"
+          >
+            Suburb
+          </button> -->
+        </div>
+        <div v-if="locationType === 'gps'">
+          <p>
+            Please allow access to your location so we can show alerts closest
+            to you.
+            <em>Your location details won&rsquo;t leave your device.</em>
+          </p>
+          <button v-if="!hasLocationPermission" @click="getLocation">
+            Allow location access
+          </button>
+          <button v-else disabled>✅ Location access granted</button>
+        </div>
+        <div v-if="locationType === 'postcode'">
+          <p>Enter your postcode below:</p>
+          <PostcodePicker
+            :value="postcode"
+            :fullwidth="true"
+            @submit="postcodeSubmitHandler"
+          />
+        </div>
       </div>
       <div
         class="case-locations-location"
@@ -80,36 +100,54 @@
 <script>
 import getDistance from "geolib/es/getDistance";
 import latLongForPostcodes from "../data/latLongForPostcodes.json";
+import PostcodePicker from "../components/PostcodePicker.vue";
 
 export default {
+  components: { PostcodePicker },
   name: "AlertsPage",
   data() {
     return {
+      locationType:
+        this.$route.name === "PostcodeAlertsPage" ? "postcode" : "gps", // `gps`, `postcode`, or `suburb` in the near future
       gpsLatitude: null,
       gpsLongitude: null,
       hasLocationPermission: false,
-      postcodeInput: "",
     };
   },
-  async created() {
-    const locationPermission = await navigator.permissions.query({
-      name: "geolocation",
-    });
-
-    if (locationPermission.state === "granted") {
-      this.hasLocationPermission = true;
-      this.getLocation();
-    }
+  created() {
+    if (this.locationType === "gps") this.getLocationIfAlreadyAllowed();
+  },
+  watch: {
+    locationType() {
+      if (this.locationType === "gps") this.getLocationIfAlreadyAllowed();
+    },
   },
   computed: {
+    postcode() {
+      return this.$route.params.postcode;
+    },
     postcodeLatLong() {
-      return latLongForPostcodes[this.postcodeInput] || [];
+      return latLongForPostcodes[this.postcode] || [];
     },
     latitude() {
-      return this.gpsLatitude || this.postcodeLatLong[0] || null;
+      switch (this.locationType) {
+        case "gps":
+          return this.gpsLatitude || null;
+        case "postcode":
+          return this.postcodeLatLong[0] || null;
+        default:
+          return null;
+      }
     },
     longitude() {
-      return this.gpsLongitude || this.postcodeLatLong[1] || null;
+      switch (this.locationType) {
+        case "gps":
+          return this.gpsLongitude || null;
+        case "postcode":
+          return this.postcodeLatLong[1] || null;
+        default:
+          return null;
+      }
     },
     caseLocationRows() {
       if (!this.latitude || !this.longitude) return [];
@@ -146,6 +184,28 @@ export default {
     },
   },
   methods: {
+    postcodeSubmitHandler(postcode) {
+      this.$router.push({
+        name: "PostcodeAlertsPage",
+        params: { postcode },
+      });
+    },
+    setLocationType(type) {
+      if (this.$route.name !== "AlertsPage")
+        this.$router.push({ name: "AlertsPage" });
+
+      this.locationType = type;
+    },
+    async getLocationIfAlreadyAllowed() {
+      const locationPermission = await navigator.permissions.query({
+        name: "geolocation",
+      });
+
+      if (locationPermission.state === "granted") {
+        this.hasLocationPermission = true;
+        this.getLocation();
+      }
+    },
     async getLocation() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -198,38 +258,59 @@ export default {
   margin-left: auto;
   margin-right: auto;
 
-  &-gps-box {
+  &-location-picker {
     padding-bottom: 2rem;
 
-    button,
-    p {
-      margin-top: 1rem;
-    }
+    &-type-buttons {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 1rem 0;
 
-    p:first-child {
-      margin: 0;
+      button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: inherit;
+        padding: 0.25rem 1rem;
+        background: white;
+        border-radius: 7px;
+        border: 1px solid hsl(0, 0%, 80%);
+        margin: 0 auto;
+        font-size: 0.9rem;
+        cursor: pointer;
 
-      em {
-        font-weight: 600;
+        &:not(:first-child) {
+          border-left: 0;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        &:not(:last-child) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        &:hover {
+          background: hsl(0, 0%, 98%);
+        }
+
+        &.active {
+          background: hsl(0, 0%, 95%);
+        }
+
+        &:active {
+          background: hsl(0, 0%, 94%);
+        }
       }
     }
 
-    input {
-      width: 100%;
-      font: inherit;
-      color: inherit;
-      border-radius: 5px;
-      border: 1px solid hsl(0, 0%, 75%);
-      padding: 0.25rem;
+    p:first-child {
+      margin-top: 0;
 
-      // Hide number input arrows, see:
-      // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
-      -moz-appearance: textfield; // For Firefox
-      // For Chrome, Safari, Edge, Opera:
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+      em {
+        font-weight: 600;
       }
     }
   }

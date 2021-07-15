@@ -13,18 +13,7 @@
   <div class="all-page" v-else>
     <div class="chooser" v-if="!councilMode">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
-      <form @submit.prevent="formSubmitHandler" class="chooser-form">
-        <input
-          v-model="postcodeInputValue"
-          placeholder="2000"
-          type="number"
-          min="2000"
-          max="2999"
-          autofocus
-          required
-        />
-        <button>Go →</button>
-      </form>
+      <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
     <h1 class="table-title">
       COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
@@ -116,14 +105,11 @@
 
 <script>
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
+import PostcodePicker from "../components/PostcodePicker.vue";
 
 export default {
+  components: { PostcodePicker },
   name: "ListPage",
-  data() {
-    return {
-      postcodeInputValue: "",
-    };
-  },
   computed: {
     councilMode() {
       return (
@@ -195,10 +181,10 @@ export default {
     },
   },
   methods: {
-    formSubmitHandler() {
+    postcodeSubmitHandler(postcode) {
       this.$router.push({
         name: "PostcodePage",
-        params: { postcode: this.postcodeInputValue },
+        params: { postcode },
       });
     },
     suburbsSeeMoreClickHandler(event) {
@@ -249,69 +235,6 @@ $table-title-breakpoint: 460px;
       // Shrinks font-size by ~77%, about the
       // same as the table title font size
       font-size: 1rem;
-    }
-  }
-
-  &-form {
-    opacity: 0.9;
-    display: flex;
-    justify-content: center;
-    max-width: 100%;
-
-    input {
-      font: inherit;
-      color: inherit;
-      background: transparent;
-      padding: 0.25em;
-      border: 1px solid hsl(0, 0%, 70%);
-      border-right: none;
-      border-radius: 10px 0 0 10px;
-      min-width: 4em;
-      width: 257px; // Firefox default
-
-      // Hide number input arrows, see:
-      // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
-      -moz-appearance: textfield; // For Firefox
-      // For Chrome, Safari, Edge, Opera:
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      &::placeholder {
-        color: hsl(0, 0%, 70%);
-        opacity: 1;
-      }
-
-      &:focus {
-        outline: none;
-        border-color: #aaa;
-      }
-    }
-
-    button {
-      font: inherit;
-      color: inherit;
-      border: none;
-      background: #eee;
-      font-size: 0.9em;
-      padding: 0.5rem 1rem;
-      border-radius: 5rem;
-      cursor: pointer;
-      border: 1px solid hsl(0, 0%, 70%);
-      border-radius: 0 10px 10px 0;
-      flex-shrink: 0;
-
-      &:hover,
-      &:focus {
-        background: #ddd;
-        outline: none;
-      }
-
-      &:active {
-        background: #ccc;
-      }
     }
   }
 }
