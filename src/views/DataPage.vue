@@ -1,11 +1,11 @@
 <!-- This file resolves the /postcode and /council routes -->
 
 <template>
-  <div class="data-page-error" v-if="$store.state.error">
+  <div class="page-error" v-if="$store.state.error">
     ⚠ {{ $store.state.error }}
   </div>
   <div
-    class="data-page-loading"
+    class="page-loading"
     v-else-if="
       $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
     "
@@ -370,17 +370,6 @@ export default {
 $top-grid-breakpoint: 750px;
 $top-grid-small-text-breakpoint: 370px;
 
-.data-page-loading,
-.data-page-error {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.data-page-error {
-  color: red;
-}
 .top-grid {
   display: flex;
   align-items: center;

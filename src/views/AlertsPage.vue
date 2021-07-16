@@ -1,14 +1,5 @@
 <template>
-  <div class="case-locations-page-error" v-if="$store.state.error">
-    ⚠ {{ $store.state.error }}
-  </div>
-  <div
-    class="case-locations-page-loading"
-    v-else-if="!$store.state.caseLocations"
-  >
-    Loading&hellip;
-  </div>
-  <div class="case-locations-page" v-else>
+  <div class="case-locations-page">
     <div class="case-locations">
       <div class="case-locations-location-picker">
         Search nearby alerts using:
@@ -57,45 +48,58 @@
         }}
       </h1>
       <div
-        class="case-locations-location"
-        v-for="caseLocation of caseLocationRows"
-        :key="caseLocation.id"
+        class="page-error"
+        v-if="latitude && longitude && $store.state.error"
       >
-        <div class="case-locations-location-place">
-          <span :title="caseLocation.Address">
-            {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
-          </span>
-
-          <span
-            class="case-locations-location-place-distance"
-            v-if="caseLocation.distance"
-          >
-            {{ caseLocation.distance.toFixed(1) }}km away
-          </span>
-        </div>
-        <div class="case-locations-location-date-time">
-          {{ caseLocation.Time }}
-          <span class="case-locations-location-date-time-connector">on</span>
-          {{ caseLocation.Date }}
-        </div>
-        <div class="case-locations-location-address">
-          {{ caseLocation.Address }}
-        </div>
-        <div
-          :class="[
-            'case-locations-location-alert',
-            `alert-type-${caseLocation.type}`,
-          ]"
-        >
-          {{ caseLocation.Alert }}
-        </div>
-        <!-- LAT,LON: <span style="user-select:all">{{ caseLocation.Lat }},{{ caseLocation.Lon }}</span> -->
+        ⚠ {{ $store.state.error }}
       </div>
       <div
-        class="no-locations-placeholder"
-        v-if="$store.state.caseLocations.length === 0"
+        class="page-loading"
+        v-else-if="latitude && longitude && !$store.state.caseLocations"
       >
-        There aren&rsquo;t any current case location alerts. Great job NSW! 🥳
+        Loading&hellip;
+      </div>
+      <div v-else-if="latitude && longitude">
+        <div
+          class="case-locations-location"
+          v-for="caseLocation of caseLocationRows"
+          :key="caseLocation.id"
+        >
+          <div class="case-locations-location-place">
+            <span :title="caseLocation.Address">
+              {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
+            </span>
+            <span
+              class="case-locations-location-place-distance"
+              v-if="caseLocation.distance"
+            >
+              {{ caseLocation.distance.toFixed(1) }}km away
+            </span>
+          </div>
+          <div class="case-locations-location-date-time">
+            {{ caseLocation.Time }}
+            <span class="case-locations-location-date-time-connector">on</span>
+            {{ caseLocation.Date }}
+          </div>
+          <div class="case-locations-location-address">
+            {{ caseLocation.Address }}
+          </div>
+          <div
+            :class="[
+              'case-locations-location-alert',
+              `alert-type-${caseLocation.type}`,
+            ]"
+          >
+            {{ caseLocation.Alert }}
+          </div>
+          <!-- LAT,LON: <span style="user-select:all">{{ caseLocation.Lat }},{{ caseLocation.Lon }}</span> -->
+        </div>
+        <div
+          class="no-locations-placeholder"
+          v-if="$store.state.caseLocations.length === 0"
+        >
+          There aren&rsquo;t any current case location alerts. Great job NSW! 🥳
+        </div>
       </div>
     </div>
   </div>
@@ -245,22 +249,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.case-locations-page-loading,
-.case-locations-page-error {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.case-locations-page-error {
-  color: red;
-}
-
 .case-locations {
-  max-width: 500px;
+  width: 500px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 
   &-location-picker {
     &-type-buttons {
@@ -268,6 +264,10 @@ export default {
       display: grid;
       grid-template-columns: 1fr 1fr;
       margin: 1rem 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
 
       button {
         width: 100%;

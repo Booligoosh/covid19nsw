@@ -1,105 +1,114 @@
 <template>
-  <div class="all-page-error" v-if="$store.state.error">
-    ⚠ {{ $store.state.error }}
-  </div>
-  <div
-    class="all-page-loading"
-    v-else-if="
-      $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
-    "
-  >
-    Loading&hellip;
-  </div>
-  <div class="all-page" v-else>
+  <div class="all-page">
     <div class="chooser" v-if="!councilMode">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
-    <h1 class="table-title">
-      COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
-    </h1>
-    <div class="table-subtitle">
-      Data as of <mark>{{ lastUpdatedString }}</mark
-      >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
-      shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
-      more stats, click on column headers to sort.
+    <div class="page-error" v-if="$store.state.error">
+      ⚠ {{ $store.state.error }}
     </div>
-    <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
-      <thead>
-        <tr>
-          <th scope="col">
-            <sort-link
-              v-if="councilMode"
-              name="councilName"
-              title="Sort by Council/LGA"
-            >
-              Council/LGA
-            </sort-link>
-            <sort-link v-else name="postcodeNumberNeg" title="Sort by Postcode">
-              Postcode
-            </sort-link>
-          </th>
-          <th scope="col" style="width: 9rem">
-            <sort-link name="newCasesToday" title="Sort by Cases today">
-              Today
-            </sort-link>
-          </th>
-          <th scope="col" style="width: 9rem">
-            <sort-link name="newCasesThisWeek" title="Sort by Cases this week">
-              This week
-            </sort-link>
-          </th>
-          <th scope="col" style="width: 9rem">
-            <sort-link name="totalCases" title="Sort by Total cases">
-              Total
-            </sort-link>
-          </th>
-        </tr>
-      </thead>
-      <tbody slot="body" slot-scope="sort">
-        <tr
-          v-for="value in sort.values"
-          :key="value.postcodeNumber"
-          role="button"
-          @click="
-            $router.push(
-              councilMode
-                ? {
-                    name: 'CouncilPage',
-                    params: { councilSlug: value.councilSlug },
-                  }
-                : {
-                    name: 'PostcodePage',
-                    params: { postcode: value.postcodeNumber },
-                  }
-            )
-          "
-        >
-          <td class="council-name" v-if="councilMode">
-            <router-link
-              :to="{
-                name: 'CouncilPage',
-                params: { councilSlug: value.councilSlug },
-              }"
-              >{{ value.councilName }}</router-link
-            >
-          </td>
-          <td class="postcode-number" v-else>
-            <router-link
-              :to="{
-                name: 'PostcodePage',
-                params: { postcode: value.postcodeNumber },
-              }"
-              >{{ value.postcodeNumber }}</router-link
-            >
-            <div class="suburbs">{{ value.suburbs }}</div>
-          </td>
-          <td class="value-number">{{ value.newCasesToday }}</td>
-          <td class="value-number">{{ value.newCasesThisWeek }}</td>
-          <td class="value-number">{{ value.totalCases }}</td>
-        </tr>
-      </tbody>
-    </sorted-table>
+    <div
+      class="page-loading"
+      v-else-if="
+        $store.state.cases.length === 0 || !$store.state.temporalCoverageTo
+      "
+    >
+      Loading&hellip;
+    </div>
+    <div v-else>
+      <h1 class="table-title">
+        COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
+      </h1>
+      <div class="table-subtitle">
+        Data as of <mark>{{ lastUpdatedString }}</mark
+        >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
+        shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
+        more stats, click on column headers to sort.
+      </div>
+      <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
+        <thead>
+          <tr>
+            <th scope="col">
+              <sort-link
+                v-if="councilMode"
+                name="councilName"
+                title="Sort by Council/LGA"
+              >
+                Council/LGA
+              </sort-link>
+              <sort-link
+                v-else
+                name="postcodeNumberNeg"
+                title="Sort by Postcode"
+              >
+                Postcode
+              </sort-link>
+            </th>
+            <th scope="col" style="width: 9rem">
+              <sort-link name="newCasesToday" title="Sort by Cases today">
+                Today
+              </sort-link>
+            </th>
+            <th scope="col" style="width: 9rem">
+              <sort-link
+                name="newCasesThisWeek"
+                title="Sort by Cases this week"
+              >
+                This week
+              </sort-link>
+            </th>
+            <th scope="col" style="width: 9rem">
+              <sort-link name="totalCases" title="Sort by Total cases">
+                Total
+              </sort-link>
+            </th>
+          </tr>
+        </thead>
+        <tbody slot="body" slot-scope="sort">
+          <tr
+            v-for="value in sort.values"
+            :key="value.postcodeNumber"
+            role="button"
+            @click="
+              $router.push(
+                councilMode
+                  ? {
+                      name: 'CouncilPage',
+                      params: { councilSlug: value.councilSlug },
+                    }
+                  : {
+                      name: 'PostcodePage',
+                      params: { postcode: value.postcodeNumber },
+                    }
+              )
+            "
+          >
+            <td class="council-name" v-if="councilMode">
+              <router-link
+                :to="{
+                  name: 'CouncilPage',
+                  params: { councilSlug: value.councilSlug },
+                }"
+                >{{ value.councilName }}</router-link
+              >
+            </td>
+            <td class="postcode-number" v-else>
+              <router-link
+                :to="{
+                  name: 'PostcodePage',
+                  params: { postcode: value.postcodeNumber },
+                }"
+                >{{ value.postcodeNumber }}</router-link
+              >
+              <div class="suburbs">{{ value.suburbs }}</div>
+            </td>
+            <td class="value-number">{{ value.newCasesToday }}</td>
+            <td class="value-number">{{ value.newCasesThisWeek }}</td>
+            <td class="value-number">{{ value.totalCases }}</td>
+          </tr>
+        </tbody>
+      </sorted-table>
+    </div>
   </div>
 </template>
 
@@ -203,17 +212,6 @@ $table-title-breakpoint: 460px;
   width: 948px !important;
 }
 
-.all-page-loading,
-.all-page-error {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.all-page-error {
-  color: red;
-}
 .chooser {
   display: flex;
   justify-content: center;

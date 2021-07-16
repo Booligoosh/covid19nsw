@@ -209,6 +209,22 @@ body,
     }
   }
   .page {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    &-loading,
+    &-error {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    &-error {
+      color: red;
+    }
+
     > :first-child,
     > :first-child > :first-child {
       margin-top: 0;
