@@ -126,6 +126,16 @@
         </button>
       </div>
     </div>
+    <router-link
+      v-if="!isCouncil"
+      class="alerts-link"
+      :to="{
+        name: 'PostcodeAlertsPage',
+        params: { postcode: postcodeNumber },
+      }"
+    >
+      See nearby alerts →
+    </router-link>
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCases, null, 2)
@@ -492,6 +502,25 @@ $top-grid-small-text-breakpoint: 370px;
         background: #ccc;
       }
     }
+  }
+}
+.alerts-link {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: 1px solid hsl(0, 0%, 80%);
+  background: hsl(0, 0%, 97%);
+
+  &:hover {
+    background: hsl(0, 0%, 96%);
+  }
+
+  &:active {
+    background: hsl(0, 0%, 95%);
   }
 }
 .add-to-home-screen {
