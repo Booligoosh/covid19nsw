@@ -18,7 +18,7 @@
   />
   <div class="data-page" v-else>
     <DataPageMetadataChanger
-      :totalCases="currentCases"
+      :totalCases="totalCases"
       :councilName="councilName"
     />
     <div class="top-grid">
@@ -40,9 +40,19 @@
           </span>
         </div>
       </h1>
-      <div class="current-cases">
-        <div class="num">{{ currentCases }}</div>
-        <div class="label">total cases</div>
+      <div class="stat-numbers">
+        <div class="stat-numbers-item">
+          <div class="stat-numbers-item-num">{{ casesToday }}</div>
+          <div class="stat-numbers-item-label">today</div>
+        </div>
+        <div class="stat-numbers-item">
+          <div class="stat-numbers-item-num">{{ casesThisWeek }}</div>
+          <div class="stat-numbers-item-label">this week</div>
+        </div>
+        <div class="stat-numbers-item">
+          <div class="stat-numbers-item-num">{{ totalCases }}</div>
+          <div class="stat-numbers-item-label">total</div>
+        </div>
       </div>
     </div>
     <vue-frappe
@@ -161,7 +171,6 @@ export default {
   data() {
     let chartNumDays;
     if (window.innerWidth < 480) {
-      // Same as $top-grid-breakpoint
       chartNumDays = 7;
     } else if (window.innerWidth < 650) {
       chartNumDays = 14;
@@ -203,8 +212,37 @@ export default {
         );
       }
     },
-    currentCases() {
+    totalCases() {
       return this.allCases.length;
+    },
+    caseCounts() {
+      // Both in 1 function to halve the number of iterations.
+      // See the individual getters based on its outputs below.
+      const todayDate =
+        this.$store.state.temporalCoverageTo.format("YYYY-MM-DD");
+      const oneWeekAgo = this.$store.state.temporalCoverageTo
+        .subtract(7, "days")
+        .format("YYYY-MM-DD");
+
+      let today = 0;
+      let thisWeek = 0;
+
+      this.allCases.forEach((caseObj) => {
+        if (caseObj.rawDate === todayDate) {
+          today++;
+          thisWeek++;
+        } else if (caseObj.rawDate > oneWeekAgo) {
+          thisWeek++;
+        }
+      });
+
+      return { today, thisWeek };
+    },
+    casesToday() {
+      return this.caseCounts.today;
+    },
+    casesThisWeek() {
+      return this.caseCounts.thisWeek;
     },
     lastXDays() {
       return Array(this.chartNumDays)
@@ -221,9 +259,9 @@ export default {
     normalChartData() {
       console.log(
         this.chartNumDays,
-        this.currentCases,
+        this.totalCases,
         "Requires",
-        this.chartNumDays * this.currentCases,
+        this.chartNumDays * this.totalCases,
         "operations"
       );
 
@@ -319,7 +357,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$top-grid-breakpoint: 480px;
+$top-grid-breakpoint: 750px;
+$top-grid-small-text-breakpoint: 370px;
 
 .data-page-loading,
 .data-page-error {
@@ -333,34 +372,22 @@ $top-grid-breakpoint: 480px;
   color: red;
 }
 .top-grid {
-  display: grid;
+  display: flex;
   align-items: center;
-  grid-template-columns: 1fr auto;
   @media screen and (max-width: $top-grid-breakpoint) {
-    display: block;
-  }
-
-  > * {
-    padding: 0 1rem;
-    border: 1px none #eee;
-    border-right-style: solid;
-    height: 100%;
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-
-    @media screen and (max-width: $top-grid-breakpoint) {
-      border-right-style: none;
-      border-bottom-style: solid;
-      padding: 1rem 0;
-    }
   }
 
   h1 {
     margin: 0;
-    padding-left: 0;
-    padding-top: 0;
+    margin-right: 1rem;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     font-weight: 900;
+
     .not-bold {
       // opacity: 0.7;
       font-weight: 600;
@@ -368,10 +395,12 @@ $top-grid-breakpoint: 480px;
 
     @media screen and (max-width: $top-grid-breakpoint) {
       text-align: center;
+      margin-right: 0;
+      margin-bottom: 1rem;
     }
 
-    @media screen and (max-width: 370px) {
-      font-size: 1.5em;
+    @media screen and (max-width: $top-grid-small-text-breakpoint) {
+      font-size: 1.5rem;
     }
 
     .suburbs-text {
@@ -389,18 +418,37 @@ $top-grid-breakpoint: 480px;
       }
     }
   }
-  .current-cases {
-    padding-right: 0;
-    padding-bottom: 0;
+  .stat-numbers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    flex-shrink: 0;
     border: none;
-    text-align: center;
-    .num {
-      font-size: 3em;
-      font-weight: bold;
-    }
-    .label {
-      opacity: 0.5;
-      font-size: 0.9em;
+    padding: 0;
+
+    &-item {
+      border: none;
+      text-align: center;
+      border: 1px none #eee;
+      border-left-style: solid;
+      padding: 0 0.75rem;
+
+      @media screen and (max-width: $top-grid-breakpoint) {
+        border-right-style: solid;
+      }
+
+      &-num {
+        font-weight: bold;
+        font-size: 2.5rem;
+
+        @media screen and (max-width: $top-grid-small-text-breakpoint) {
+          font-size: 2rem;
+        }
+      }
+
+      &-label {
+        opacity: 0.5;
+        font-size: 0.9em;
+      }
     }
   }
 }
