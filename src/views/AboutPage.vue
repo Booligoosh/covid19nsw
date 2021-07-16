@@ -14,6 +14,10 @@
         <a href="https://ethan.link" target="_blank">Ethan</a> and is not
         affiliated with the NSW government.
       </p>
+      <p>
+        If you have any questions, feedback, or ideas (or job opportunities!),
+        you can <a href="mailto:me@ethan.link">email me</a>.
+      </p>
       <p class="bottom-note">
         <a href="https://github.com/Booligoosh/covid19nsw" target="_blank"
           >Source code on GitHub</a
