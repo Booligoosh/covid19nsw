@@ -14,11 +14,11 @@
         <a href="https://ethan.link" target="_blank">Ethan</a> and is not
         affiliated with the NSW government.
       </p>
-      <p>
-        It&rsquo;s also open source &mdash; you can see the source code
-        <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">
-          on GitHub.
-        </a>
+      <p class="bottom-note">
+        <a href="https://github.com/Booligoosh/covid19nsw" target="_blank"
+          >Source code on GitHub</a
+        >
+        (if you're a software dev)
       </p>
     </div>
   </div>
@@ -33,6 +33,16 @@
 
   h1 {
     font-size: 1.5rem;
+  }
+
+  .bottom-note {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    opacity: 0.5;
+
+    a {
+      color: inherit;
+    }
   }
 }
 </style>
