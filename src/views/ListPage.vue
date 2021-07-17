@@ -306,12 +306,20 @@ table {
     }
   }
 
+  thead tr {
+    z-index: 1;
+    background: white;
+    position: sticky;
+    top: 0;
+
+    @media screen and (max-width: $compact-breakpoint) {
+      top: -1px;
+    }
+  }
+
   th {
     text-align: left;
-    position: sticky;
-    top: -1px;
     background: hsl(0, 0%, 95%);
-    z-index: 1;
     border-top: $table-border;
 
     &:first-child {
