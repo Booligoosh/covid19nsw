@@ -281,9 +281,6 @@ table {
   @media screen and (max-width: $compact-breakpoint) {
     margin-left: -1.5rem;
     width: calc(100% + 3rem);
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
   }
 
   tbody tr {
@@ -350,6 +347,11 @@ table {
 
     @media screen and (max-width: $compact-breakpoint) {
       padding: 0.4rem;
+      border-radius: 0 !important;
+      border-left: none !important;
+      &:last-child {
+        border-right: none;
+      }
     }
   }
 
