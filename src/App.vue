@@ -235,6 +235,12 @@ body,
 h1 {
   margin-top: 0;
 }
+
+button,
+input {
+  // Override default 2px margins in Safari
+  margin: 0;
+}
 </style>
 
 <style lang="scss" scoped>
