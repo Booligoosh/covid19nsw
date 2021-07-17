@@ -270,15 +270,13 @@ $table-title-breakpoint: 460px;
   }
 }
 
-$table-border-color: hsl(0, 0%, 50%);
+$table-border: 1px solid hsl(0, 0%, 50%);
+$table-border-radius: 7px;
 
 table {
   width: 100%;
   margin: 0 auto;
-  border: 1px solid $table-border-color;
   border-spacing: 0;
-  border-radius: 7px;
-  overflow: hidden;
 
   @media screen and (max-width: $compact-breakpoint) {
     margin-left: -1.5rem;
@@ -290,6 +288,17 @@ table {
 
   tbody tr {
     cursor: pointer;
+
+    &:last-child {
+      td {
+        &:first-child {
+          border-bottom-left-radius: $table-border-radius;
+        }
+        &:last-child {
+          border-bottom-right-radius: $table-border-radius;
+        }
+      }
+    }
 
     &:hover {
       background: hsl(0, 0%, 98%);
@@ -306,6 +315,14 @@ table {
     top: -1px;
     background: hsl(0, 0%, 95%);
     z-index: 1;
+    border-top: $table-border;
+
+    &:first-child {
+      border-top-left-radius: $table-border-radius;
+    }
+    &:last-child {
+      border-top-right-radius: $table-border-radius;
+    }
 
     a {
       color: inherit;
@@ -325,9 +342,10 @@ table {
   th,
   td {
     padding: 0.5rem 1rem;
+    border-right: $table-border;
 
-    &:not(:last-child) {
-      border-right: 1px solid $table-border-color;
+    &:first-child {
+      border-left: $table-border;
     }
 
     @media screen and (max-width: $compact-breakpoint) {
@@ -335,11 +353,10 @@ table {
     }
   }
 
-  thead tr,
-  tbody tr:not(:last-child) {
+  tr {
     th,
     td {
-      border-bottom: 1px solid $table-border-color;
+      border-bottom: $table-border;
     }
   }
 
