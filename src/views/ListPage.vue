@@ -303,7 +303,7 @@ table {
   th {
     text-align: left;
     position: sticky;
-    top: 0;
+    top: -1px;
     background: hsl(0, 0%, 95%);
     z-index: 1;
 
