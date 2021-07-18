@@ -37,22 +37,7 @@
 </template>
 
 <script>
-import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "@/constants";
-
 export default {
-  watch: {
-    $route(to) {
-      this.$store.state.pageTitle = to.meta.title || DEFAULT_PAGE_TITLE;
-      this.$store.state.pageDescription =
-        to.meta.description || DEFAULT_PAGE_DESCRIPTION;
-    },
-    "$store.state.pageTitle": function () {
-      this.updatePageTitle();
-    },
-    "$store.state.pageDescription": function () {
-      this.updatePageDescription();
-    },
-  },
   created() {
     if (window.location.origin === "https://covid19nsw.netlify.com") {
       window.location.href = window.location.href.replace(
@@ -60,25 +45,6 @@ export default {
         "https://covid19nsw.ethan.link"
       );
     }
-    this.updatePageTitle();
-    this.updatePageDescription();
-  },
-  methods: {
-    updatePageTitle() {
-      document.title = this.$store.state.pageTitle;
-      document
-        .querySelectorAll(".page-title-meta")
-        .forEach((el) =>
-          el.setAttribute("content", this.$store.state.pageTitle)
-        );
-    },
-    updatePageDescription() {
-      document
-        .querySelectorAll(".page-description-meta")
-        .forEach((el) =>
-          el.setAttribute("content", this.$store.state.pageDescription)
-        );
-    },
   },
 };
 </script>

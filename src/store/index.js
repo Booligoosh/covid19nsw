@@ -51,6 +51,21 @@ const store = new Vuex.Store({
     setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
     },
+    setPageTitle(state, pageTitle) {
+      state.pageTitle = pageTitle;
+
+      document.title = pageTitle;
+      document
+        .querySelectorAll(".page-title-meta")
+        .forEach((el) => el.setAttribute("content", pageTitle));
+    },
+    setPageDescription(state, pageDescription) {
+      state.pageDescription = pageDescription;
+
+      document
+        .querySelectorAll(".page-description-meta")
+        .forEach((el) => el.setAttribute("content", pageDescription));
+    },
   },
   actions: {
     async loadCsvData({ commit }) {

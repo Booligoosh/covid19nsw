@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "@/constants";
+import store from "@/store";
 
 Vue.use(VueRouter);
 
@@ -74,6 +76,14 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.afterEach((to) => {
+  store.commit("setPageTitle", to.meta.title || DEFAULT_PAGE_TITLE);
+  store.commit(
+    "pageDescription",
+    to.meta.description || DEFAULT_PAGE_DESCRIPTION
+  );
 });
 
 export default router;
