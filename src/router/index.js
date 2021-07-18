@@ -8,10 +8,20 @@ const LIST_PAGE_DESCRIPTION_SUFFIX =
   " including new cases today, cases this week, total cases, and cases by source (local/overseas/interstate).";
 
 const routes = [
+  // Redirects
   {
     path: "/",
     redirect: "/postcodes",
   },
+  {
+    path: "/all",
+    redirect: "/postcodes",
+  },
+  {
+    path: "/locations",
+    redirect: "/alerts",
+  },
+  // Actual routes
   {
     path: "/postcodes",
     name: "PostcodesPage",
@@ -50,14 +60,6 @@ const routes = [
     name: "CouncilPage",
     component: () =>
       import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
-  },
-  {
-    path: "/all",
-    redirect: "/postcodes",
-  },
-  {
-    path: "/locations",
-    redirect: "/alerts",
   },
   {
     path: "/alerts",
