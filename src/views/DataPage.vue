@@ -265,7 +265,8 @@ export default {
       return this.lastXDays.map((date) => date.format("YYYY-MM-DD"));
     },
     chartLabels() {
-      return this.lastXDays.map((date) => date.format("D MMM"));
+      const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
+      return this.lastXDays.map((date) => date.format(format));
     },
     normalChartData() {
       console.log(
