@@ -99,7 +99,7 @@
                   params: { postcode: value.postcodeNumber },
                 }"
                 >{{ value.postcodeNumber }}</router-link
-              >
+              >&nbsp;
               <div class="suburbs">{{ value.suburbs }}</div>
             </td>
             <td class="value-number">{{ value.newCasesToday }}</td>
