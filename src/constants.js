@@ -1,3 +1,3 @@
-export const DEFAULT_PAGE_TITLE = "COVID-19 data for New South Wales";
+export const DEFAULT_PAGE_TITLE = "COVID-19 NSW";
 export const DEFAULT_PAGE_DESCRIPTION =
-  "See the latest COVID-19 data for your postcode.";
+  "See the latest local COVID-19 information for your postcode/suburb/council in New South Wales.";

@@ -1,9 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "@/constants";
 import store from "@/store";
 
 Vue.use(VueRouter);
+
+const LIST_PAGE_DESCRIPTION_SUFFIX =
+  " including new cases today, cases this week, total cases, and cases by source (local/overseas/interstate).";
 
 const routes = [
   {
@@ -15,6 +17,12 @@ const routes = [
     name: "PostcodesPage",
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
+    meta: {
+      title: "COVID-19 Cases By Postcode",
+      description:
+        "See the latest COVID-19 data for your postcode/suburb" +
+        LIST_PAGE_DESCRIPTION_SUFFIX,
+    },
   },
   {
     path: "/postcode/:postcode(2[0-9][0-9][0-9])",
@@ -30,6 +38,12 @@ const routes = [
     name: "CouncilsPage",
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
+    meta: {
+      title: "COVID-19 Cases By Council/LGA",
+      description:
+        "See the latest COVID-19 data for your council/LGA" +
+        LIST_PAGE_DESCRIPTION_SUFFIX,
+    },
   },
   {
     path: "/council/:councilSlug",
@@ -50,18 +64,31 @@ const routes = [
     name: "AlertsPage",
     component: () =>
       import(/* webpackChunkName: "alertsPage" */ "../views/AlertsPage.vue"),
+    meta: {
+      title: "Alerts Near Your Location",
+      description:
+        "See close and casual contact alerts closest to your GPS location or postcode.",
+    },
   },
   {
     path: "/alerts/postcode/:postcode(2[0-9][0-9][0-9])",
     name: "PostcodeAlertsPage",
     component: () =>
       import(/* webpackChunkName: "alertsPage" */ "../views/AlertsPage.vue"),
+    meta: {
+      title: "Alerts near the postcode <postcode>",
+      description:
+        "See close and casual contact alerts near the postcode <postcode>.",
+    },
   },
   {
     path: "/about",
     name: "AboutPage",
     component: () =>
       import(/* webpackChunkName: "aboutPage" */ "../views/AboutPage.vue"),
+    meta: {
+      title: "About",
+    },
   },
   {
     path: "*",
@@ -79,10 +106,13 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-  store.commit("setPageTitle", to.meta.title || DEFAULT_PAGE_TITLE);
   store.commit(
-    "pageDescription",
-    to.meta.description || DEFAULT_PAGE_DESCRIPTION
+    "setPageTitle",
+    to.meta.title?.replace("<postcode>", to.params.postcode)
+  );
+  store.commit(
+    "setPageDescription",
+    to.meta.description?.replace("<postcode>", to.params.postcode)
   );
 });
 

@@ -52,6 +52,8 @@ const store = new Vuex.Store({
       state.caseLocations = caseLocations;
     },
     setPageTitle(state, pageTitle) {
+      if (!pageTitle) pageTitle = DEFAULT_PAGE_TITLE;
+      else pageTitle += " | COVID-19 NSW";
       state.pageTitle = pageTitle;
 
       document.title = pageTitle;
@@ -60,6 +62,8 @@ const store = new Vuex.Store({
         .forEach((el) => el.setAttribute("content", pageTitle));
     },
     setPageDescription(state, pageDescription) {
+      if (!pageDescription) pageDescription = DEFAULT_PAGE_DESCRIPTION;
+
       state.pageDescription = pageDescription;
 
       document
