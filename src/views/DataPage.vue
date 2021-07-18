@@ -192,6 +192,7 @@ export default {
 
     return {
       chartNumDays,
+      allTimeDays: dayjs().diff("2020-01-25", "day"),
       sourceMode: false,
     };
   },
@@ -336,15 +337,6 @@ export default {
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
-    },
-    allTimeDays() {
-      if (this.allCases.length === 0) {
-        return 1;
-      } else {
-        const earliestDate = dayjs.min(this.allCases.map(({ date }) => date));
-        const startDate = earliestDate.subtract(1, "day");
-        return dayjs().diff(startDate, "day");
-      }
     },
     allTimeMode() {
       return this.chartNumDays === this.allTimeDays;
