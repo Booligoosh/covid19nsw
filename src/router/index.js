@@ -116,6 +116,10 @@ router.afterEach((to) => {
     "setPageDescription",
     to.meta.description?.replace("<postcode>", to.params.postcode)
   );
+
+  document
+    .querySelector("link[rel=canonical]")
+    .setAttribute("href", "https://covid19nsw.ethan.link" + to.path);
 });
 
 export default router;
