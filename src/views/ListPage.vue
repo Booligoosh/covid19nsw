@@ -44,12 +44,12 @@
                 Postcode
               </sort-link>
             </th>
-            <th scope="col" style="width: 9rem">
+            <th scope="col" class="num-col">
               <sort-link name="newCasesToday" title="Sort by Cases today">
                 Today
               </sort-link>
             </th>
-            <th scope="col" style="width: 9rem">
+            <th scope="col" class="num-col">
               <sort-link
                 name="newCasesThisWeek"
                 title="Sort by Cases this week"
@@ -57,7 +57,7 @@
                 This week
               </sort-link>
             </th>
-            <th scope="col" style="width: 9rem">
+            <th scope="col" class="num-col">
               <sort-link name="totalCases" title="Sort by Total cases">
                 Total
               </sort-link>
@@ -329,6 +329,12 @@ table {
       border-top-right-radius: $table-border-radius;
     }
 
+    &.num-col {
+      @media screen and (min-width: 590px) {
+        width: 9rem;
+      }
+    }
+
     a {
       color: inherit;
       text-decoration: none;
@@ -339,6 +345,7 @@ table {
       display: grid;
       // 13px for size of sort arrow
       grid-template-columns: auto 13px;
+      grid-gap: 4px;
       justify-content: space-between;
       align-items: center;
     }
