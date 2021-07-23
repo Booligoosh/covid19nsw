@@ -25,8 +25,7 @@
         </div>
         <div v-if="locationType === 'gps' && !hasLocationPermission">
           <p>
-            Please allow access to your location so we can show alerts closest
-            to you.
+            Please allow location access so we can show alerts closest to you.
             <em>Your location details won&rsquo;t leave your device.</em>
           </p>
           <button @click="getLocation">Allow location access</button>
