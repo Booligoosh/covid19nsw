@@ -395,6 +395,11 @@ table {
   }
 
   td.council-name {
+    a {
+      color: hsl(123, 50%, 28%);
+      text-decoration: underline;
+    }
+
     @media screen and (max-width: 528px) {
       font-size: 1.2rem;
     }
