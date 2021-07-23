@@ -379,7 +379,7 @@ table {
 
   td.postcode-number,
   td.council-name {
-    font-weight: 800;
+    font-weight: bold;
 
     a {
       color: inherit;
