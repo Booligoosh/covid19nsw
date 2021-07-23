@@ -24,6 +24,13 @@
         >
         (if you're a software dev)
       </p>
+      <a
+        class="tip-jar"
+        href="https://www.buymeacoffee.com/booligoosh"
+        target="_blank"
+      >
+        💵 Tip Jar
+      </a>
     </div>
   </div>
 </template>
@@ -47,6 +54,21 @@
     a {
       color: inherit;
     }
+  }
+
+  .tip-jar {
+    display: block;
+    padding: 0.6rem 2rem;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    width: max-content;
+    // Colors from logo
+    background: rgb(220, 237, 200);
+    color: rgb(46, 125, 50);
   }
 }
 </style>
