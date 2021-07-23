@@ -390,6 +390,10 @@ table {
       margin-top: 0.2rem;
       opacity: 0.7;
       font-size: 0.9rem;
+
+      @media screen and (max-width: $compact-breakpoint) {
+        font-size: 0.85rem;
+      }
     }
   }
 
