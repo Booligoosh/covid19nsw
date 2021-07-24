@@ -28,7 +28,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
     meta: {
-      title: "COVID-19 Cases By Postcode",
+      title: "COVID Cases By Postcode",
       description:
         "See the latest COVID-19 data for your postcode/suburb" +
         LIST_PAGE_DESCRIPTION_SUFFIX,
@@ -49,7 +49,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
     meta: {
-      title: "COVID-19 Cases By Council/LGA",
+      title: "COVID Cases By Council/LGA",
       description:
         "See the latest COVID-19 data for your council/LGA" +
         LIST_PAGE_DESCRIPTION_SUFFIX,
