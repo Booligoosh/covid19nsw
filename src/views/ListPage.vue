@@ -385,10 +385,8 @@ table {
   }
 
   td.value-number {
-    @media screen and (max-width: $compact-breakpoint) {
-      // Align numbers to top of cell rather than middle
-      vertical-align: baseline;
-    }
+    // Align numbers to top of cell rather than middle
+    vertical-align: baseline;
   }
 
   td.postcode-number,
