@@ -24,7 +24,7 @@
       <table>
         <thead>
           <tr>
-            <th>
+            <th class="primary-col">
               <a
                 v-if="councilMode"
                 href="#"
@@ -273,6 +273,7 @@ export default {
 <style lang="scss" scoped>
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
+$fixed-num-col-width-breakpoint: 589px;
 
 .all-page {
   width: 948px !important;
@@ -389,8 +390,13 @@ $table-border-radius: 7px;
     }
 
     &.num-col {
-      @media screen and (min-width: 590px) {
+      @media screen and (min-width: $fixed-num-col-width-breakpoint + 1) {
         width: 9rem;
+      }
+    }
+    &.primary-col {
+      @media screen and (max-width: $fixed-num-col-width-breakpoint) {
+        width: 100%;
       }
     }
 
