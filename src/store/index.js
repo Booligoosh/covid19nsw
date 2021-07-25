@@ -10,6 +10,9 @@ dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 
+const CASE_LOCATIONS_URL =
+  "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
+
 const store = new Vuex.Store({
   state: {
     cases: [],
@@ -74,7 +77,7 @@ const store = new Vuex.Store({
   actions: {
     async loadCsvData({ commit }) {
       try {
-        const { metadataModified, csvData, caseLocations } = await fetch(
+        const { metadataModified, csvData } = await fetch(
           "https://covid19nsw.ethan.link/worker",
           // See https://stackoverflow.com/a/63814972
           window.location.origin === "https://covid19nsw.ethan.link"
@@ -119,8 +122,32 @@ const store = new Vuex.Store({
           "setTemporalCoverageTo",
           dayjs(metadataModified).startOf("day").subtract(1, "day")
         );
+      } catch (err) {
+        commit("setError", err.toString());
+      }
+    },
+    async getCaseLocations({ commit }) {
+      try {
+        const json = await fetch(CASE_LOCATIONS_URL).then((r) => r.json());
+
+        // Reverse to show most severe types first
+        const types = Object.keys(json.data).reverse();
+        const caseLocations = types
+          .map((type) =>
+            json.data[type].map((caseLocation) => ({
+              ...caseLocation,
+              // For some reason Data NSW puts everything
+              // in the monitor array now, so get type
+              // manually from alert text
+              type: getTypeFromAlert(caseLocation.Alert),
+              id: Math.random(),
+            }))
+          )
+          .flat();
+        // console.log({caseLocations});
         commit("setCaseLocations", caseLocations);
       } catch (err) {
+        console.log("CASE LOCATIONS ERROR:", err);
         commit("setError", err.toString());
       }
     },
@@ -129,5 +156,24 @@ const store = new Vuex.Store({
 });
 
 store.dispatch("loadCsvData");
+store.dispatch("getCaseLocations");
 
 export default store;
+
+function getTypeFromAlert(alertText) {
+  switch (alertText) {
+    case "Get tested immediately and self-isolate for 14 days":
+    case "Get tested immediately and self-isolate for 14 days.":
+    case "Get tested immediately and self-isolate until you receive further advice from NSW Health":
+      return "isolate";
+    case "Get tested immediately. Self-isolate until you get a negative result.":
+    case "Get tested immediately and self-isolate until you get a negative result":
+    case "Get tested and immediately self-isolate until you receive a negative result":
+      return "negative";
+    case "Monitor for symptoms":
+    case "Monitor for symptoms.":
+      return "monitor";
+    default:
+      return "no-type";
+  }
+}
