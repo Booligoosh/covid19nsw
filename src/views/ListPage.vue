@@ -4,121 +4,119 @@
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
+    <h1 class="table-title">
+      COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
+    </h1>
+    <div class="table-subtitle">
+      Data as of <mark>{{ lastUpdatedString }}</mark
+      >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
+      shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
+      more stats, click on column headers to sort.
+    </div>
     <div class="page-error" v-if="$store.state.error">
       ⚠ {{ $store.state.error }}
     </div>
     <div class="page-loading" v-else-if="$store.state.cases.length === 0">
       Loading&hellip;
     </div>
-    <div v-else>
-      <h1 class="table-title">
-        COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
-      </h1>
-      <div class="table-subtitle">
-        Data as of <mark>{{ lastUpdatedString }}</mark
-        >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
-        shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
-        more stats, click on column headers to sort.
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <a
-                v-if="councilMode"
-                href="#"
-                @click.prevent="sort = 'col1Sort'"
-                title="Sort by Council/LGA"
-              >
-                Council/LGA
-                <span v-if="sort === 'col1Sort'">▼</span>
-              </a>
-              <a
-                v-else
-                href="#"
-                @click.prevent="sort = 'col1Sort'"
-                title="Sort by Postcode"
-              >
-                Postcode
-                <span v-if="sort === 'col1Sort'">▼</span>
-              </a>
-            </th>
-            <th class="num-col">
-              <a
-                href="#"
-                @click.prevent="sort = 'newCasesToday'"
-                title="Sort by Cases today"
-              >
-                Today
-                <span v-if="sort === 'newCasesToday'">▼</span>
-              </a>
-            </th>
-            <th class="num-col">
-              <a
-                href="#"
-                @click.prevent="sort = 'newCasesThisWeek'"
-                title="Sort by Cases this week"
-              >
-                This week
-                <span v-if="sort === 'newCasesThisWeek'">▼</span>
-              </a>
-            </th>
-            <th class="num-col">
-              <a
-                href="#"
-                @click.prevent="sort = 'totalCases'"
-                title="Sort by Total cases"
-              >
-                Total <span v-if="sort === 'totalCases'">▼</span>
-              </a>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="value in postcodeRowsSorted"
-            :key="value.postcodeNumber"
-            role="button"
-            @click="
-              $router.push(
-                councilMode
-                  ? {
-                      name: 'CouncilPage',
-                      params: { councilSlug: value.councilSlug },
-                    }
-                  : {
-                      name: 'PostcodePage',
-                      params: { postcode: value.postcodeNumber },
-                    }
-              )
-            "
-          >
-            <td class="council-name" v-if="councilMode">
-              <router-link
-                :to="{
-                  name: 'CouncilPage',
-                  params: { councilSlug: value.councilSlug },
-                }"
-                >{{ value.councilName }}</router-link
-              >
-            </td>
-            <td class="postcode-number" v-else>
-              <router-link
-                :to="{
-                  name: 'PostcodePage',
-                  params: { postcode: value.postcodeNumber },
-                }"
-                >{{ value.postcodeNumber }}</router-link
-              >&nbsp;
-              <div class="suburbs">{{ value.suburbs }}</div>
-            </td>
-            <td class="value-number">{{ value.newCasesToday }}</td>
-            <td class="value-number">{{ value.newCasesThisWeek }}</td>
-            <td class="value-number">{{ value.totalCases }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table v-else>
+      <thead>
+        <tr>
+          <th>
+            <a
+              v-if="councilMode"
+              href="#"
+              @click.prevent="sort = 'col1Sort'"
+              title="Sort by Council/LGA"
+            >
+              Council/LGA
+              <span v-if="sort === 'col1Sort'">▼</span>
+            </a>
+            <a
+              v-else
+              href="#"
+              @click.prevent="sort = 'col1Sort'"
+              title="Sort by Postcode"
+            >
+              Postcode
+              <span v-if="sort === 'col1Sort'">▼</span>
+            </a>
+          </th>
+          <th class="num-col">
+            <a
+              href="#"
+              @click.prevent="sort = 'newCasesToday'"
+              title="Sort by Cases today"
+            >
+              Today
+              <span v-if="sort === 'newCasesToday'">▼</span>
+            </a>
+          </th>
+          <th class="num-col">
+            <a
+              href="#"
+              @click.prevent="sort = 'newCasesThisWeek'"
+              title="Sort by Cases this week"
+            >
+              This week
+              <span v-if="sort === 'newCasesThisWeek'">▼</span>
+            </a>
+          </th>
+          <th class="num-col">
+            <a
+              href="#"
+              @click.prevent="sort = 'totalCases'"
+              title="Sort by Total cases"
+            >
+              Total <span v-if="sort === 'totalCases'">▼</span>
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="value in postcodeRowsSorted"
+          :key="value.postcodeNumber"
+          role="button"
+          @click="
+            $router.push(
+              councilMode
+                ? {
+                    name: 'CouncilPage',
+                    params: { councilSlug: value.councilSlug },
+                  }
+                : {
+                    name: 'PostcodePage',
+                    params: { postcode: value.postcodeNumber },
+                  }
+            )
+          "
+        >
+          <td class="council-name" v-if="councilMode">
+            <router-link
+              :to="{
+                name: 'CouncilPage',
+                params: { councilSlug: value.councilSlug },
+              }"
+              >{{ value.councilName }}</router-link
+            >
+          </td>
+          <td class="postcode-number" v-else>
+            <router-link
+              :to="{
+                name: 'PostcodePage',
+                params: { postcode: value.postcodeNumber },
+              }"
+              >{{ value.postcodeNumber }}</router-link
+            >&nbsp;
+            <div class="suburbs">{{ value.suburbs }}</div>
+          </td>
+          <td class="value-number">{{ value.newCasesToday }}</td>
+          <td class="value-number">{{ value.newCasesThisWeek }}</td>
+          <td class="value-number">{{ value.totalCases }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
