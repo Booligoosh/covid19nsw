@@ -139,7 +139,6 @@ const store = new Vuex.Store({
 });
 
 store.dispatch("loadCsvData");
-store.dispatch("getCaseLocations");
 
 export default store;
 

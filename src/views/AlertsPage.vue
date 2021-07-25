@@ -123,6 +123,8 @@ export default {
   },
   created() {
     if (this.locationType === "gps") this.getLocationIfAlreadyAllowed();
+    if (!this.$store.state.caseLocations)
+      this.$store.dispatch("getCaseLocations");
   },
   watch: {
     locationType() {
