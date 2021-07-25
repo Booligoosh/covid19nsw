@@ -269,6 +269,8 @@ export default {
       return this.lastXDays.map((date) => date.format(format));
     },
     normalChartData() {
+      console.time("Calculate normalChartData");
+
       console.log(
         this.chartNumDays,
         this.totalCases,
@@ -296,6 +298,7 @@ export default {
         newCaseValues.push(newCases);
       });
 
+      console.timeEnd("Calculate normalChartData");
       return [
         {
           name: "Total cases",
@@ -308,6 +311,7 @@ export default {
       ];
     },
     sourceChartData() {
+      console.time("Calculate sourceChartData");
       const SOURCES = ["Local", "Interstate", "Overseas"];
 
       let values = {};
@@ -328,10 +332,13 @@ export default {
 
       console.log(values);
 
-      return SOURCES.map((targetSource) => ({
+      const sourceChartData = SOURCES.map((targetSource) => ({
         name: targetSource,
         values: values[targetSource],
       }));
+
+      console.timeEnd("Calculate sourceChartData");
+      return sourceChartData;
     },
     chartData() {
       return this.sourceMode ? this.sourceChartData : this.normalChartData;

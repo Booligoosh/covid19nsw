@@ -87,14 +87,18 @@ const store = new Vuex.Store({
                 mode: "no-cors",
               }
             : {}; // See https://stackoverflow.com/a/63814972
-
+        console.time("Fetch CSV");
         const [csvData, metadataModified] = await Promise.all([
           fetch(CASES_URL, fetchConfig).then((r) => r.text()),
           fetch(CASES_MODIFIED_URL, fetchConfig).then((r) => r.text()),
         ]);
+        console.timeEnd("Fetch CSV");
+        console.time("Parse CSV");
         console.log(csvData);
         const parsed = parse(csvData);
         console.log(parsed);
+        console.timeEnd("Parse CSV");
+        console.time("Transform parsed CSV");
         const cases = parsed.map((caseRow) => {
           const postcode = Number(caseRow.postcode);
           const rawDate = caseRow.notification_date;
@@ -116,6 +120,7 @@ const store = new Vuex.Store({
           };
         });
         console.log(cases);
+        console.timeEnd("Transform parsed CSV");
         commit("setCases", cases);
         commit(
           "setTemporalCoverageTo",

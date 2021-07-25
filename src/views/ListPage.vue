@@ -153,7 +153,8 @@ export default {
       );
     },
     postcodeRowsSorted() {
-      return [].concat(this.postcodeRows).sort((a, b) =>
+      console.time("Sort postcodeRows");
+      const postcodeRowsSorted = [].concat(this.postcodeRows).sort((a, b) =>
         // If values are the same, return zero
         a[this.sort] === b[this.sort]
           ? 0
@@ -162,8 +163,11 @@ export default {
             // Unless it's col1, in which case reverse the order
             (this.sort === "col1Sort" ? -1 : 1)
       );
+      console.timeEnd("Sort postcodeRows");
+      return postcodeRowsSorted;
     },
     postcodeRows() {
+      console.time("Calculate postcodeRows");
       // Initialise objects
       const totalCases = {};
       const newCasesThisWeek = {};
@@ -196,25 +200,26 @@ export default {
       });
 
       // Return postcodes/councils using precalculated values
-      if (this.councilMode) {
-        return this.$store.getters.councilNames.map((councilName) => ({
-          councilName,
-          col1Sort: councilName,
-          councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
-          totalCases: totalCases[councilName] || 0,
-          newCasesThisWeek: newCasesThisWeek[councilName] || 0,
-          newCasesToday: newCasesToday[councilName] || 0,
-        }));
-      } else {
-        return this.$store.getters.postcodes.map((postcodeNumber) => ({
-          postcodeNumber,
-          col1Sort: postcodeNumber,
-          totalCases: totalCases[postcodeNumber] || 0,
-          newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
-          newCasesToday: newCasesToday[postcodeNumber] || 0,
-          suburbs: suburbsForPostcode[postcodeNumber].join(", "),
-        }));
-      }
+      const postcodeRows = this.councilMode
+        ? this.$store.getters.councilNames.map((councilName) => ({
+            councilName,
+            col1Sort: councilName,
+            councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
+            totalCases: totalCases[councilName] || 0,
+            newCasesThisWeek: newCasesThisWeek[councilName] || 0,
+            newCasesToday: newCasesToday[councilName] || 0,
+          }))
+        : this.$store.getters.postcodes.map((postcodeNumber) => ({
+            postcodeNumber,
+            col1Sort: postcodeNumber,
+            totalCases: totalCases[postcodeNumber] || 0,
+            newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
+            newCasesToday: newCasesToday[postcodeNumber] || 0,
+            suburbs: suburbsForPostcode[postcodeNumber].join(", "),
+          }));
+
+      console.timeEnd("Calculate postcodeRows");
+      return postcodeRows;
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
