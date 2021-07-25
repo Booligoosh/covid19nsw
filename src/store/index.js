@@ -10,7 +10,7 @@ dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 
-const CASES_URL = "https://covid19nsw.ethan.link/data/cases.csv";
+const CASES_URL = "https://covid19nsw.ethan.link/data/cases.css";
 const CASES_MODIFIED_URL =
   "https://covid19nsw.ethan.link/data/cases_modified.txt";
 const CASE_LOCATIONS_URL =

@@ -15,7 +15,8 @@ async function fetchData() {
   ]);
 
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
-  fs.writeFileSync("./public/data/cases.csv", csv);
+  // Write as .css instead of .csv so that Netlify will apply compression
+  fs.writeFileSync("./public/data/cases.css", csv);
 }
 
 fetchData();
