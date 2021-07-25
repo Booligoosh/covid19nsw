@@ -5,8 +5,6 @@
   Cache-Control: public, max-age=31536000, immutable
 /js/*
   Cache-Control: public, max-age=31536000, immutable
-/api/*
-  Cache-Control: public, max-age=60, stale-while-revalidate=3600
 /data/*
   Cache-Control: public, max-age=60, stale-while-revalidate=3600
   Access-Control-Allow-Origin: *
