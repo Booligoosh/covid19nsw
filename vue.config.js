@@ -7,6 +7,7 @@ module.exports = {
     name: "COVID-19 NSW",
     manifestOptions: {
       short_name: "COVID-19 Data",
+      start_url: "/?utm_source=web_app_manifest&utm_medium=start_url",
     },
     themeColor: "#FFFFFF",
     msTileColor: "#FFFFFF",
