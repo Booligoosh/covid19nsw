@@ -6,7 +6,7 @@ module.exports = {
   pwa: {
     name: "COVID-19 NSW",
     manifestOptions: {
-      short_name: "COVID-19 Data",
+      short_name: "COVID-19 NSW",
       start_url: "/?utm_source=web_app_manifest&utm_medium=start_url",
     },
     themeColor: "#FFFFFF",
