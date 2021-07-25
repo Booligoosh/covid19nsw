@@ -25,48 +25,63 @@
         shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
         more stats, click on column headers to sort.
       </div>
-      <sorted-table :values="postcodeRows" sort="newCasesThisWeek" dir="desc">
+      <table>
         <thead>
           <tr>
-            <th scope="col">
-              <sort-link
+            <th>
+              <a
                 v-if="councilMode"
-                name="councilName"
+                href="#"
+                @click.prevent="sort = 'col1Sort'"
                 title="Sort by Council/LGA"
               >
                 Council/LGA
-              </sort-link>
-              <sort-link
+                <span v-if="sort === 'col1Sort'">▼</span>
+              </a>
+              <a
                 v-else
-                name="postcodeNumberNeg"
+                href="#"
+                @click.prevent="sort = 'col1Sort'"
                 title="Sort by Postcode"
               >
                 Postcode
-              </sort-link>
+                <span v-if="sort === 'col1Sort'">▼</span>
+              </a>
             </th>
-            <th scope="col" class="num-col">
-              <sort-link name="newCasesToday" title="Sort by Cases today">
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'newCasesToday'"
+                title="Sort by Cases today"
+              >
                 Today
-              </sort-link>
+                <span v-if="sort === 'newCasesToday'">▼</span>
+              </a>
             </th>
-            <th scope="col" class="num-col">
-              <sort-link
-                name="newCasesThisWeek"
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'newCasesThisWeek'"
                 title="Sort by Cases this week"
               >
                 This week
-              </sort-link>
+                <span v-if="sort === 'newCasesThisWeek'">▼</span>
+              </a>
             </th>
-            <th scope="col" class="num-col">
-              <sort-link name="totalCases" title="Sort by Total cases">
-                Total
-              </sort-link>
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'totalCases'"
+                title="Sort by Total cases"
+              >
+                Total <span v-if="sort === 'totalCases'">▼</span>
+              </a>
             </th>
           </tr>
         </thead>
-        <tbody slot="body" slot-scope="sort">
+        <tbody>
           <tr
-            v-for="value in sort.values"
+            v-for="value in postcodeRowsSorted"
             :key="value.postcodeNumber"
             role="button"
             @click="
@@ -107,7 +122,7 @@
             <td class="value-number">{{ value.totalCases }}</td>
           </tr>
         </tbody>
-      </sorted-table>
+      </table>
     </div>
   </div>
 </template>
@@ -119,6 +134,11 @@ import PostcodePicker from "../components/PostcodePicker.vue";
 export default {
   components: { PostcodePicker },
   name: "ListPage",
+  data() {
+    return {
+      sort: "newCasesThisWeek",
+    };
+  },
   computed: {
     councilMode() {
       return (
@@ -130,6 +150,17 @@ export default {
         // the router-link click would register after councilMode becomes false,
         // meaning it wrongly navigates to the PostcodePage.
         this.$route.name === "CouncilPage"
+      );
+    },
+    postcodeRowsSorted() {
+      return [].concat(this.postcodeRows).sort((a, b) =>
+        // If values are the same, return zero
+        a[this.sort] === b[this.sort]
+          ? 0
+          : // If A is less than B, put A after B
+            (a[this.sort] < b[this.sort] ? 1 : -1) *
+            // Unless it's col1, in which case reverse the order
+            (this.sort === "col1Sort" ? -1 : 1)
       );
     },
     postcodeRows() {
@@ -168,6 +199,7 @@ export default {
       if (this.councilMode) {
         return this.$store.getters.councilNames.map((councilName) => ({
           councilName,
+          col1Sort: councilName,
           councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
           totalCases: totalCases[councilName] || 0,
           newCasesThisWeek: newCasesThisWeek[councilName] || 0,
@@ -176,8 +208,7 @@ export default {
       } else {
         return this.$store.getters.postcodes.map((postcodeNumber) => ({
           postcodeNumber,
-          // Negative version of postcode so default desc cases sort === asc postcodes sort
-          postcodeNumberNeg: postcodeNumber * -1,
+          col1Sort: postcodeNumber,
           totalCases: totalCases[postcodeNumber] || 0,
           newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
           newCasesToday: newCasesToday[postcodeNumber] || 0,
@@ -348,6 +379,10 @@ table {
       grid-gap: 4px;
       justify-content: space-between;
       align-items: center;
+
+      span {
+        font-size: 0.75em;
+      }
     }
   }
 
@@ -414,13 +449,5 @@ table {
       font-size: 1.2rem;
     }
   }
-}
-</style>
-
-<style lang="scss">
-// Must be outside of scoped styles as the span is
-// within the table component rather than this one.
-table.table th a > span {
-  font-size: 0.75em;
 }
 </style>

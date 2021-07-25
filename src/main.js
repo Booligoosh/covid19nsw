@@ -18,9 +18,6 @@ Vue.use(
   router
 );
 
-import SortedTablePlugin from "vue-sorted-table";
-Vue.use(SortedTablePlugin);
-
 new Vue({
   store,
   router,
