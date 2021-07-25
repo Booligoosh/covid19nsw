@@ -8,10 +8,11 @@
       COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
     </h1>
     <div class="table-subtitle">
-      Data as of <mark>{{ lastUpdatedString }}</mark
-      >, {{ councilMode ? "councils" : "postcodes" }} with 0 cases are not
-      shown. <br />Click on {{ councilMode ? "councils" : "postcodes" }} for
-      more stats, click on column headers to sort.
+      Click on
+      {{ councilMode ? "councils" : "postcodes" }} for more stats, click on
+      column headers to sort. <br />Data as of
+      <mark>{{ lastUpdatedString }}</mark
+      >, updates around 2pm daily.
     </div>
     <div class="page-error" v-if="$store.state.error">
       ⚠ {{ $store.state.error }}
@@ -19,104 +20,119 @@
     <div class="page-loading" v-else-if="$store.state.cases.length === 0">
       Loading&hellip;
     </div>
-    <table v-else>
-      <thead>
-        <tr>
-          <th>
-            <a
-              v-if="councilMode"
-              href="#"
-              @click.prevent="sort = 'col1Sort'"
-              title="Sort by Council/LGA"
-            >
-              Council/LGA
-              <span v-if="sort === 'col1Sort'">▼</span>
-            </a>
-            <a
-              v-else
-              href="#"
-              @click.prevent="sort = 'col1Sort'"
-              title="Sort by Postcode"
-            >
-              Postcode
-              <span v-if="sort === 'col1Sort'">▼</span>
-            </a>
-          </th>
-          <th class="num-col">
-            <a
-              href="#"
-              @click.prevent="sort = 'newCasesToday'"
-              title="Sort by Cases today"
-            >
-              Today
-              <span v-if="sort === 'newCasesToday'">▼</span>
-            </a>
-          </th>
-          <th class="num-col">
-            <a
-              href="#"
-              @click.prevent="sort = 'newCasesThisWeek'"
-              title="Sort by Cases this week"
-            >
-              This week
-              <span v-if="sort === 'newCasesThisWeek'">▼</span>
-            </a>
-          </th>
-          <th class="num-col">
-            <a
-              href="#"
-              @click.prevent="sort = 'totalCases'"
-              title="Sort by Total cases"
-            >
-              Total <span v-if="sort === 'totalCases'">▼</span>
-            </a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="value in postcodeRowsSorted"
-          :key="value.postcodeNumber"
-          role="button"
-          @click="
-            $router.push(
-              councilMode
-                ? {
-                    name: 'CouncilPage',
-                    params: { councilSlug: value.councilSlug },
-                  }
-                : {
-                    name: 'PostcodePage',
-                    params: { postcode: value.postcodeNumber },
-                  }
-            )
-          "
-        >
-          <td class="council-name" v-if="councilMode">
-            <router-link
-              :to="{
-                name: 'CouncilPage',
-                params: { councilSlug: value.councilSlug },
-              }"
-              >{{ value.councilName }}</router-link
-            >
-          </td>
-          <td class="postcode-number" v-else>
-            <router-link
-              :to="{
-                name: 'PostcodePage',
-                params: { postcode: value.postcodeNumber },
-              }"
-              >{{ value.postcodeNumber }}</router-link
-            >&nbsp;
-            <div class="suburbs">{{ value.suburbs }}</div>
-          </td>
-          <td class="value-number">{{ value.newCasesToday }}</td>
-          <td class="value-number">{{ value.newCasesThisWeek }}</td>
-          <td class="value-number">{{ value.totalCases }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table" v-else>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <a
+                v-if="councilMode"
+                href="#"
+                @click.prevent="sort = 'col1Sort'"
+                title="Sort by Council/LGA"
+              >
+                Council/LGA
+                <span v-if="sort === 'col1Sort'">▼</span>
+              </a>
+              <a
+                v-else
+                href="#"
+                @click.prevent="sort = 'col1Sort'"
+                title="Sort by Postcode"
+              >
+                Postcode
+                <span v-if="sort === 'col1Sort'">▼</span>
+              </a>
+            </th>
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'newCasesToday'"
+                title="Sort by Cases today"
+              >
+                Today
+                <span v-if="sort === 'newCasesToday'">▼</span>
+              </a>
+            </th>
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'newCasesThisWeek'"
+                title="Sort by Cases this week"
+              >
+                This week
+                <span v-if="sort === 'newCasesThisWeek'">▼</span>
+              </a>
+            </th>
+            <th class="num-col">
+              <a
+                href="#"
+                @click.prevent="sort = 'totalCases'"
+                title="Sort by Total cases"
+              >
+                Total <span v-if="sort === 'totalCases'">▼</span>
+              </a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="value in truncate
+              ? postcodeRowsSortedTruncated
+              : postcodeRowsSorted"
+            :key="value.postcodeNumber"
+            role="button"
+            @click="
+              $router.push(
+                councilMode
+                  ? {
+                      name: 'CouncilPage',
+                      params: { councilSlug: value.councilSlug },
+                    }
+                  : {
+                      name: 'PostcodePage',
+                      params: { postcode: value.postcodeNumber },
+                    }
+              )
+            "
+          >
+            <td class="council-name" v-if="councilMode">
+              <router-link
+                :to="{
+                  name: 'CouncilPage',
+                  params: { councilSlug: value.councilSlug },
+                }"
+                >{{ value.councilName }}</router-link
+              >
+            </td>
+            <td class="postcode-number" v-else>
+              <router-link
+                :to="{
+                  name: 'PostcodePage',
+                  params: { postcode: value.postcodeNumber },
+                }"
+                >{{ value.postcodeNumber }}</router-link
+              >&nbsp;
+              <div class="suburbs">{{ value.suburbs }}</div>
+            </td>
+            <td class="value-number">{{ value.newCasesToday }}</td>
+            <td class="value-number">{{ value.newCasesThisWeek }}</td>
+            <td class="value-number">{{ value.totalCases }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button
+        class="bottom-row load-more-btn"
+        v-if="truncate"
+        @click="truncate = false"
+      >
+        Show more rows ↓
+      </button>
+      <div class="bottom-row no-postcodes-note" v-else>
+        {{ councilMode ? "Councils" : "Postcodes" }} with 0 total cases are not
+        shown.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -129,6 +145,7 @@ export default {
   name: "ListPage",
   data() {
     return {
+      truncate: true,
       sort: "newCasesThisWeek",
     };
   },
@@ -144,6 +161,12 @@ export default {
         // meaning it wrongly navigates to the PostcodePage.
         this.$route.name === "CouncilPage"
       );
+    },
+    postcodeRowsSortedTruncated() {
+      console.time("Truncating postcodeRowsSorted");
+      const postcodeRowsSortedTruncated = this.postcodeRowsSorted.slice(0, 115);
+      console.timeEnd("Truncating postcodeRowsSorted");
+      return postcodeRowsSortedTruncated;
     },
     postcodeRowsSorted() {
       console.time("Sort postcodeRows");
@@ -302,29 +325,22 @@ $table-title-breakpoint: 460px;
 $table-border: 1px solid hsl(0, 0%, 50%);
 $table-border-radius: 7px;
 
-table {
+.table {
   width: 100%;
   margin: 0 auto;
-  border-spacing: 0;
 
   @media screen and (max-width: $compact-breakpoint) {
     margin-left: -1.5rem;
     width: calc(100% + 3rem);
   }
 
+  table {
+    width: 100%;
+    border-spacing: 0;
+  }
+
   tbody tr {
     cursor: pointer;
-
-    &:last-child {
-      td {
-        &:first-child {
-          border-bottom-left-radius: $table-border-radius;
-        }
-        &:last-child {
-          border-bottom-right-radius: $table-border-radius;
-        }
-      }
-    }
 
     &:hover {
       background: hsl(0, 0%, 98%);
@@ -385,7 +401,8 @@ table {
   }
 
   th,
-  td {
+  td,
+  .bottom-row {
     padding: 0.5rem 1rem;
     border-right: $table-border;
 
@@ -445,6 +462,38 @@ table {
   td.council-name {
     @media screen and (max-width: 528px) {
       font-size: 1.2rem;
+    }
+  }
+
+  .bottom-row {
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    width: 100%;
+    border: $table-border;
+    border-top: none;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    text-align: center;
+
+    &.load-more-btn {
+      cursor: pointer;
+      background: hsl(0, 0%, 98%);
+
+      &:hover {
+        background: hsl(0, 0%, 97%);
+      }
+
+      &:active {
+        background: hsl(0, 0%, 96%);
+      }
+    }
+
+    &.no-postcodes-note {
+      color: hsl(0, 0%, 50%);
+      font-size: 0.9rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
     }
   }
 }
