@@ -20,6 +20,32 @@ async function fetchData() {
   const parsed = parse(csv, {
     columns: true,
   });
+
+  // Calculate postcodes
+  const postcodes = [...new Set(parsed.map((c) => Number(c.postcode)))]
+    .filter((c) => !!c)
+    .filter(
+      // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
+      (postcode) =>
+        (postcode >= 2000 && postcode <= 2599) ||
+        (postcode >= 2619 && postcode <= 2899) ||
+        (postcode >= 2921 && postcode <= 2999)
+    );
+  fs.writeFileSync(
+    "./src/data/built/postcodes.json",
+    JSON.stringify(postcodes)
+  );
+
+  // Calculate councilNames
+  const councilNames = [
+    ...new Set(parsed.map((c) => c.lga_name19.replace(/\(.+?\)/g, "").trim())),
+  ].filter((c) => !!c);
+  fs.writeFileSync(
+    "./src/data/built/councilNames.json",
+    JSON.stringify(councilNames)
+  );
+
+  // Calculate cases
   const cases = parsed.map((caseRow) => {
     const postcode = Number(caseRow.postcode);
     const rawDate = caseRow.notification_date;
@@ -38,7 +64,7 @@ async function fetchData() {
       // source: Minified into number [0,1,2]
       ["Local", "Interstate", "Overseas"].indexOf(source),
       // councilName
-      councilName,
+      councilNames.indexOf(councilName),
       // councilSlug: Not present, calculated from councilName on frontend
 
       // councilIsCityCouncil: Minified into number [0,1]

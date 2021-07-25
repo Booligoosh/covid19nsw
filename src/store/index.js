@@ -8,6 +8,7 @@ const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
+import councilNames from "@/data/built/councilNames.json";
 
 const CASES_URL = "/data/cases.json";
 const CASE_LOCATIONS_URL =
@@ -27,30 +28,6 @@ const store = new Vuex.Store({
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
-  },
-  getters: {
-    postcodes(state) {
-      console.time("Calculate postcodes array");
-      const postcodes = [
-        ...new Set(state.cases.map((state) => state.postcode)),
-      ].filter(
-        // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
-        (postcode) =>
-          (postcode >= 2000 && postcode <= 2599) ||
-          (postcode >= 2619 && postcode <= 2899) ||
-          (postcode >= 2921 && postcode <= 2999)
-      );
-      console.timeEnd("Calculate postcodes array");
-      return postcodes;
-    },
-    councilNames(state) {
-      console.time("Calculate councilNames array");
-      const councilNames = [
-        ...new Set(state.cases.map((state) => state.councilName)),
-      ].filter((c) => !!c);
-      console.timeEnd("Calculate councilNames array");
-      return councilNames;
-    },
   },
   mutations: {
     setCases(state, cases = []) {
@@ -105,8 +82,8 @@ const store = new Vuex.Store({
           postcode: p,
           rawDate: d,
           source: ["Local", "Interstate", "Overseas"][s],
-          councilName: x,
-          councilSlug: x.replace(/ /g, "-").toLowerCase(),
+          councilName: councilNames[x],
+          councilSlug: councilNames[x]?.replace(/ /g, "-").toLowerCase(),
           councilIsCityCouncil: !!y,
         }));
         console.timeEnd("Transform parsed JSON");

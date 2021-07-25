@@ -137,8 +137,15 @@
 </template>
 
 <script>
-import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import PostcodePicker from "../components/PostcodePicker.vue";
+
+import suburbsForPostcode from "@/data/suburbsForPostcode.json";
+
+import postcodes from "@/data/built/postcodes.json";
+import councilNames from "@/data/built/councilNames.json";
+
+const postcodesLength = postcodes.length;
+const councilNamesLength = councilNames.length;
 
 export default {
   components: { PostcodePicker },
@@ -221,7 +228,7 @@ export default {
 
       // Return postcodes/councils using precalculated values
       const postcodeRows = this.councilMode
-        ? this.$store.getters.councilNames.map((councilName) => ({
+        ? councilNames.map((councilName) => ({
             councilName,
             col1Sort: councilName,
             councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
@@ -229,7 +236,7 @@ export default {
             newCasesThisWeek: newCasesThisWeek[councilName] || 0,
             newCasesToday: newCasesToday[councilName] || 0,
           }))
-        : this.$store.getters.postcodes.map((postcodeNumber) => ({
+        : postcodes.map((postcodeNumber) => ({
             postcodeNumber,
             col1Sort: postcodeNumber,
             totalCases: totalCases[postcodeNumber] || 0,
@@ -242,9 +249,7 @@ export default {
       return postcodeRows;
     },
     rowCount() {
-      return this.councilMode
-        ? this.$store.getters.councilNames.length
-        : this.$store.getters.postcodes.length;
+      return this.councilMode ? councilNamesLength : postcodesLength;
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
