@@ -10,8 +10,8 @@ dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 
-const CASES_URL =
-  "https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv";
+const CASES_URL = "https://covid19nsw.ethan.link/worker/v3";
+// "https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv";
 const CASES_META_URL =
   "https://data.nsw.gov.au/data/api/3/action/package_show?id=97ea2424-abaf-4f3e-a9f2-b5c883f42b6a";
 const CASE_LOCATIONS_URL =
@@ -82,7 +82,15 @@ const store = new Vuex.Store({
     async loadCsvData({ commit }) {
       try {
         const [csvData, metadataModified] = await Promise.all([
-          fetch(CASES_URL).then((r) => r.text()),
+          fetch(
+            CASES_URL,
+            window.location.origin === "https://covid19nsw.ethan.link"
+              ? {
+                  credentials: "include",
+                  mode: "no-cors",
+                }
+              : {}
+          ).then((r) => r.text()),
           fetch(CASES_META_URL)
             .then((r) => r.json())
             .then(({ result }) => result.metadata_modified),
