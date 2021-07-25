@@ -2,8 +2,8 @@
 node_modules
 /dist
 /public/sitemap.xml
-/public/data/cases.csv
-/public/data/cases_modified.txt
+/public/data/**
+!/public/data/.gitkeep
 
 # local env files
 .env.local
