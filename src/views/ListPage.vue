@@ -123,7 +123,7 @@
       </table>
       <button
         class="bottom-row load-more-btn"
-        v-if="truncate"
+        v-if="truncate && rowCount > TRUNCATE_SIZE"
         @click="truncate = false"
       >
         Show more rows ↓
@@ -145,6 +145,7 @@ export default {
   name: "ListPage",
   data() {
     return {
+      TRUNCATE_SIZE: 115,
       truncate: true,
       sort: "newCasesThisWeek",
     };
@@ -164,7 +165,10 @@ export default {
     },
     postcodeRowsSortedTruncated() {
       console.time("Truncating postcodeRowsSorted");
-      const postcodeRowsSortedTruncated = this.postcodeRowsSorted.slice(0, 115);
+      const postcodeRowsSortedTruncated = this.postcodeRowsSorted.slice(
+        0,
+        this.TRUNCATE_SIZE
+      );
       console.timeEnd("Truncating postcodeRowsSorted");
       return postcodeRowsSortedTruncated;
     },
@@ -236,6 +240,11 @@ export default {
 
       console.timeEnd("Calculate postcodeRows");
       return postcodeRows;
+    },
+    rowCount() {
+      return this.councilMode
+        ? this.$store.getters.councilNames.length
+        : this.$store.getters.postcodes.length;
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
