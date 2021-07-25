@@ -96,13 +96,13 @@ const store = new Vuex.Store({
         const casesMin = await casesRes.json();
         console.timeEnd("Parse JSON");
         console.time("Transform parsed JSON");
-        const cases = casesMin.map(({ p, d, s, x, y, z }) => ({
+        const cases = casesMin.map(([p, d, s, x, y]) => ({
           postcode: p,
           rawDate: d,
-          source: s,
+          source: ["Local", "Interstate", "Overseas"][s],
           councilName: x,
-          councilSlug: y,
-          councilIsCityCouncil: z,
+          councilSlug: x.replace(/ /g, "-").toLowerCase(),
+          councilIsCityCouncil: !!y,
         }));
         console.timeEnd("Transform parsed JSON");
         commit("setCases", cases);

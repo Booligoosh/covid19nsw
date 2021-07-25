@@ -24,21 +24,26 @@ async function fetchData() {
     const postcode = Number(caseRow.postcode);
     const rawDate = caseRow.notification_date;
     const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
-    const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
     const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
     const source = caseRow.likely_source_of_infection.startsWith(
       "Locally acquired"
     )
       ? "Local"
       : caseRow.likely_source_of_infection;
-    return {
-      p: postcode,
-      d: rawDate,
-      s: source,
-      x: councilName,
-      y: councilSlug,
-      z: councilIsCityCouncil,
-    };
+    return [
+      // postcode
+      postcode,
+      // rawDate
+      rawDate,
+      // source: Minified into number [0,1,2]
+      ["Local", "Interstate", "Overseas"].indexOf(source),
+      // councilName
+      councilName,
+      // councilSlug: Not present, calculated from councilName on frontend
+
+      // councilIsCityCouncil: Minified into number [0,1]
+      Number(councilIsCityCouncil),
+    ];
   });
   fs.writeFileSync("./public/data/cases.json", JSON.stringify(cases));
 }
