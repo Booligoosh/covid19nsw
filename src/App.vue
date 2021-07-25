@@ -50,14 +50,26 @@ export default {
 </script>
 
 <style lang="scss">
-html {
-  font-family: "Inter", sans-serif;
-  font-feature-settings: "ss01";
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: "Regular";
+  src: url("/fonts/Inter-roman.var.woff2?v=3.19") format("woff2");
 }
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: "Inter var", sans-serif;
-  }
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: "Italic";
+  src: url("/fonts/Inter-italic.var.woff2?v=3.19") format("woff2");
+}
+
+html {
+  font-family: "Inter var", sans-serif;
+  font-feature-settings: "ss01";
 }
 
 * {
