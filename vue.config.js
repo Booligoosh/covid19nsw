@@ -21,6 +21,7 @@ module.exports = {
         "sitemap.xml",
         "opensearch.xml",
         "robots.txt",
+        /\/data\/.+/,
       ],
       // https://forum.vuejs.org/t/vue-cli-3-project-with-pwa-not-busting-cache-on-new-builds/50252/7
       skipWaiting: true,
