@@ -2,6 +2,8 @@
 node_modules
 /dist
 /public/sitemap.xml
+/public/data/cases.csv
+/public/data/cases_modified.txt
 
 # local env files
 .env.local
