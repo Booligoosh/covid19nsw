@@ -78,13 +78,11 @@ const store = new Vuex.Store({
   actions: {
     async loadCsvData({ commit }) {
       try {
-        const fetchConfig =
-          window.location.origin === "https://covid19nsw.ethan.link"
-            ? {
-                credentials: "include",
-                mode: "no-cors",
-              }
-            : {}; // See https://stackoverflow.com/a/63814972
+        // See https://stackoverflow.com/a/63814972
+        const fetchConfig = {
+          credentials: "include",
+          mode: "no-cors",
+        };
         console.time("Fetch JSON");
         const [casesRes, metadataModified] = await Promise.all([
           fetch(CASES_URL, fetchConfig),
