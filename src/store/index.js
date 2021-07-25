@@ -10,7 +10,6 @@ dayjs.extend(customParseFormat);
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 
 const CASES_URL = "/data/cases.json";
-const CASES_MODIFIED_URL = "/data/cases_modified.txt";
 const CASE_LOCATIONS_URL =
   "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
 
@@ -18,7 +17,13 @@ const store = new Vuex.Store({
   state: {
     cases: [],
     error: null,
-    temporalCoverageTo: null,
+    temporalCoverageTo: dayjs(
+      document
+        .querySelector("meta[name=cases_modified]")
+        .getAttribute("content")
+    )
+      .startOf("day")
+      .subtract(1, "day"),
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
@@ -48,9 +53,6 @@ const store = new Vuex.Store({
         "TypeError: Failed to fetch",
         "Failed to fetch data. This could be because data.nsw.gov.au isn't working, or you're not connected to the internet."
       );
-    },
-    setTemporalCoverageTo(state, temporalCoverageTo) {
-      state.temporalCoverageTo = temporalCoverageTo;
     },
     setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
@@ -84,10 +86,7 @@ const store = new Vuex.Store({
           mode: "no-cors",
         };
         console.time("Fetch JSON");
-        const [casesRes, metadataModified] = await Promise.all([
-          fetch(CASES_URL, fetchConfig),
-          fetch(CASES_MODIFIED_URL, fetchConfig).then((r) => r.text()),
-        ]);
+        const casesRes = await fetch(CASES_URL, fetchConfig);
         console.timeEnd("Fetch JSON");
         console.time("Parse JSON");
         // Cases with minified properties
@@ -104,10 +103,6 @@ const store = new Vuex.Store({
         }));
         console.timeEnd("Transform parsed JSON");
         commit("setCases", cases);
-        commit(
-          "setTemporalCoverageTo",
-          dayjs(metadataModified).startOf("day").subtract(1, "day")
-        );
       } catch (err) {
         console.log("CSV DATA ERROR:", err);
         commit("setError", err.toString());
