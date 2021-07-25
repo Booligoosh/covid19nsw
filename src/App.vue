@@ -50,7 +50,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://rsms.me/inter/inter.css");
 html {
   font-family: "Inter", sans-serif;
   font-feature-settings: "ss01";
