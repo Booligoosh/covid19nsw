@@ -130,21 +130,15 @@ const store = new Vuex.Store({
       try {
         const json = await fetch(CASE_LOCATIONS_URL).then((r) => r.json());
 
-        // Reverse to show most severe types first
-        const types = Object.keys(json.data).reverse();
-        const caseLocations = types
-          .map((type) =>
-            json.data[type].map((caseLocation) => ({
-              ...caseLocation,
-              // For some reason Data NSW puts everything
-              // in the monitor array now, so get type
-              // manually from alert text
-              type: getTypeFromAlert(caseLocation.Alert),
-              id: Math.random(),
-            }))
-          )
-          .flat();
-        // console.log({caseLocations});
+        const caseLocations = json.data.monitor.map((caseLocation) => ({
+          ...caseLocation,
+          // For some reason Data NSW puts everything
+          // in the monitor array now, so get type
+          // manually from alert text
+          type: getTypeFromAlert(caseLocation.Alert),
+          id: Math.random(),
+        }));
+
         commit("setCaseLocations", caseLocations);
       } catch (err) {
         console.log("CASE LOCATIONS ERROR:", err);
