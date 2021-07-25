@@ -161,23 +161,6 @@ export default {
     DataPageMetadataChanger,
     PageNotFound,
   },
-  created() {
-    const scriptEl = document.createElement("script");
-    scriptEl.setAttribute("type", "application/ld+json");
-    scriptEl.innerText = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: this.postcodeNumber.toString(),
-          item: `https://covid19nsw.ethan.link/postcode/${this.postcodeNumber}`,
-        },
-      ],
-    });
-    document.querySelector("head").appendChild(scriptEl);
-  },
   data() {
     let chartNumDays;
     if (window.innerWidth < 480) {
