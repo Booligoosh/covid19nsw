@@ -2,6 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store";
 
+import ListPage from "@/views/ListPage.vue";
+
 Vue.use(VueRouter);
 
 const LIST_PAGE_DESCRIPTION_SUFFIX =
@@ -25,8 +27,7 @@ const routes = [
   {
     path: "/postcodes",
     name: "PostcodesPage",
-    component: () =>
-      import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
+    component: ListPage,
     meta: {
       title: "COVID Cases By Postcode",
       description:
@@ -46,8 +47,7 @@ const routes = [
   {
     path: "/councils",
     name: "CouncilsPage",
-    component: () =>
-      import(/* webpackChunkName: "listPage" */ "../views/ListPage.vue"),
+    component: ListPage,
     meta: {
       title: "COVID Cases By Council/LGA",
       description:
