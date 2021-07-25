@@ -97,12 +97,7 @@ const store = new Vuex.Store({
         console.log(parsed);
         const cases = parsed.map((caseRow) => {
           const postcode = Number(caseRow.postcode);
-          // const date = new Date(caseRow.notification_date);
-          // date.setHours(0);
-          // date.setMinutes(0);
-          // date.setSeconds(0);
           const rawDate = caseRow.notification_date;
-          const date = dayjs(rawDate);
           const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
           const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
           const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
@@ -114,7 +109,6 @@ const store = new Vuex.Store({
           return {
             postcode,
             rawDate,
-            date,
             councilName,
             councilSlug,
             councilIsCityCouncil,
