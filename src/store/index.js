@@ -77,10 +77,12 @@ const store = new Vuex.Store({
         const { metadataModified, csvData, caseLocations } = await fetch(
           "https://covid19nsw.ethan.link/worker",
           // See https://stackoverflow.com/a/63814972
-          {
-            credentials: "include",
-            mode: "no-cors",
-          }
+          window.location.origin === "https://covid19nsw.ethan.link"
+            ? {
+                credentials: "include",
+                mode: "no-cors",
+              }
+            : {}
         ).then((r) => r.json());
         console.log(csvData);
         const parsed = parse(csvData);
