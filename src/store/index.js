@@ -75,7 +75,12 @@ const store = new Vuex.Store({
     async loadCsvData({ commit }) {
       try {
         const { metadataModified, csvData, caseLocations } = await fetch(
-          "https://covid19nsw.ethan.link/worker"
+          "https://covid19nsw.ethan.link/worker",
+          // See https://stackoverflow.com/a/63814972
+          {
+            credentials: "include",
+            mode: "no-cors",
+          }
         ).then((r) => r.json());
         console.log(csvData);
         const parsed = parse(csvData);
