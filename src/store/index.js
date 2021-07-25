@@ -3,16 +3,14 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-import { parse } from "lil-csv";
 import dayjs from "dayjs";
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 
-const CASES_URL = "https://covid19nsw.ethan.link/data/cases.css";
-const CASES_MODIFIED_URL =
-  "https://covid19nsw.ethan.link/data/cases_modified.txt";
+const CASES_URL = "/data/cases.json";
+const CASES_MODIFIED_URL = "/data/cases_modified.txt";
 const CASE_LOCATIONS_URL =
   "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
 
@@ -87,40 +85,26 @@ const store = new Vuex.Store({
                 mode: "no-cors",
               }
             : {}; // See https://stackoverflow.com/a/63814972
-        console.time("Fetch CSV");
-        const [csvData, metadataModified] = await Promise.all([
-          fetch(CASES_URL, fetchConfig).then((r) => r.text()),
+        console.time("Fetch JSON");
+        const [casesRes, metadataModified] = await Promise.all([
+          fetch(CASES_URL, fetchConfig),
           fetch(CASES_MODIFIED_URL, fetchConfig).then((r) => r.text()),
         ]);
-        console.timeEnd("Fetch CSV");
-        console.time("Parse CSV");
-        console.log(csvData);
-        const parsed = parse(csvData);
-        console.log(parsed);
-        console.timeEnd("Parse CSV");
-        console.time("Transform parsed CSV");
-        const cases = parsed.map((caseRow) => {
-          const postcode = Number(caseRow.postcode);
-          const rawDate = caseRow.notification_date;
-          const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
-          const councilSlug = councilName.replace(/ /g, "-").toLowerCase();
-          const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
-          const source = caseRow.likely_source_of_infection.startsWith(
-            "Locally acquired"
-          )
-            ? "Local"
-            : caseRow.likely_source_of_infection;
-          return {
-            postcode,
-            rawDate,
-            councilName,
-            councilSlug,
-            councilIsCityCouncil,
-            source,
-          };
-        });
-        console.log(cases);
-        console.timeEnd("Transform parsed CSV");
+        console.timeEnd("Fetch JSON");
+        console.time("Parse JSON");
+        // Cases with minified properties
+        const casesMin = await casesRes.json();
+        console.timeEnd("Parse JSON");
+        console.time("Transform parsed JSON");
+        const cases = casesMin.map(({ p, d, s, x, y, z }) => ({
+          postcode: p,
+          rawDate: d,
+          source: s,
+          councilName: x,
+          councilSlug: y,
+          councilIsCityCouncil: z,
+        }));
+        console.timeEnd("Transform parsed JSON");
         commit("setCases", cases);
         commit(
           "setTemporalCoverageTo",
