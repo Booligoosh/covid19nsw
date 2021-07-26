@@ -16,6 +16,7 @@
       :totalCases="totalCases"
       :councilName="councilName"
     />
+    <RenderDetector @created="mainContentRendered" />
     <div class="top-grid">
       <h1 v-if="isCouncil">
         <span
@@ -50,68 +51,57 @@
         </div>
       </div>
     </div>
-    <vue-frappe
-      id="test"
-      class="main-chart"
-      :labels="chartLabels"
-      title=""
-      :type="sourceMode ? 'bar' : 'line'"
-      :height="300"
-      :colors="
-        sourceMode
-          ? ['blue', 'orange', 'light-green']
-          : ['purple', 'light-blue']
-      "
-      :dataSets="chartData"
-      :valuesOverPoints="!sourceMode && !allTimeMode"
-      :tooltipOptions="{ formatTooltipY: (n) => n }"
-      :lineOptions="{
-        regionFill: 1,
-        hideDots: allTimeMode ? 1 : 0,
-      }"
-      :axisOptions="{
-        xIsSeries: true,
-        xAxisMode: allTimeMode ? 'tick' : 'span',
-      }"
-      :barOptions="{ stacked: sourceMode ? 1 : 0 }"
-      :key="chartKey"
-    >
-    </vue-frappe>
+    <div id="chart" ref="chart" class="main-chart"></div>
     <div class="chart-config">
       <div class="chart-config-row">
-        Graph type = &nbsp;
-        <button @click="sourceMode = false" :class="{ active: !sourceMode }">
-          Total & New cases
+        <span class="chart-config-row-name">Graph type: &nbsp;</span>
+        <button
+          @click="newCasesMode = false"
+          :class="{ active: !newCasesMode }"
+        >
+          Total cases
         </button>
-        <button @click="sourceMode = true" :class="{ active: sourceMode }">
-          Total cases by source
+        <button @click="newCasesMode = true" :class="{ active: newCasesMode }">
+          New cases
         </button>
+        <label>
+          <input type="checkbox" v-model="sourceMode" />
+          By source
+        </label>
       </div>
       <div class="chart-config-row">
-        Graph time period = &nbsp;
+        <span class="chart-config-row-name">Graph time period: &nbsp;</span>
         <button
           @click="chartNumDays = 7"
           :class="{ active: chartNumDays === 7 }"
         >
-          1 week
+          1<span class="non-compact">&nbsp;</span>w<span class="non-compact"
+            >eek</span
+          >
         </button>
         <button
           @click="chartNumDays = 14"
           :class="{ active: chartNumDays === 14 }"
         >
-          2 weeks
+          2<span class="non-compact">&nbsp;</span>w<span class="non-compact"
+            >eeks</span
+          >
         </button>
         <button
           @click="chartNumDays = 21"
           :class="{ active: chartNumDays === 21 }"
         >
-          3 weeks
+          3<span class="non-compact">&nbsp;</span>w<span class="non-compact"
+            >eeks</span
+          >
         </button>
         <button
           @click="chartNumDays = 28"
           :class="{ active: chartNumDays === 28 }"
         >
-          4 weeks
+          4<span class="non-compact">&nbsp;</span>w<span class="non-compact"
+            >eeks</span
+          >
         </button>
         <button
           @click="chartNumDays = allTimeDays"
@@ -150,11 +140,15 @@ import minMax from "dayjs/plugin/minMax";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(minMax);
 
+import { Chart } from "frappe-charts";
+import RenderDetector from "../components/RenderDetector.vue";
+
 export default {
   name: "DataPage",
   components: {
     DataPageMetadataChanger,
     PageNotFound,
+    RenderDetector,
   },
   data() {
     let chartNumDays;
@@ -171,7 +165,9 @@ export default {
     return {
       chartNumDays,
       allTimeDays: dayjs().diff("2020-01-25", "day"),
+      newCasesMode: false,
       sourceMode: false,
+      chart: null,
     };
   },
   computed: {
@@ -242,12 +238,18 @@ export default {
     rawDates() {
       return this.lastXDays.map((date) => date.format("YYYY-MM-DD"));
     },
+    lastUpdatedString() {
+      return this.$store.state.temporalCoverageTo.format("D MMMM");
+    },
+    allTimeMode() {
+      return this.chartNumDays === this.allTimeDays;
+    },
     chartLabels() {
       const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
       return this.lastXDays.map((date) => date.format(format));
     },
-    normalChartData() {
-      console.time("Calculate normalChartData");
+    normalChartDatasets() {
+      console.time("Calculate normalChartDatasets");
 
       console.log(
         this.chartNumDays,
@@ -257,41 +259,39 @@ export default {
         "operations"
       );
 
-      let cumulativeValues = [];
+      const cumulative = !this.newCasesMode;
       let newCaseValues = [];
       const caseRawDates = this.allCases.map((c) => c.rawDate);
 
       // Interate through each date
       this.rawDates.forEach((date) => {
-        let cumulativeCases = 0;
-        let newCases = 0;
+        let casesValue = 0;
 
         // Iterate through the dates corresponding to each case
         caseRawDates.forEach((rawDate) => {
-          if (rawDate <= date) cumulativeCases++;
-          if (rawDate === date) newCases++;
+          if (
+            (cumulative && rawDate <= date) ||
+            (!cumulative && rawDate === date)
+          )
+            casesValue++;
         });
 
-        cumulativeValues.push(cumulativeCases);
-        newCaseValues.push(newCases);
+        newCaseValues.push(casesValue);
       });
 
-      console.timeEnd("Calculate normalChartData");
+      console.timeEnd("Calculate normalChartDatasets");
       return [
         {
-          name: "Total cases",
-          values: cumulativeValues,
-        },
-        {
-          name: "New cases",
+          name: `${cumulative ? "Total" : "New"} cases`,
           values: newCaseValues,
         },
       ];
     },
-    sourceChartData() {
-      console.time("Calculate sourceChartData");
+    sourceChartDatasets() {
+      console.time("Calculate sourceChartDatasets");
       const SOURCES = ["Local", "Interstate", "Overseas"];
 
+      const cumulative = !this.newCasesMode;
       let values = {};
       SOURCES.forEach(
         (source) => (values[source] = new Array(this.chartNumDays).fill(0))
@@ -304,41 +304,88 @@ export default {
       this.rawDates.forEach((date, dateIndex) => {
         // Iterate through the sources corresponding to each case
         caseSources.forEach((source, i) => {
-          if (caseRawDates[i] <= date) values[source][dateIndex]++;
+          if (
+            (cumulative && caseRawDates[i] <= date) ||
+            (!cumulative && caseRawDates[i] === date)
+          )
+            values[source][dateIndex]++;
         });
       });
 
-      console.log(values);
-
-      const sourceChartData = SOURCES.map((targetSource) => ({
+      const sourceChartDatasets = SOURCES.map((targetSource) => ({
         name: targetSource,
         values: values[targetSource],
       }));
 
-      console.timeEnd("Calculate sourceChartData");
-      return sourceChartData;
+      console.timeEnd("Calculate sourceChartDatasets");
+      return sourceChartDatasets;
+    },
+    chartDatasets() {
+      return this.sourceMode
+        ? this.sourceChartDatasets
+        : this.normalChartDatasets;
+    },
+    chartOptions() {
+      return {
+        type: this.sourceMode ? "bar" : "line",
+        // Possibly todo later - make graphs line up
+        // regardless of if legend is present:
+        // height: this.sourceMode ? 340 : 300,
+        height: 300,
+        colors: this.sourceMode
+          ? ["blue", "orange", "light-green"]
+          : this.newCasesMode
+          ? ["light-blue"]
+          : ["purple"],
+        valuesOverPoints: !this.sourceMode && !this.allTimeMode,
+        tooltipOptions: { formatTooltipY: (n) => n },
+        lineOptions: {
+          regionFill: 1,
+          hideDots: this.allTimeMode ? 1 : 0,
+        },
+        axisOptions: {
+          xIsSeries: true,
+          xAxisMode: this.allTimeMode ? "tick" : "span",
+        },
+        barOptions: { stacked: this.sourceMode ? 1 : 0, spaceRatio: 0.25 },
+        animate: false,
+      };
     },
     chartData() {
-      return this.sourceMode ? this.sourceChartData : this.normalChartData;
+      return {
+        labels: this.chartLabels,
+        datasets: this.chartDatasets,
+        // Workaround so Y-axis starts at zero, see:
+        // https://github.com/frappe/charts/issues/86#issuecomment-375557382
+        // It'll only kick in when needed, which is when type=line (i.e. sourceMode
+        // is false) and there is not already a zero value in the dataset.
+        yMarkers:
+          !this.sourceMode && !this.chartDatasets[0].values.includes(0)
+            ? [{ label: "", value: 0 }]
+            : [],
+      };
     },
-    lastUpdatedString() {
-      return this.$store.state.temporalCoverageTo.format("D MMMM");
-    },
-    allTimeMode() {
-      return this.chartNumDays === this.allTimeDays;
-    },
-    chartKey() {
-      return this.allTimeMode.toString() + this.sourceMode.toString();
+  },
+  watch: {
+    chartData() {
+      console.log("chartOptions watcher called");
+      this.createChart();
     },
   },
   methods: {
-    getCumulativeCasesOnDate(dayjsDate) {
-      return this.allCases.filter(({ date }) => date.isSameOrBefore(dayjsDate))
-        .length;
+    mainContentRendered() {
+      console.log("mainContentRendered event");
+      this.createChart();
     },
-    getNewCasesOnDate(dayjsDate) {
-      return this.allCases.filter(({ date }) => date.isSame(dayjsDate, "day"))
-        .length;
+    createChart() {
+      // Check that chart div is present
+      if (this.$refs.chart) {
+        const chart = new Chart(`#chart`, {
+          data: this.chartData,
+          ...this.chartOptions,
+        });
+        chart.update(this.chartData);
+      }
     },
   },
 };
@@ -435,6 +482,10 @@ $top-grid-small-text-breakpoint: 370px;
   margin: -5px -30px;
   // margin-right calculated through trial-and-error
   margin-right: -23px;
+  // Hard-coded height measured in DevTools so the page doesn't scroll
+  // back to the top when the contents are briefly removed and re-rendered.
+  height: 303.5px;
+  // height: 343.5px;
 }
 .chart-config {
   margin: 1rem 0;
@@ -444,6 +495,13 @@ $top-grid-small-text-breakpoint: 370px;
   gap: 0.5rem 1.5rem;
 
   &-row {
+    &-name {
+      @media screen and (max-width: 460px) {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+    }
+
     button {
       background: #eee;
       border: none;
@@ -458,6 +516,12 @@ $top-grid-small-text-breakpoint: 370px;
         margin-right: 0;
       }
 
+      @media screen and (max-width: 580px) {
+        .non-compact {
+          display: none;
+        }
+      }
+
       &:hover,
       &:focus {
         background: #ddd;
@@ -468,6 +532,12 @@ $top-grid-small-text-breakpoint: 370px;
       &:active {
         background: #ccc;
       }
+    }
+
+    label {
+      user-select: none;
+      display: inline-block; // So the contents doesn't wrap
+      margin-bottom: 0.5rem; // margin-bottom consistent with buttons
     }
   }
 }

@@ -6,9 +6,6 @@ import router from "./router";
 
 Vue.config.productionTip = false;
 
-import Chart from "vue2-frappe";
-Vue.use(Chart);
-
 import VueGtag from "vue-gtag";
 Vue.use(
   VueGtag,
