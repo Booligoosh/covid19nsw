@@ -167,7 +167,6 @@ export default {
       allTimeDays: dayjs().diff("2020-01-25", "day"),
       newCasesMode: false,
       sourceMode: false,
-      chart: null,
     };
   },
   computed: {
