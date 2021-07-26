@@ -152,11 +152,11 @@ export default {
   },
   data() {
     let chartNumDays;
-    if (window.innerWidth < 480) {
+    if (window.innerWidth < 376) {
       chartNumDays = 7;
-    } else if (window.innerWidth < 650) {
+    } else if (window.innerWidth < 587) {
       chartNumDays = 14;
-    } else if (window.innerWidth < 800) {
+    } else if (window.innerWidth < 815) {
       chartNumDays = 21;
     } else {
       chartNumDays = 28;
