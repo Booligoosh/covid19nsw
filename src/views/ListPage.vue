@@ -495,6 +495,8 @@ $table-border-radius: 7px;
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
     text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
     &.load-more-btn {
       cursor: pointer;
@@ -512,8 +514,6 @@ $table-border-radius: 7px;
     &.no-postcodes-note {
       color: hsl(0, 0%, 50%);
       font-size: 0.9rem;
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
     }
   }
 }
