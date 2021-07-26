@@ -507,6 +507,7 @@ $top-grid-small-text-breakpoint: 370px;
       color: inherit;
       margin-right: 0.5rem;
       margin-bottom: 0.5rem;
+      padding: 2px 4px;
       cursor: pointer;
 
       &:last-child {
