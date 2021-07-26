@@ -31,6 +31,10 @@ const store = new Vuex.Store({
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
+    // Chart options stored globally so they persist between pages
+    chartNumDays: calculateDefaultChartNumDays(),
+    newCasesMode: true,
+    sourceMode: false,
   },
   mutations: {
     setCases(state, cases = []) {
@@ -63,6 +67,15 @@ const store = new Vuex.Store({
       document
         .querySelectorAll(".page-description-meta")
         .forEach((el) => el.setAttribute("content", pageDescription));
+    },
+    setChartNumDays(state, chartNumDays) {
+      state.chartNumDays = chartNumDays;
+    },
+    setNewCasesMode(state, newCasesMode) {
+      state.newCasesMode = newCasesMode;
+    },
+    setSourceMode(state, sourceMode) {
+      state.sourceMode = sourceMode;
     },
   },
   actions: {
@@ -139,4 +152,11 @@ function getTypeFromAlert(alertText) {
     default:
       return "no-type";
   }
+}
+
+function calculateDefaultChartNumDays() {
+  if (window.innerWidth < 376) return 7;
+  if (window.innerWidth < 587) return 14;
+  if (window.innerWidth < 815) return 21;
+  return 28;
 }

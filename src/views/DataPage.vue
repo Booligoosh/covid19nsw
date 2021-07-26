@@ -56,23 +56,26 @@
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph type: &nbsp;</span>
         <button
-          @click="newCasesMode = false"
+          @click="$store.commit('setNewCasesMode', false)"
           :class="{ active: !newCasesMode }"
         >
           Total cases
         </button>
-        <button @click="newCasesMode = true" :class="{ active: newCasesMode }">
+        <button
+          @click="$store.commit('setNewCasesMode', true)"
+          :class="{ active: newCasesMode }"
+        >
           New cases
         </button>
         <label>
-          <input type="checkbox" v-model="sourceMode" />
+          <input type="checkbox" v-model="$store.state.sourceMode" />
           By source
         </label>
       </div>
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph time period: &nbsp;</span>
         <button
-          @click="chartNumDays = 7"
+          @click="$store.commit('setChartNumDays', 7)"
           :class="{ active: chartNumDays === 7 }"
         >
           1<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -80,7 +83,7 @@
           >
         </button>
         <button
-          @click="chartNumDays = 14"
+          @click="$store.commit('setChartNumDays', 14)"
           :class="{ active: chartNumDays === 14 }"
         >
           2<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -88,7 +91,7 @@
           >
         </button>
         <button
-          @click="chartNumDays = 21"
+          @click="$store.commit('setChartNumDays', 21)"
           :class="{ active: chartNumDays === 21 }"
         >
           3<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -96,7 +99,7 @@
           >
         </button>
         <button
-          @click="chartNumDays = 28"
+          @click="$store.commit('setChartNumDays', 28)"
           :class="{ active: chartNumDays === 28 }"
         >
           4<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -104,7 +107,7 @@
           >
         </button>
         <button
-          @click="chartNumDays = allTimeDays"
+          @click="$store.commit('setChartNumDays', allTimeDays)"
           :class="{ active: allTimeMode }"
         >
           All time
@@ -151,25 +154,20 @@ export default {
     RenderDetector,
   },
   data() {
-    let chartNumDays;
-    if (window.innerWidth < 376) {
-      chartNumDays = 7;
-    } else if (window.innerWidth < 587) {
-      chartNumDays = 14;
-    } else if (window.innerWidth < 815) {
-      chartNumDays = 21;
-    } else {
-      chartNumDays = 28;
-    }
-
     return {
-      chartNumDays,
       allTimeDays: dayjs().diff("2020-01-25", "day"),
-      newCasesMode: true,
-      sourceMode: false,
     };
   },
   computed: {
+    chartNumDays() {
+      return this.$store.state.chartNumDays;
+    },
+    newCasesMode() {
+      return this.$store.state.newCasesMode;
+    },
+    sourceMode() {
+      return this.$store.state.sourceMode;
+    },
     isCouncil() {
       return this.$route.name === "CouncilPage";
     },
