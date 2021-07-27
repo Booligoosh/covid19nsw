@@ -198,6 +198,8 @@ export default {
       return this.allCases.length;
     },
     caseCounts() {
+      if (!this.$store.state.temporalCoverageTo)
+        return { today: 0, thisWeek: 0 };
       // Both in 1 function to halve the number of iterations.
       // See the individual getters based on its outputs below.
       const todayDate =
@@ -227,6 +229,7 @@ export default {
       return this.caseCounts.thisWeek;
     },
     lastXDays() {
+      if (!this.$store.state.temporalCoverageTo) return [];
       return Array(this.chartNumDays)
         .fill(0)
         .map((_, i) => this.$store.state.temporalCoverageTo.subtract(i, "days"))
