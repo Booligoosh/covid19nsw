@@ -21,13 +21,7 @@ const store = new Vuex.Store({
   state: {
     cases: [],
     error: null,
-    temporalCoverageTo: dayjs(
-      document
-        .querySelector("meta[name=cases_modified]")
-        .getAttribute("content")
-    )
-      .startOf("day")
-      .subtract(1, "day"),
+    temporalCoverageTo: null,
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
@@ -45,6 +39,9 @@ const store = new Vuex.Store({
         "TypeError: Failed to fetch",
         "Failed to fetch data. This could be because data.nsw.gov.au isn't working, or you're not connected to the internet."
       );
+    },
+    setTemporalCoverageTo(state, temporalCoverageTo) {
+      state.temporalCoverageTo = temporalCoverageTo;
     },
     setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
@@ -91,7 +88,7 @@ const store = new Vuex.Store({
         console.timeEnd("Fetch JSON");
         console.time("Parse JSON");
         // Cases with minified properties
-        const casesMin = await casesRes.json();
+        const [metadataModified, casesMin] = await casesRes.json();
         console.timeEnd("Parse JSON");
         console.time("Transform parsed JSON");
         const cases = casesMin.map(([p, d, s, x, y]) => ({
@@ -103,6 +100,10 @@ const store = new Vuex.Store({
           councilIsCityCouncil: !!y,
         }));
         console.timeEnd("Transform parsed JSON");
+        commit(
+          "setTemporalCoverageTo",
+          dayjs(metadataModified).startOf("day").subtract(1, "day")
+        );
         commit("setCases", cases);
       } catch (err) {
         console.log("CSV DATA ERROR:", err);

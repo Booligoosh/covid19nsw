@@ -1,7 +1,3 @@
-const cases_modified = require("fs")
-  .readFileSync("./public/data/cases_modified.txt")
-  .toString();
-
 module.exports = {
   pwa: {
     name: "COVID-19 NSW",
@@ -33,13 +29,6 @@ module.exports = {
       skipWaiting: true,
       clientsClaim: true,
     },
-  },
-  // https://cli.vuejs.org/guide/webpack.html#modifying-options-of-a-plugin
-  chainWebpack: (config) => {
-    config.plugin("html").tap((args) => {
-      args[0].meta = { cases_modified };
-      return args;
-    });
   },
   css: {
     sourceMap: true,

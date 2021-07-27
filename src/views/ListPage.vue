@@ -10,9 +10,11 @@
     <div class="table-subtitle">
       Click on
       {{ councilMode ? "councils" : "postcodes" }} for more stats, click on
-      column headers to sort. <br />Data as of
-      <mark>{{ lastUpdatedString }}</mark
-      >, updates around 2pm daily.
+      column headers to sort.
+      <span v-if="lastUpdatedString"
+        ><br />Data as of <mark>{{ lastUpdatedString }}</mark
+        >, updates around 2pm daily.</span
+      >
     </div>
     <div class="page-error" v-if="$store.state.error">
       ⚠ {{ $store.state.error }}
@@ -252,7 +254,7 @@ export default {
       return this.councilMode ? councilNamesLength : postcodesLength;
     },
     lastUpdatedString() {
-      return this.$store.state.temporalCoverageTo.format("D MMMM");
+      return this.$store.state.temporalCoverageTo?.format("D MMMM");
     },
   },
   methods: {

@@ -71,7 +71,10 @@ async function fetchData() {
       Number(councilIsCityCouncil),
     ];
   });
-  fs.writeFileSync("./public/data/cases.json", JSON.stringify(cases));
+  fs.writeFileSync(
+    "./public/data/cases.json",
+    JSON.stringify([modified, cases])
+  );
 }
 
 fetchData();
