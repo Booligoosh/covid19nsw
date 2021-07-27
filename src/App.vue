@@ -68,7 +68,7 @@ export default {
 }
 
 html {
-  font-family: "Inter var", sans-serif;
+  font-family: "Inter var", "Helvetica Neue", sans-serif;
   font-feature-settings: "ss01";
 }
 
