@@ -9,7 +9,7 @@
     </h1>
     <div class="table-subtitle" v-if="lastUpdatedString">
       Data up to <mark>{{ lastUpdatedString }}</mark
-      >, updated daily by NSW Health at around 2pm.
+      >, updated daily by NSW Health around 2-3pm.
     </div>
     <div class="page-error" v-if="$store.state.error">
       ⚠ {{ $store.state.error }}
