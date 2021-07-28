@@ -180,8 +180,8 @@ export default {
                 longitude: this.longitude,
               },
               {
-                latitude: caseLocation.Lat,
-                longitude: caseLocation.Lon,
+                latitude: caseLocation.Lat || 0,
+                longitude: caseLocation.Lon || 0,
               }
             ) / 1000;
           return caseLocation;
