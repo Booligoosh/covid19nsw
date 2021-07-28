@@ -346,6 +346,10 @@ export default {
       padding: 1rem 0.5rem;
       cursor: pointer;
 
+      &:focus {
+        outline: none;
+      }
+
       &::marker {
         color: hsl(0, 0%, 50%);
       }
