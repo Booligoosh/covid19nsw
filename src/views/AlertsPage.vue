@@ -61,7 +61,9 @@
       <div v-else-if="latitude && longitude">
         <details
           class="case-locations-location"
-          v-for="caseLocation of caseLocationRows"
+          v-for="caseLocation of truncate
+            ? caseLocationRowsTruncated
+            : caseLocationRows"
           :key="caseLocation.id"
           :open="openToggle === caseLocation.id"
         >
@@ -112,6 +114,13 @@
             </div>
           </div>
         </details>
+        <button
+          class="show-more-btn"
+          v-if="truncate && caseLocationRows.length > TRUNCATE_SIZE"
+          @click="truncate = false"
+        >
+          ↓ Show {{ caseLocationRows.length - TRUNCATE_SIZE }} more alerts
+        </button>
         <div
           class="no-locations-placeholder"
           v-if="$store.state.caseLocations.length === 0"
@@ -139,6 +148,8 @@ export default {
       gpsLongitude: null,
       hasLocationPermission: false,
       openToggle: null,
+      truncate: true,
+      TRUNCATE_SIZE: 100,
     };
   },
   created() {
@@ -207,6 +218,9 @@ export default {
           return caseLocation;
         })
         .sort((a, b) => a.distance - b.distance);
+    },
+    caseLocationRowsTruncated() {
+      return this.caseLocationRows.slice(0, 100);
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
