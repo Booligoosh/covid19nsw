@@ -106,6 +106,10 @@
               <strong>Health advice:</strong>&nbsp;
               <span v-html="caseLocation.HealthAdviceHTML"></span>
             </div>
+            <div class="case-locations-location-more-info-last-updated">
+              <strong>Added/updated:</strong>
+              {{ caseLocation["Last updated date"] }}
+            </div>
           </div>
         </details>
         <div
@@ -414,6 +418,10 @@ export default {
 
       &-address {
         margin: 0.2rem 0;
+      }
+
+      &-html {
+        margin-bottom: 0.2rem;
       }
     }
   }
