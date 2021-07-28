@@ -305,8 +305,9 @@ export default {
         // Iterate through the sources corresponding to each case
         caseSources.forEach((source, i) => {
           if (
-            (cumulative && caseRawDates[i] <= date) ||
-            (!cumulative && caseRawDates[i] === date)
+            ((cumulative && caseRawDates[i] <= date) ||
+              (!cumulative && caseRawDates[i] === date)) &&
+            values[source]
           )
             values[source][dateIndex]++;
         });
