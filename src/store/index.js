@@ -152,6 +152,7 @@ function getTypeFromAlert(alertText) {
     case "Monitor for symptoms.":
       return "monitor";
     default:
+      console.warn("COULD NOT DETERMINE TYPE:", alertText);
       return "no-type";
   }
 }
