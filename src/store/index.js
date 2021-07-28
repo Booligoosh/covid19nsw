@@ -142,6 +142,7 @@ function getTypeFromAlert(alertText) {
     case "Get tested immediately and self-isolate for 14 days":
     case "Get tested immediately and self-isolate for 14 days.":
     case "Get tested immediately and self-isolate until you receive further advice from NSW Health":
+    case "Get tested immediately and self-isolate until you receive further advice.":
       return "isolate";
     case "Get tested immediately. Self-isolate until you get a negative result.":
     case "Get tested immediately and self-isolate until you get a negative result":
