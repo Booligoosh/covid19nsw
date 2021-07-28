@@ -59,40 +59,49 @@
         Loading&hellip;
       </div>
       <div v-else-if="latitude && longitude">
-        <div
+        <details
           class="case-locations-location"
           v-for="caseLocation of caseLocationRows"
           :key="caseLocation.id"
         >
-          <div class="case-locations-location-place">
-            <span :title="caseLocation.Address">
-              {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
-            </span>
-            <span
-              class="case-locations-location-place-distance"
-              v-if="caseLocation.distance"
+          <summary>
+            <div class="case-locations-location-place">
+              <span :title="caseLocation.Address">
+                {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
+              </span>
+              <span
+                class="case-locations-location-place-distance"
+                v-if="caseLocation.distance"
+              >
+                {{ caseLocation.distance.toFixed(1) }}km away
+              </span>
+            </div>
+            <div class="case-locations-location-date-time">
+              {{ caseLocation.Time }}
+              <span class="case-locations-location-date-time-connector"
+                >on</span
+              >
+              {{ caseLocation.Date }}
+            </div>
+            <div
+              :class="[
+                'case-locations-location-alert',
+                `alert-type-${caseLocation.type}`,
+              ]"
             >
-              {{ caseLocation.distance.toFixed(1) }}km away
-            </span>
+              {{ caseLocation.Alert }}
+            </div>
+          </summary>
+          <div class="case-locations-location-more-info">
+            <div class="case-locations-location-more-info-address">
+              <strong>Address:</strong> {{ caseLocation.Address }}
+            </div>
+            <div class="case-locations-location-more-info-html">
+              <strong>Health advice:</strong>&nbsp;
+              <span v-html="caseLocation.HealthAdviceHTML"></span>
+            </div>
           </div>
-          <div class="case-locations-location-date-time">
-            {{ caseLocation.Time }}
-            <span class="case-locations-location-date-time-connector">on</span>
-            {{ caseLocation.Date }}
-          </div>
-          <div class="case-locations-location-address">
-            {{ caseLocation.Address }}
-          </div>
-          <div
-            :class="[
-              'case-locations-location-alert',
-              `alert-type-${caseLocation.type}`,
-            ]"
-          >
-            {{ caseLocation.Alert }}
-          </div>
-          <!-- LAT,LON: <span style="user-select:all">{{ caseLocation.Lat }},{{ caseLocation.Lon }}</span> -->
-        </div>
+        </details>
         <div
           class="no-locations-placeholder"
           v-if="$store.state.caseLocations.length === 0"
@@ -178,6 +187,12 @@ export default {
                 longitude: caseLocation.Lon || 0,
               }
             ) / 1000;
+          // Add target=_blank to links
+          caseLocation.HealthAdviceHTML =
+            caseLocation.HealthAdviceHTML?.replace(
+              /(href=['"].+?['"])/g,
+              "$1 target='_blank'"
+            );
           return caseLocation;
         })
         .sort((a, b) => a.distance - b.distance);
@@ -318,10 +333,24 @@ export default {
 
   &-location {
     margin: 0 -1.5rem;
-    padding: 1rem 1.5rem;
     border-top: 1px solid hsl(0, 0%, 90%);
 
+    summary {
+      padding: 1rem 0.5rem;
+      cursor: pointer;
+
+      &::marker {
+        color: hsl(0, 0%, 50%);
+      }
+
+      > * {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+
     &-place {
+      margin-top: -19.6px;
       font-weight: 600;
       margin-bottom: 0.2rem;
       display: flex;
@@ -350,14 +379,6 @@ export default {
       }
     }
 
-    &-address {
-      display: none;
-      font-style: italic;
-      font-size: 0.9rem;
-      opacity: 0.5;
-      margin-bottom: 0.2rem;
-    }
-
     &-alert {
       font-size: 0.9rem;
 
@@ -374,6 +395,16 @@ export default {
         color: hsl(194, 100%, 33%);
       }
     }
+
+    &-more-info {
+      font-size: 0.9rem;
+      padding: 0 1.5rem;
+      padding-bottom: 1rem;
+
+      &-address {
+        margin: 0.2rem 0;
+      }
+    }
   }
 }
 
@@ -385,5 +416,12 @@ export default {
   font-weight: 500;
   color: hsl(0, 0%, 40%);
   line-height: 1.5;
+}
+</style>
+
+<style lang="scss">
+// Unscoped as it's from v-html
+.case-locations-location-more-info-html a {
+  color: hsl(123, 50%, 28%);
 }
 </style>
