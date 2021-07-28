@@ -63,8 +63,14 @@
           class="case-locations-location"
           v-for="caseLocation of caseLocationRows"
           :key="caseLocation.id"
+          :open="openToggle === caseLocation.id"
         >
-          <summary>
+          <summary
+            @click.prevent="
+              openToggle =
+                openToggle === caseLocation.id ? null : caseLocation.id
+            "
+          >
             <div class="case-locations-location-place">
               <span :title="caseLocation.Address">
                 {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
@@ -128,6 +134,7 @@ export default {
       gpsLatitude: null,
       gpsLongitude: null,
       hasLocationPermission: false,
+      openToggle: null,
     };
   },
   created() {
