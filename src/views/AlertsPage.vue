@@ -166,12 +166,6 @@ export default {
 
       return (this.$store.state.caseLocations || [])
         .map((caseLocation) => {
-          // Temporary workaround for incorrect Westfield Bondi Junction coordinates
-          if (caseLocation.Venue === "Westfield Bondi Junction") {
-            caseLocation.Lat = -33.892139;
-            caseLocation.Lon = 151.247375;
-          }
-
           // Distance from current location in km
           caseLocation.distance =
             getDistance(
