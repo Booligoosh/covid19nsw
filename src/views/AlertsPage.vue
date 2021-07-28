@@ -346,6 +346,10 @@ export default {
     margin: 0 -1.5rem;
     border-top: 1px solid hsl(0, 0%, 85%);
 
+    &[open] {
+      background: hsl(0, 0%, 97%);
+    }
+
     summary {
       padding: 1rem 0.5rem;
       cursor: pointer;
