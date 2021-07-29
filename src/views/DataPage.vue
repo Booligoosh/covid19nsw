@@ -430,7 +430,6 @@ $top-grid-small-text-breakpoint: 370px;
 
     .suburbs-text {
       font-weight: normal;
-      opacity: 0.8;
       font-size: 0.95rem;
       margin-top: 0.2rem;
 
