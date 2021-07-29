@@ -239,7 +239,7 @@ export default {
             totalCases: totalCases[postcodeNumber] || 0,
             newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
             newCasesToday: newCasesToday[postcodeNumber] || 0,
-            suburbs: suburbsForPostcode[postcodeNumber].join(", "),
+            suburbs: suburbsForPostcode[postcodeNumber],
           }));
 
       console.timeEnd("Calculate postcodeRows");

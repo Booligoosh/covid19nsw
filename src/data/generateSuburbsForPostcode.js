@@ -8,7 +8,10 @@ console.log(postcodeNumbers);
 const obj = {};
 postcodeNumbers.forEach(
   (postcode) =>
-    (obj[postcode] = array.filter(({ p }) => p === postcode).map((x) => x.n))
+    (obj[postcode] = array
+      .filter(({ p }) => p === postcode)
+      .map((x) => x.n)
+      .join(", "))
 );
 const final = JSON.stringify(obj);
 // console.log(final);
