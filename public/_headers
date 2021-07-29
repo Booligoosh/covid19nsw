@@ -1,6 +1,6 @@
-# Cache CSS and JS for as long as possible,
-# since changes will have a new hash URL.
-# See https://stackoverflow.com/a/25201898
+
+/* 
+  Cache-Control: public, max-age=60, s-maxage=86400, stale-while-revalidate
 /css/*
   Cache-Control: public, max-age=31536000, immutable
 /js/*
@@ -9,5 +9,3 @@
   Cache-Control: public, max-age=31536000, immutable
 /data/*
   Access-Control-Allow-Origin: *
-/* 
-  Cache-Control: public, max-age=60, s-maxage=86400, stale-while-revalidate
