@@ -274,6 +274,10 @@ $fixed-num-col-width-breakpoint: 589px;
 
 .all-page {
   width: 948px !important;
+
+  @media screen and (max-width: $compact-breakpoint) {
+    padding-bottom: 0 !important;
+  }
 }
 
 .chooser {
@@ -498,6 +502,10 @@ $table-border-radius: 7px;
     text-align: center;
     padding-top: 1rem;
     padding-bottom: 1rem;
+
+    @media screen and (max-width: $compact-breakpoint) {
+      border-bottom: none !important;
+    }
 
     &.load-more-btn {
       cursor: pointer;
