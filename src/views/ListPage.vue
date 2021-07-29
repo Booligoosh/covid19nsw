@@ -441,18 +441,27 @@ $table-border-radius: 7px;
   td.value-number,
   td.postcode-number,
   td.council-name {
-    font-size: 1.5em;
     font-weight: 500;
   }
 
   td.value-number {
     // Align numbers to top of cell rather than middle
     vertical-align: baseline;
+    font-size: 1.5rem;
+
+    @media screen and (max-width: $compact-breakpoint) {
+      font-size: 1.3rem;
+    }
   }
 
   td.postcode-number,
   td.council-name {
     font-weight: bold;
+    font-size: 1.4rem;
+
+    @media screen and (max-width: $compact-breakpoint) {
+      font-size: 1.3rem;
+    }
 
     a {
       color: hsl(123, 50%, 28%);
@@ -461,7 +470,7 @@ $table-border-radius: 7px;
     .suburbs {
       font-weight: normal;
       margin-top: 0.2rem;
-      opacity: 0.7;
+      opacity: 0.9;
       font-size: 0.9rem;
 
       @media screen and (max-width: $compact-breakpoint) {
@@ -472,7 +481,8 @@ $table-border-radius: 7px;
 
   td.council-name {
     @media screen and (max-width: 528px) {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
     }
   }
 
