@@ -149,7 +149,7 @@ export default {
   name: "ListPage",
   data() {
     return {
-      TRUNCATE_SIZE: 115,
+      TRUNCATE_SIZE: 60,
       truncate: true,
       sort: "newCasesThisWeek",
     };
