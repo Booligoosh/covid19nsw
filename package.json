@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node fetchData.js && node generateSitemap.js && vue-cli-service build --modern",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "update-browserslist": "npx browserslist@latest --update-db"
   },
   "dependencies": {
     "core-js": "^3.15.2",
