@@ -102,7 +102,7 @@
                 >{{ value.councilName }}</router-link
               >
             </td>
-            <td class="postcode-number" v-else>
+            <td v-else>
               <router-link
                 :to="{
                   name: 'PostcodePage',
@@ -110,11 +110,11 @@
                 }"
                 >{{ value.postcodeNumber }}</router-link
               >&nbsp;
-              <div class="suburbs">{{ value.suburbs }}</div>
+              <div>{{ value.suburbs }}</div>
             </td>
-            <td class="value-number">{{ value.newCasesToday }}</td>
-            <td class="value-number">{{ value.newCasesThisWeek }}</td>
-            <td class="value-number">{{ value.totalCases }}</td>
+            <td>{{ value.newCasesToday }}</td>
+            <td>{{ value.newCasesThisWeek }}</td>
+            <td>{{ value.totalCases }}</td>
           </tr>
         </tbody>
       </table>
@@ -442,13 +442,12 @@ $table-border-radius: 7px;
     }
   }
 
-  td.value-number,
-  td.postcode-number,
-  td.council-name {
+  td {
     font-weight: 500;
   }
 
-  td.value-number {
+  // Value numbers
+  td:not(:first-child) {
     // Align numbers to top of cell rather than middle
     vertical-align: baseline;
     font-size: 1.5rem;
@@ -458,8 +457,8 @@ $table-border-radius: 7px;
     }
   }
 
-  td.postcode-number,
-  td.council-name {
+  // Postcodes / Council names
+  td:first-child {
     font-weight: bold;
     font-size: 1.4rem;
 
@@ -471,7 +470,8 @@ $table-border-radius: 7px;
       color: hsl(123, 50%, 28%);
     }
 
-    .suburbs {
+    // Suburbs text
+    div {
       font-weight: normal;
       margin-top: 0.2rem;
       opacity: 0.9;
