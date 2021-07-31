@@ -1,7 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
 import store from "./store";
-import "./registerServiceWorker";
 import router from "./router";
 
 Vue.config.productionTip = false;
@@ -20,3 +19,10 @@ new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
+
+// Unregister old service workers
+navigator.serviceWorker
+  ?.getRegistrations()
+  ?.then((registrations) =>
+    registrations?.forEach((registration) => registration.unregister())
+  );
