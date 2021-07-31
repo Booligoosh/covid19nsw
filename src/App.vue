@@ -5,6 +5,7 @@
       <div class="nav-logo">
         <div class="nav-logo-spacer left" />
         <img
+          svg-inline
           src="@/assets/logo.svg"
           class="nav-logo-img"
           title="COVID-19 NSW"

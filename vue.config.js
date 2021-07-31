@@ -39,6 +39,11 @@ module.exports = {
       args[0].inlineSource = "app\\..+?\\.css$";
       return args;
     });
+
+    config.module
+      .rule("vue")
+      .use("vue-svg-inline-loader")
+      .loader("vue-svg-inline-loader");
   },
   devServer: { port: 8081 },
 };
