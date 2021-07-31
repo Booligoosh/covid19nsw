@@ -9,6 +9,7 @@
       :autofocus="autofocus"
       required
       :class="{ fullwidth }"
+      ref="input"
     />
     <button>Go →</button>
   </form>
@@ -43,6 +44,9 @@ export default {
     return {
       inputValue: this.value,
     };
+  },
+  mounted() {
+    if (this.autofocus) this.$refs.input.focus();
   },
   methods: {
     formSubmitHandler() {
