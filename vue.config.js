@@ -23,5 +23,14 @@ module.exports = {
       }),
     ],
   },
+  chainWebpack: (config) => {
+    config
+      .plugin("inline-source")
+      .use(require("html-webpack-inline-source-plugin"));
+    config.plugin("html").tap((args) => {
+      args[0].inlineSource = "app\\..+?\\.css$";
+      return args;
+    });
+  },
   devServer: { port: 8081 },
 };
