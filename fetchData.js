@@ -75,6 +75,10 @@ async function fetchData() {
     "./public/data/cases.json",
     JSON.stringify([modified, cases])
   );
+  fs.writeFileSync(
+    "./src/data/built/cases.json",
+    JSON.stringify([modified, cases])
+  );
 }
 
 fetchData();

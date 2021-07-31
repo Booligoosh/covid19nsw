@@ -9,8 +9,9 @@ dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 import councilNames from "@/data/built/councilNames.json";
+import casesResImported from "@/data/built/cases.json";
 
-const CASES_URL = "/data/cases.json";
+// const CASES_URL = "/data/cases.json";
 const CASE_LOCATIONS_URL =
   "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
 
@@ -79,16 +80,17 @@ const store = new Vuex.Store({
     async loadCsvData({ commit }) {
       try {
         // See https://stackoverflow.com/a/63814972
-        const fetchConfig = {
-          credentials: "include",
-          mode: "no-cors",
-        };
-        console.time("Fetch JSON");
-        const casesRes = await fetch(CASES_URL, fetchConfig);
-        console.timeEnd("Fetch JSON");
+        // const fetchConfig = {
+        //   credentials: "include",
+        //   mode: "no-cors",
+        // };
+        // console.time("Fetch JSON");
+        // const casesRes = await fetch(CASES_URL, fetchConfig);
+        // console.timeEnd("Fetch JSON");
         console.time("Parse JSON");
         // Cases with minified properties
-        const [metadataModified, casesMin] = await casesRes.json();
+        // const [metadataModified, casesMin] = await casesRes.json();
+        const [metadataModified, casesMin] = casesResImported;
         console.timeEnd("Parse JSON");
         console.time("Transform parsed JSON");
         const cases = casesMin.map(([p, d, s, x, y]) => ({
