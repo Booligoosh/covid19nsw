@@ -267,7 +267,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
 $fixed-num-col-width-breakpoint: 589px;

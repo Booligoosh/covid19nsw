@@ -283,7 +283,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .case-locations {
   width: 500px;
   max-width: 100%;
@@ -440,6 +440,10 @@ export default {
 
       &-html {
         margin-bottom: 0.2rem;
+
+        a {
+          color: hsl(123, 50%, 28%);
+        }
       }
     }
   }
@@ -453,12 +457,5 @@ export default {
   font-weight: 500;
   color: hsl(0, 0%, 40%);
   line-height: 1.5;
-}
-</style>
-
-<style lang="scss">
-// Unscoped as it's from v-html
-.case-locations-location-more-info-html a {
-  color: hsl(123, 50%, 28%);
 }
 </style>

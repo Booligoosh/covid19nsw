@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .postcode-picker {
   opacity: 0.9;
   display: flex;

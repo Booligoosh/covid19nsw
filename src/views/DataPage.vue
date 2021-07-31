@@ -392,7 +392,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $top-grid-breakpoint: 750px;
 $top-grid-small-text-breakpoint: 370px;
 
@@ -486,6 +486,10 @@ $top-grid-small-text-breakpoint: 370px;
   // back to the top when the contents are briefly removed and re-rendered.
   height: 303.5px;
   // height: 343.5px;
+
+  .chart-container svg.frappe-chart.chart {
+    max-width: 100%;
+  }
 }
 .chart-config {
   margin: 1rem 0;
@@ -581,12 +585,5 @@ $top-grid-small-text-breakpoint: 370px;
       margin-top: 1em;
     }
   }
-}
-</style>
-
-<style lang="scss">
-// Unscoped
-.data-page .chart-container svg.frappe-chart.chart {
-  max-width: 100%;
 }
 </style>

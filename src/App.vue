@@ -220,19 +220,3 @@ input {
   margin: 0;
 }
 </style>
-
-<style lang="scss" scoped>
-.beta {
-  text-transform: uppercase;
-  font-size: 0.7em;
-  padding: 0.2rem 0.5rem;
-  background: #ccc;
-  border-radius: 5px;
-  font-weight: 500;
-  margin-left: 0.25rem;
-
-  .bracket {
-    display: none;
-  }
-}
-</style>
