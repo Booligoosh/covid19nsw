@@ -24,13 +24,7 @@ async function fetchData() {
   // Calculate postcodes
   const postcodes = [...new Set(parsed.map((c) => Number(c.postcode)))]
     .filter((c) => !!c)
-    .filter(
-      // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
-      (postcode) =>
-        (postcode >= 2000 && postcode <= 2599) ||
-        (postcode >= 2619 && postcode <= 2899) ||
-        (postcode >= 2921 && postcode <= 2999)
-    );
+    .filter(postcodeIsValid);
   fs.writeFileSync(
     "./src/data/built/postcodes.json",
     JSON.stringify(postcodes)
@@ -46,33 +40,35 @@ async function fetchData() {
   );
 
   // Calculate cases
-  const cases = parsed.map((caseRow) => {
-    const postcode = Number(caseRow.postcode);
-    const rawDate = caseRow.notification_date;
-    const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
-    const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
-    const source = caseRow.likely_source_of_infection.startsWith(
-      "Locally acquired"
-    )
-      ? "Local"
-      : caseRow.likely_source_of_infection;
-    return [
-      // postcode
-      postcode,
-      // rawDate:
-      // - "2020" replaced with "0", "2021" replaced with "1" etc.
-      // - Dashes removed
-      rawDate.substr(3).replace(/-/g, ""),
-      // source: Minified into number [0,1,2]
-      ["Local", "Interstate", "Overseas"].indexOf(source),
-      // councilName
-      councilNames.indexOf(councilName),
-      // councilSlug: Not present, calculated from councilName on frontend
+  const cases = parsed
+    .filter(({ postcode }) => postcodeIsValid(postcode))
+    .map((caseRow) => {
+      const postcode = Number(caseRow.postcode);
+      const rawDate = caseRow.notification_date;
+      const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
+      const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
+      const source = caseRow.likely_source_of_infection.startsWith(
+        "Locally acquired"
+      )
+        ? "Local"
+        : caseRow.likely_source_of_infection;
+      return [
+        // postcode
+        postcode,
+        // rawDate:
+        // - "2020" replaced with "0", "2021" replaced with "1" etc.
+        // - Dashes removed
+        rawDate.substr(3).replace(/-/g, ""),
+        // source: Minified into number [0,1,2]
+        ["Local", "Interstate", "Overseas"].indexOf(source),
+        // councilName
+        councilNames.indexOf(councilName),
+        // councilSlug: Not present, calculated from councilName on frontend
 
-      // councilIsCityCouncil: Minified into number [0,1]
-      Number(councilIsCityCouncil),
-    ];
-  });
+        // councilIsCityCouncil: Minified into number [0,1]
+        Number(councilIsCityCouncil),
+      ];
+    });
   fs.writeFileSync(
     "./public/data/cases.json",
     JSON.stringify([modified, cases])
@@ -84,3 +80,12 @@ async function fetchData() {
 }
 
 fetchData();
+
+function postcodeIsValid(postcode) {
+  // Based on https://en.wikipedia.org/wiki/Postcodes_in_Australia#Australian_states_and_territories
+  return (
+    (postcode >= 2000 && postcode <= 2599) ||
+    (postcode >= 2619 && postcode <= 2899) ||
+    (postcode >= 2921 && postcode <= 2999)
+  );
+}
