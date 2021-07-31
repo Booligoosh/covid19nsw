@@ -46,12 +46,23 @@ async function fetchData() {
     JSON.stringify(councilNames)
   );
 
+  // Calculate dates
+  const dates = [...new Set(parsed.map(getMinifiedDate))]
+    .filter((c) => !!c)
+    // Sort so the most-used dates come first, leading to
+    // less >1-digit dates indicies in the cases.json file.
+    .sort(
+      (a, b) =>
+        parsed.filter((c) => getMinifiedDate(c) === b).length -
+        parsed.filter((c) => getMinifiedDate(c) === a).length
+    );
+  fs.writeFileSync("./src/data/built/dates.json", JSON.stringify(dates));
+
   // Calculate cases
   const cases = parsed
     .filter(({ postcode }) => postcodeIsValid(postcode))
     .map((caseRow) => {
       const postcode = Number(caseRow.postcode);
-      const rawDate = caseRow.notification_date;
       const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
       const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
       const source = caseRow.likely_source_of_infection.startsWith(
@@ -65,7 +76,7 @@ async function fetchData() {
         // rawDate:
         // - "2020" replaced with "0", "2021" replaced with "1" etc.
         // - Dashes removed
-        rawDate.substr(3).replace(/-/g, ""),
+        dates.indexOf(getMinifiedDate(caseRow)),
         // source: Minified into number [0,1,2]
         ["Local", "Interstate", "Overseas"].indexOf(source),
         // councilName
@@ -95,4 +106,8 @@ function postcodeIsValid(postcode) {
     (postcode >= 2619 && postcode <= 2899) ||
     (postcode >= 2921 && postcode <= 2999)
   );
+}
+
+function getMinifiedDate(c) {
+  return c.notification_date.substr(3).replace(/-/g, "");
 }
