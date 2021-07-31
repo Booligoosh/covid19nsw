@@ -16,14 +16,6 @@ const routes = [
     path: "/",
     redirect: "/postcodes",
   },
-  {
-    path: "/all",
-    redirect: "/postcodes",
-  },
-  {
-    path: "/locations",
-    redirect: "/alerts",
-  },
   // Actual routes
   {
     path: "/postcodes",
