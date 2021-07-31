@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import store from "@/store";
 
 import ListPage from "@/views/ListPage.vue";
+import AppShell from "@/views/AppShell.vue";
 
 Vue.use(VueRouter);
 
@@ -95,7 +96,7 @@ const routes = [
   {
     path: "/app-shell",
     name: "AppShell",
-    component: null,
+    component: AppShell,
   },
   {
     path: "*",
