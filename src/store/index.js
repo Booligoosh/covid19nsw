@@ -95,7 +95,7 @@ const store = new Vuex.Store({
         console.time("Transform parsed JSON");
         const cases = casesMin.map(([p, d, s, x, y]) => ({
           postcode: p,
-          rawDate: d,
+          rawDate: `202${d.substr(0, 1)}-${d.substr(1, 2)}-${d.substr(3, 2)}`,
           source: ["Local", "Interstate", "Overseas"][s],
           councilName: councilNames[x],
           councilSlug: councilNames[x]?.replace(/ /g, "-").toLowerCase(),

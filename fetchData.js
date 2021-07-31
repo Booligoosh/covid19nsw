@@ -59,8 +59,10 @@ async function fetchData() {
     return [
       // postcode
       postcode,
-      // rawDate
-      rawDate,
+      // rawDate:
+      // - "2020" replaced with "0", "2021" replaced with "1" etc.
+      // - Dashes removed
+      rawDate.substr(3).replace(/-/g, ""),
       // source: Minified into number [0,1,2]
       ["Local", "Interstate", "Overseas"].indexOf(source),
       // councilName
