@@ -6,5 +6,5 @@ https://covid19nsw.netlify.com/*            https://covid19nsw.ethan.link/:splat
 /js/*                                       /                                               410
 /yo                                         https://plausible.io/api/event                  200
 /yo.js                                      https://plausible.io/js/plausible.outbound-links.js 200
-# Proxy all URLs to index so that Vue Router works
-/*                                          /                                               200
+# Proxy all URLs to app-shell so that Vue Router works
+/*                                          /app-shell/index.html                           200

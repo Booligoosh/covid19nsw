@@ -93,6 +93,11 @@ const routes = [
     },
   },
   {
+    path: "/app-shell",
+    name: "AppShell",
+    component: null,
+  },
+  {
     path: "*",
     component: () =>
       import(
