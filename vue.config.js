@@ -13,11 +13,16 @@ module.exports = {
         postProcess(renderedRoute) {
           // Ignore any redirects.
           renderedRoute.route = renderedRoute.originalRoute;
-          // Remove <noscript> tag for prerendered pages as they work without JS
-          renderedRoute.html = renderedRoute.html.replace(
-            /<noscript>.+?<\/noscript>/g,
-            ""
-          );
+
+          renderedRoute.html = renderedRoute.html
+            // Remove <noscript> tag for prerendered pages as they work without JS
+            .replace(/<noscript>.+?<\/noscript>/g, "")
+            // Remove gtag stuff so it doesn't get added twice
+            .replace(
+              `<link href="https://www.googletagmanager.com" rel="preconnect"><script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-103555680-12&amp;l=dataLayer"></script>`,
+              ""
+            );
+
           return renderedRoute;
         },
       }),
