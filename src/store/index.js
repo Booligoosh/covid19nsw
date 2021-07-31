@@ -9,6 +9,7 @@ dayjs.extend(customParseFormat);
 
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
 import councilNames from "@/data/built/councilNames.json";
+import postcodes from "@/data/built/postcodes.json";
 import casesResImported from "@/data/built/cases.json";
 
 // const CASES_URL = "/data/cases.json";
@@ -94,7 +95,7 @@ const store = new Vuex.Store({
         console.timeEnd("Parse JSON");
         console.time("Transform parsed JSON");
         const cases = casesMin.map(([p, d, s, x, y]) => ({
-          postcode: p,
+          postcode: postcodes[p],
           rawDate: `202${d.substr(0, 1)}-${d.substr(1, 2)}-${d.substr(3, 2)}`,
           source: ["Local", "Interstate", "Overseas"][s],
           councilName: councilNames[x],

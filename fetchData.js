@@ -24,7 +24,14 @@ async function fetchData() {
   // Calculate postcodes
   const postcodes = [...new Set(parsed.map((c) => Number(c.postcode)))]
     .filter((c) => !!c)
-    .filter(postcodeIsValid);
+    .filter(postcodeIsValid)
+    // Sort so the most-used postcodes come first, leading to
+    // less >1-digit postcode indicies in the cases.json file.
+    .sort(
+      (a, b) =>
+        parsed.filter(({ postcode }) => postcode === b.toString()).length -
+        parsed.filter(({ postcode }) => postcode === a.toString()).length
+    );
   fs.writeFileSync(
     "./src/data/built/postcodes.json",
     JSON.stringify(postcodes)
@@ -54,7 +61,7 @@ async function fetchData() {
         : caseRow.likely_source_of_infection;
       return [
         // postcode
-        postcode,
+        postcodes.indexOf(postcode),
         // rawDate:
         // - "2020" replaced with "0", "2021" replaced with "1" etc.
         // - Dashes removed
