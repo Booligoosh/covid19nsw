@@ -69,7 +69,8 @@ export default {
 }
 
 html {
-  font-family: "Inter var", "Helvetica Neue", sans-serif;
+  font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-feature-settings: "ss01";
 }
 
