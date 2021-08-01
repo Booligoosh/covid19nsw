@@ -19,14 +19,11 @@
     <RenderDetector @created="mainContentRendered" />
     <div class="top-grid">
       <h1 v-if="isCouncil">
-        <span
-          ><span class="not-bold">COVID-19 data for the</span>
-          {{ councilName }} <span class="not-bold">area</span></span
-        >
+        <span><span class="not-bold">Cases in</span> {{ councilName }}</span>
       </h1>
       <h1 v-else>
         <span
-          ><span class="not-bold">COVID-19 data for the postcode</span>
+          ><span class="not-bold">Cases in the postcode</span>
           {{ postcodeNumber }}</span
         >
         <div class="suburbs-text">
