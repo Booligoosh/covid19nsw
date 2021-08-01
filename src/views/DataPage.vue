@@ -302,6 +302,7 @@ export default {
             this.avgPeriod - 1,
             this.chartNumDays + this.avgPeriod - 1
           ),
+          chartType: cumulative ? "line" : "bar",
         },
       ];
       if (this.avgPeriod !== 1)
@@ -312,6 +313,7 @@ export default {
           values: prevPeriodTotals
             .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
             .map((n) => n / this.avgPeriod),
+          chartType: "line",
         });
 
       console.timeEnd("Calculate normalChartDatasets");
@@ -361,7 +363,7 @@ export default {
     },
     chartOptions() {
       return {
-        type: this.sourceMode ? "bar" : "line",
+        type: this.sourceMode ? "bar" : "axis-mixed",
         // Possibly todo later - make graphs line up
         // regardless of if legend is present:
         // height: this.sourceMode ? 340 : 300,
