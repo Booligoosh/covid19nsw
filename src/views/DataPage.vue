@@ -123,6 +123,7 @@
 import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
+import { ALL_TIME_START_DATE, OUTBREAK_START_DATE } from "@/constants.js";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -144,8 +145,8 @@ export default {
   },
   data() {
     return {
-      allTimeDays: dayjs().diff("2020-01-25", "day"),
-      outbreakDays: dayjs().diff("2021-06-17", "day"),
+      allTimeDays: dayjs().diff(ALL_TIME_START_DATE, "day"),
+      outbreakDays: dayjs().diff(OUTBREAK_START_DATE, "day"),
     };
   },
   computed: {

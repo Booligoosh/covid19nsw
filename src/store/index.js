@@ -7,7 +7,11 @@ import dayjs from "dayjs";
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
-import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
+import {
+  DEFAULT_PAGE_TITLE,
+  DEFAULT_PAGE_DESCRIPTION,
+  OUTBREAK_START_DATE,
+} from "../constants";
 import councilNames from "@/data/built/councilNames.json";
 import postcodes from "@/data/built/postcodes.json";
 import dates from "@/data/built/dates.json";
@@ -29,7 +33,9 @@ const store = new Vuex.Store({
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
     // Chart options stored globally so they persist between pages
-    chartNumDays: calculateDefaultChartNumDays(),
+    chartNumDays: OUTBREAK_START_DATE
+      ? dayjs().diff(OUTBREAK_START_DATE, "day")
+      : calculateDefaultChartNumDays(),
     newCasesMode: true,
     sourceMode: false,
   },
