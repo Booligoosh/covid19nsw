@@ -166,6 +166,5 @@ function getTypeFromAlert(alertText) {
 
 function calculateDefaultChartNumDays() {
   if (window.innerWidth < 587) return 14;
-  if (window.innerWidth < 815) return 21;
   return 28;
 }

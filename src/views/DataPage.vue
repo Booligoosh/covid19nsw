@@ -83,14 +83,6 @@
           >
         </button>
         <button
-          @click="$store.commit('setChartNumDays', 21)"
-          :class="{ active: chartNumDays === 21 }"
-        >
-          3<span class="non-compact">&nbsp;</span>w<span class="non-compact"
-            >eeks</span
-          >
-        </button>
-        <button
           @click="$store.commit('setChartNumDays', 28)"
           :class="{ active: chartNumDays === 28 }"
         >
@@ -544,7 +536,7 @@ $top-grid-small-text-breakpoint: 370px;
 
   &-row {
     &-name {
-      @media screen and (max-width: 475px) {
+      @media screen and (max-width: 520px) {
         display: block;
         margin-bottom: 0.5rem;
       }
@@ -565,7 +557,7 @@ $top-grid-small-text-breakpoint: 370px;
         margin-right: 0;
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 365px) {
         .non-compact {
           display: none;
         }
