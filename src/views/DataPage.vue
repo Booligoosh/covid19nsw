@@ -542,6 +542,9 @@ $top-grid-small-text-breakpoint: 370px;
       @media screen and (max-width: 520px) {
         display: block;
         margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        opacity: 0.6;
       }
     }
 
