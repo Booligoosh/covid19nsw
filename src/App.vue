@@ -128,9 +128,8 @@ body,
       }
       &-img {
         width: auto;
-        height: 2.5rem;
-        vertical-align: middle;
-        margin-right: 0.5rem;
+        height: 2rem;
+        margin-right: 0.25rem;
       }
       &-title {
         font-weight: bold;
@@ -139,7 +138,7 @@ body,
       }
       &-about {
         font-weight: normal;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: inherit;
         opacity: 0.6;
         width: $about-width;
