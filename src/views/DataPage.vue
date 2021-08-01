@@ -107,10 +107,16 @@
           >
         </button>
         <button
+          @click="$store.commit('setChartNumDays', outbreakDays)"
+          :class="{ active: outbreakMode }"
+        >
+          This wave
+        </button>
+        <button
           @click="$store.commit('setChartNumDays', allTimeDays)"
           :class="{ active: allTimeMode }"
         >
-          All time
+          All-time
         </button>
       </div>
     </div>
@@ -158,6 +164,7 @@ export default {
   data() {
     return {
       allTimeDays: dayjs().diff("2020-01-25", "day"),
+      outbreakDays: dayjs().diff("2021-06-17", "day"),
     };
   },
   computed: {
@@ -177,7 +184,9 @@ export default {
       return Number(this.$route.params.postcode);
     },
     avgPeriod() {
-      return this.newCasesMode && this.allTimeMode ? AVG_PERIOD : 1;
+      return this.newCasesMode && (this.allTimeMode || this.outbreakMode)
+        ? AVG_PERIOD
+        : 1;
     },
     suburbsText() {
       return suburbsForPostcode[this.postcodeNumber] || "Unknown";
@@ -249,6 +258,9 @@ export default {
     },
     allTimeMode() {
       return this.chartNumDays === this.allTimeDays;
+    },
+    outbreakMode() {
+      return this.chartNumDays === this.outbreakDays;
     },
     chartLabels() {
       const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
@@ -377,11 +389,12 @@ export default {
           : this.newCasesMode
           ? ["light-blue", "green"]
           : ["purple"],
-        valuesOverPoints: !this.sourceMode && !this.allTimeMode,
+        valuesOverPoints:
+          !this.sourceMode && !this.allTimeMode && !this.outbreakMode,
         tooltipOptions: { formatTooltipY: (n) => n },
         lineOptions: {
           regionFill: 1,
-          hideDots: this.allTimeMode ? 1 : 0,
+          hideDots: this.allTimeMode || this.outbreakMode ? 1 : 0,
         },
         axisOptions: {
           xIsSeries: true,
@@ -539,7 +552,7 @@ $top-grid-small-text-breakpoint: 370px;
 
   &-row {
     &-name {
-      @media screen and (max-width: 460px) {
+      @media screen and (max-width: 510px) {
         display: block;
         margin-bottom: 0.5rem;
       }
@@ -560,7 +573,7 @@ $top-grid-small-text-breakpoint: 370px;
         margin-right: 0;
       }
 
-      @media screen and (max-width: 580px) {
+      @media screen and (max-width: 660px) {
         .non-compact {
           display: none;
         }
