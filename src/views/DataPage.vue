@@ -146,6 +146,8 @@ dayjs.extend(minMax);
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 
+const AVG_PERIOD = 5;
+
 export default {
   name: "DataPage",
   components: {
@@ -173,6 +175,9 @@ export default {
     },
     postcodeNumber() {
       return Number(this.$route.params.postcode);
+    },
+    avgPeriod() {
+      return this.newCasesMode && this.allTimeMode ? AVG_PERIOD : 1;
     },
     suburbsText() {
       return suburbsForPostcode[this.postcodeNumber] || "Unknown";
@@ -230,7 +235,8 @@ export default {
     },
     lastXDays() {
       if (!this.$store.state.temporalCoverageTo) return [];
-      return Array(this.chartNumDays)
+      // Add avgPeriod-1 days before the period
+      return Array(this.chartNumDays + this.avgPeriod - 1)
         .fill(0)
         .map((_, i) => this.$store.state.temporalCoverageTo.subtract(i, "days"))
         .reverse();
@@ -246,7 +252,12 @@ export default {
     },
     chartLabels() {
       const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
-      return this.lastXDays.map((date) => date.format(format));
+      return (
+        this.lastXDays
+          // Remove the first avgPeriod-1 days
+          .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
+          .map((date) => date.format(format))
+      );
     },
     normalChartDatasets() {
       console.time("Calculate normalChartDatasets");
@@ -260,11 +271,18 @@ export default {
       );
 
       const cumulative = !this.newCasesMode;
-      let newCaseValues = [];
+      // Add avgPeriod-1 days BEFORE the period
+      const newCaseValues = new Array(
+        this.chartNumDays + this.avgPeriod - 1
+      ).fill(0);
+      // Add avgPeriod-1 days AFTER the period
+      const prevPeriodTotals = new Array(
+        this.chartNumDays + this.avgPeriod - 1
+      ).fill(0);
       const caseRawDates = this.allCases.map((c) => c.rawDate);
 
       // Interate through each date
-      this.rawDates.forEach((date) => {
+      this.rawDates.forEach((date, i) => {
         let casesValue = 0;
 
         // Iterate through the dates corresponding to each case
@@ -276,16 +294,34 @@ export default {
             casesValue++;
         });
 
-        newCaseValues.push(casesValue);
+        newCaseValues[i] = casesValue;
+
+        for (let j = 0; j < this.avgPeriod; j++)
+          prevPeriodTotals[i + j] += casesValue;
       });
 
-      console.timeEnd("Calculate normalChartDatasets");
-      return [
+      const normalChartDatasets = [
         {
           name: `${cumulative ? "Total" : "New"} cases`,
-          values: newCaseValues,
+          // Remove the first avgPeriod-1 days
+          values: newCaseValues.slice(
+            this.avgPeriod - 1,
+            this.chartNumDays + this.avgPeriod - 1
+          ),
         },
       ];
+      if (this.avgPeriod !== 1)
+        normalChartDatasets.push({
+          name: `${this.avgPeriod} day avg`,
+          // Remove the first avgPeriod-1 days, and the last avgPeriod-1 days
+          // after period added by the for loop, which will be NaN (null + num)
+          values: prevPeriodTotals
+            .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
+            .map((n) => n / this.avgPeriod),
+        });
+
+      console.timeEnd("Calculate normalChartDatasets");
+      return normalChartDatasets;
     },
     sourceChartDatasets() {
       console.time("Calculate sourceChartDatasets");
@@ -300,18 +336,21 @@ export default {
       const caseRawDates = this.allCases.map((c) => c.rawDate);
       const caseSources = this.allCases.map((c) => c.source);
 
-      // Interate through each date
-      this.rawDates.forEach((date, dateIndex) => {
-        // Iterate through the sources corresponding to each case
-        caseSources.forEach((source, i) => {
-          if (
-            ((cumulative && caseRawDates[i] <= date) ||
-              (!cumulative && caseRawDates[i] === date)) &&
-            values[source]
-          )
-            values[source][dateIndex]++;
+      this.rawDates
+        // Remove the first avgPeriod-1 days
+        .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
+        // Interate through each date
+        .forEach((date, dateIndex) => {
+          // Iterate through the sources corresponding to each case
+          caseSources.forEach((source, i) => {
+            if (
+              ((cumulative && caseRawDates[i] <= date) ||
+                (!cumulative && caseRawDates[i] === date)) &&
+              values[source]
+            )
+              values[source][dateIndex]++;
+          });
         });
-      });
 
       const sourceChartDatasets = SOURCES.map((targetSource) => ({
         name: targetSource,
@@ -336,7 +375,7 @@ export default {
         colors: this.sourceMode
           ? ["blue", "orange", "light-green"]
           : this.newCasesMode
-          ? ["light-blue"]
+          ? ["light-blue", "green"]
           : ["purple"],
         valuesOverPoints: !this.sourceMode && !this.allTimeMode,
         tooltipOptions: { formatTooltipY: (n) => n },
