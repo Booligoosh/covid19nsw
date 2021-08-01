@@ -457,7 +457,8 @@ $top-grid-small-text-breakpoint: 370px;
     @media screen and (max-width: $top-grid-breakpoint) {
       text-align: center;
       margin-right: 0;
-      margin-bottom: 1rem;
+      margin-bottom: 0.7rem;
+      font-size: 1.7rem;
     }
 
     @media screen and (max-width: $top-grid-small-text-breakpoint) {
@@ -470,7 +471,7 @@ $top-grid-small-text-breakpoint: 370px;
       margin-top: 0.2rem;
 
       @media screen and (max-width: $top-grid-breakpoint) {
-        margin-top: 0.7rem;
+        margin-top: 0.4rem;
       }
 
       &-suburbs {
@@ -493,14 +494,16 @@ $top-grid-small-text-breakpoint: 370px;
       padding: 0 0.75rem;
 
       @media screen and (max-width: $top-grid-breakpoint) {
-        border-right-style: solid;
+        &:first-child {
+          border-left-style: none;
+        }
       }
 
       &-num {
         font-weight: bold;
         font-size: 2.5rem;
 
-        @media screen and (max-width: $top-grid-small-text-breakpoint) {
+        @media screen and (max-width: $top-grid-breakpoint) {
           font-size: 2rem;
         }
       }
