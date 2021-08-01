@@ -75,14 +75,6 @@
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph time period: &nbsp;</span>
         <button
-          @click="$store.commit('setChartNumDays', 7)"
-          :class="{ active: chartNumDays === 7 }"
-        >
-          1<span class="non-compact">&nbsp;</span>w<span class="non-compact"
-            >eek</span
-          >
-        </button>
-        <button
           @click="$store.commit('setChartNumDays', 14)"
           :class="{ active: chartNumDays === 14 }"
         >
@@ -552,7 +544,7 @@ $top-grid-small-text-breakpoint: 370px;
 
   &-row {
     &-name {
-      @media screen and (max-width: 510px) {
+      @media screen and (max-width: 475px) {
         display: block;
         margin-bottom: 0.5rem;
       }
@@ -573,7 +565,7 @@ $top-grid-small-text-breakpoint: 370px;
         margin-right: 0;
       }
 
-      @media screen and (max-width: 660px) {
+      @media screen and (max-width: 600px) {
         .non-compact {
           display: none;
         }
