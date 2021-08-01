@@ -166,9 +166,7 @@ export default {
       return Number(this.$route.params.postcode);
     },
     avgPeriod() {
-      return this.newCasesMode && (this.allTimeMode || this.outbreakMode)
-        ? AVG_PERIOD
-        : 1;
+      return this.newCasesMode ? AVG_PERIOD : 1;
     },
     suburbsText() {
       return suburbsForPostcode[this.postcodeNumber] || "Unknown";
@@ -378,7 +376,8 @@ export default {
         tooltipOptions: { formatTooltipY: (n) => n },
         lineOptions: {
           regionFill: 1,
-          hideDots: this.allTimeMode || this.outbreakMode ? 1 : 0,
+          hideDots:
+            this.allTimeMode || this.outbreakMode || this.newCasesMode ? 1 : 0,
         },
         axisOptions: {
           xIsSeries: true,
