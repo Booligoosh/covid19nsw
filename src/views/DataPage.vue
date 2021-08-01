@@ -445,7 +445,7 @@ $top-grid-small-text-breakpoint: 370px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-weight: 900;
+    font-weight: 800;
 
     .not-bold {
       // opacity: 0.7;
