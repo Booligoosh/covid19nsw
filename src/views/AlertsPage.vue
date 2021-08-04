@@ -109,7 +109,7 @@
               <span v-html="caseLocation.HealthAdviceHTML"></span>
             </div>
             <div class="case-locations-location-more-info-last-updated">
-              <strong>Added/updated:</strong>
+              <strong>Last updated:</strong>
               {{ caseLocation["Last updated date"] }}
             </div>
           </div>
