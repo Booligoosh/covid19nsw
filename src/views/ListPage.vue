@@ -29,7 +29,7 @@
                 title="Sort by Council/LGA"
               >
                 Council/LGA
-                <span v-if="sort === 'col1Sort'">▼</span>
+                <div v-if="sort === 'col1Sort'">▼</div>
               </a>
               <a
                 v-else
@@ -38,36 +38,42 @@
                 title="Sort by Postcode"
               >
                 Postcode
-                <span v-if="sort === 'col1Sort'">▼</span>
+                <div v-if="sort === 'col1Sort'">▼</div>
               </a>
             </th>
             <th class="num-col">
               <a
                 href="#"
                 @click.prevent="sort = 'newCasesToday'"
-                title="Sort by Cases today"
+                title="Sort by cases today"
               >
                 Today
-                <span v-if="sort === 'newCasesToday'">▼</span>
+                <div v-if="sort === 'newCasesToday'">▼</div>
               </a>
             </th>
             <th class="num-col">
               <a
                 href="#"
                 @click.prevent="sort = 'newCasesThisWeek'"
-                title="Sort by Cases this week"
+                title="Sort by cases this week"
               >
                 This week
-                <span v-if="sort === 'newCasesThisWeek'">▼</span>
+                <div v-if="sort === 'newCasesThisWeek'">▼</div>
               </a>
             </th>
             <th class="num-col">
               <a
                 href="#"
                 @click.prevent="sort = 'totalCases'"
-                title="Sort by Total cases"
+                title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
               >
-                Total <span v-if="sort === 'totalCases'">▼</span>
+                <span>
+                  Since
+                  <span style="white-space: nowrap">{{
+                    OUTBREAK_START_DATE_FORMATTED
+                  }}</span>
+                </span>
+                <div v-if="sort === 'totalCases'">▼</div>
               </a>
             </th>
           </tr>
@@ -140,6 +146,10 @@ import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
+import {
+  OUTBREAK_START_DATE,
+  OUTBREAK_START_DATE_FORMATTED,
+} from "@/constants";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
@@ -152,6 +162,7 @@ export default {
       TRUNCATE_SIZE: 60,
       truncate: true,
       sort: "newCasesThisWeek",
+      OUTBREAK_START_DATE_FORMATTED,
     };
   },
   computed: {
@@ -193,7 +204,8 @@ export default {
     postcodeRows() {
       console.time("Calculate postcodeRows");
       // Initialise objects
-      const totalCases = {};
+      // const totalCases = {};
+      const outbreakTotalCases = {};
       const newCasesThisWeek = {};
       const newCasesToday = {};
 
@@ -209,17 +221,35 @@ export default {
       this.$store.state.cases.forEach((caseObj) => {
         const identifier = caseObj[identifierKey];
         // Add the case to its postcode/council's total cases
-        totalCases[identifier] = (totalCases[identifier] || 0) + 1;
-        // If the case is today, add it to its postcode/council's cases today & this week
+        // totalCases[identifier] = (totalCases[identifier] || 0) + 1;
+
+        // If the case is today:
         if (caseObj.rawDate === today) {
+          // Add to Today col
           newCasesToday[identifier] = (newCasesToday[identifier] || 0) + 1;
+          // Add to This Week col
           newCasesThisWeek[identifier] =
             (newCasesThisWeek[identifier] || 0) + 1;
+          // Add to Outbreak col
+          outbreakTotalCases[identifier] =
+            (outbreakTotalCases[identifier] || 0) + 1;
         }
-        // Otherwise if the case is this week, add it to its postcode/council's cases this week
+
+        // If the case is this week:
         else if (caseObj.rawDate > oneWeekAgo) {
+          // Add to This Week col
           newCasesThisWeek[identifier] =
             (newCasesThisWeek[identifier] || 0) + 1;
+          // Add to Outbreak col
+          outbreakTotalCases[identifier] =
+            (outbreakTotalCases[identifier] || 0) + 1;
+        }
+
+        // If the case is this outbreak:
+        else if (caseObj.rawDate > OUTBREAK_START_DATE) {
+          // Add to Outbreak col
+          outbreakTotalCases[identifier] =
+            (outbreakTotalCases[identifier] || 0) + 1;
         }
       });
 
@@ -229,14 +259,16 @@ export default {
             councilName,
             col1Sort: councilName,
             councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
-            totalCases: totalCases[councilName] || 0,
+            // totalCases: totalCases[councilName] || 0,
+            totalCases: outbreakTotalCases[councilName] || 0,
             newCasesThisWeek: newCasesThisWeek[councilName] || 0,
             newCasesToday: newCasesToday[councilName] || 0,
           }))
         : postcodes.map((postcodeNumber) => ({
             postcodeNumber,
             col1Sort: postcodeNumber,
-            totalCases: totalCases[postcodeNumber] || 0,
+            // totalCases: totalCases[postcodeNumber] || 0,
+            totalCases: outbreakTotalCases[postcodeNumber] || 0,
             newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
             newCasesToday: newCasesToday[postcodeNumber] || 0,
             suburbs: suburbsForPostcode[postcodeNumber],
@@ -270,7 +302,7 @@ export default {
 <style lang="scss">
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
-$fixed-num-col-width-breakpoint: 589px;
+$fixed-num-col-width-breakpoint: 632px;
 
 .all-page {
   width: 948px !important;
@@ -384,14 +416,13 @@ $table-border-radius: 7px;
       border-top-right-radius: $table-border-radius;
     }
 
+    @media screen and (max-width: $compact-breakpoint) {
+      font-size: 0.9rem;
+    }
+
     &.num-col {
       @media screen and (min-width: $fixed-num-col-width-breakpoint + 1) {
-        width: 9rem;
-      }
-    }
-    &.primary-col {
-      @media screen and (max-width: $fixed-num-col-width-breakpoint) {
-        width: 100%;
+        width: 9.3rem;
       }
     }
 
@@ -409,7 +440,7 @@ $table-border-radius: 7px;
       justify-content: space-between;
       align-items: center;
 
-      span {
+      div {
         font-size: 0.75em;
       }
     }

@@ -35,16 +35,21 @@
       </h1>
       <div class="stat-numbers">
         <div class="stat-numbers-item">
-          <div class="stat-numbers-item-num">{{ casesToday }}</div>
+          <div class="stat-numbers-item-num">{{ caseCounts.today }}</div>
           <div class="stat-numbers-item-label">today</div>
         </div>
         <div class="stat-numbers-item">
-          <div class="stat-numbers-item-num">{{ casesThisWeek }}</div>
+          <div class="stat-numbers-item-num">{{ caseCounts.thisWeek }}</div>
           <div class="stat-numbers-item-label">this week</div>
         </div>
         <div class="stat-numbers-item">
-          <div class="stat-numbers-item-num">{{ totalCases }}</div>
-          <div class="stat-numbers-item-label">total</div>
+          <div class="stat-numbers-item-num">{{ caseCounts.thisOutbreak }}</div>
+          <div class="stat-numbers-item-label">
+            since
+            <span style="white-space: nowrap">
+              {{ OUTBREAK_START_DATE_FORMATTED }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -123,7 +128,11 @@
 import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
-import { ALL_TIME_START_DATE, OUTBREAK_START_DATE } from "@/constants.js";
+import {
+  ALL_TIME_START_DATE,
+  OUTBREAK_START_DATE,
+  OUTBREAK_START_DATE_FORMATTED,
+} from "@/constants.js";
 
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -147,6 +156,7 @@ export default {
     return {
       allTimeDays: dayjs().diff(ALL_TIME_START_DATE, "day"),
       outbreakDays: dayjs().diff(OUTBREAK_START_DATE, "day"),
+      OUTBREAK_START_DATE_FORMATTED,
     };
   },
   computed: {
@@ -193,7 +203,7 @@ export default {
     },
     caseCounts() {
       if (!this.$store.state.temporalCoverageTo)
-        return { today: 0, thisWeek: 0 };
+        return { today: 0, thisWeek: 0, thisOutbreak: 0 };
       // Both in 1 function to halve the number of iterations.
       // See the individual getters based on its outputs below.
       const todayDate =
@@ -204,23 +214,22 @@ export default {
 
       let today = 0;
       let thisWeek = 0;
+      let thisOutbreak = 0;
 
       this.allCases.forEach((caseObj) => {
         if (caseObj.rawDate === todayDate) {
           today++;
           thisWeek++;
+          thisOutbreak++;
         } else if (caseObj.rawDate > oneWeekAgo) {
           thisWeek++;
+          thisOutbreak++;
+        } else if (caseObj.rawDate > OUTBREAK_START_DATE) {
+          thisOutbreak++;
         }
       });
 
-      return { today, thisWeek };
-    },
-    casesToday() {
-      return this.caseCounts.today;
-    },
-    casesThisWeek() {
-      return this.caseCounts.thisWeek;
+      return { today, thisWeek, thisOutbreak };
     },
     lastXDays() {
       if (!this.$store.state.temporalCoverageTo) return [];
