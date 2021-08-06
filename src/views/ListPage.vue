@@ -302,7 +302,7 @@ export default {
 <style lang="scss">
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
-$fixed-num-col-width-breakpoint: 682px;
+$fixed-num-col-width-breakpoint: 800px;
 
 .all-page {
   width: 948px !important;
