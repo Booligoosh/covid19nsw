@@ -9,7 +9,14 @@ module.exports = {
     plugins: [
       new PrerenderSPAPlugin({
         staticDir: path.join(__dirname, "./dist"),
-        routes: ["/app-shell", "/", "/postcodes", "/councils", "/about"],
+        routes: [
+          "/app-shell",
+          "/",
+          "/postcodes",
+          "/councils",
+          "/alerts",
+          "/about",
+        ],
         postProcess(renderedRoute) {
           // Ignore any redirects.
           renderedRoute.route = renderedRoute.originalRoute;
