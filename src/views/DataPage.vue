@@ -151,8 +151,6 @@ export default {
   },
   data() {
     return {
-      allTimeDays: dayjs().diff(ALL_TIME_START_DATE, "day"),
-      outbreakDays: dayjs().diff(OUTBREAK_START_DATE, "day"),
       OUTBREAK_START_DATE_FORMATTED,
     };
   },
@@ -174,6 +172,19 @@ export default {
     },
     avgPeriod() {
       return this.newCasesMode ? AVG_PERIOD : 1;
+    },
+
+    allTimeDays() {
+      return dayjs(this.$store.state.temporalCoverageT).diff(
+        ALL_TIME_START_DATE,
+        "day"
+      );
+    },
+    outbreakDays() {
+      return dayjs(this.$store.state.temporalCoverageT).diff(
+        OUTBREAK_START_DATE,
+        "day"
+      );
     },
     suburbsText() {
       return suburbsForPostcode[this.postcodeNumber] || "(Suburbs unknown)";
