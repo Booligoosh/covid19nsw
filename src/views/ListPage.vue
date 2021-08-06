@@ -425,6 +425,11 @@ $table-border-radius: 7px;
         width: 9.3rem;
       }
     }
+    &.primary-col {
+      @media screen and (max-width: $fixed-num-col-width-breakpoint) {
+        width: 100%;
+      }
+    }
 
     a {
       color: inherit;
