@@ -12,10 +12,6 @@
     :isOnCouncilPage="true"
   />
   <div class="data-page" v-else>
-    <DataPageMetadataChanger
-      :totalCases="totalCases"
-      :councilName="councilName"
-    />
     <RenderDetector @created="mainContentRendered" />
     <div class="top-grid">
       <h1 v-if="isCouncil">
@@ -122,7 +118,6 @@
 </template>
 
 <script>
-import DataPageMetadataChanger from "@/components/DataPageMetadataChanger.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
@@ -145,7 +140,6 @@ const AVG_PERIOD = 5;
 export default {
   name: "DataPage",
   components: {
-    DataPageMetadataChanger,
     PageNotFound,
     RenderDetector,
   },
@@ -440,6 +434,40 @@ export default {
         chart.update(this.chartData);
       }
     },
+    setPageMetadata() {
+      if (this.$route.name === "CouncilPage") {
+        this.$store.commit(
+          "setPageTitle",
+          `COVID-19 data for ${this.councilName}, NSW, Australia`
+        );
+
+        this.$store.commit(
+          "setPageDescription",
+          `As of ${this.$store.state.temporalCoverageTo.format(
+            "D MMMM YYYY"
+          )}, there are ${this.totalCases} cases of COVID-19 in ${
+            this.councilName
+          }. Click to see the latest data for your area.`
+        );
+      } else {
+        this.$store.commit(
+          "setPageTitle",
+          `COVID-19 data for the postcode ${this.$route.params.postcode}, NSW, Australia`
+        );
+
+        this.$store.commit(
+          "setPageDescription",
+          `As of ${this.$store.state.temporalCoverageTo.format(
+            "D MMMM YYYY"
+          )}, there are ${this.totalCases} cases of COVID-19 in the postcode ${
+            this.$route.params.postcode
+          }. Click to see the latest data for your postcode.`
+        );
+      }
+    },
+  },
+  created() {
+    this.setPageMetadata();
   },
 };
 </script>
