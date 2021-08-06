@@ -65,7 +65,7 @@
               <a
                 href="#"
                 @click.prevent="sort = 'totalCases'"
-                title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
+                :title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
               >
                 <span>
                   Since
