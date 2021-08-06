@@ -27,10 +27,7 @@
           {{ postcodeNumber }}</span
         >
         <div class="suburbs-text">
-          Suburbs in this postcode:
-          <span class="suburbs-text-suburbs">
-            {{ suburbsText }}
-          </span>
+          {{ suburbsText }}
         </div>
       </h1>
       <div class="stat-numbers">
@@ -179,7 +176,7 @@ export default {
       return this.newCasesMode ? AVG_PERIOD : 1;
     },
     suburbsText() {
-      return suburbsForPostcode[this.postcodeNumber] || "Unknown";
+      return suburbsForPostcode[this.postcodeNumber] || "(Suburbs unknown)";
     },
     councilName() {
       const oneCase = this.allCases[0] || {};
@@ -460,6 +457,12 @@ $top-grid-small-text-breakpoint: 370px;
     .not-bold {
       // opacity: 0.7;
       font-weight: 600;
+
+      // @media screen and (max-width: $top-grid-breakpoint) {
+      display: block;
+      font-size: 1.2rem;
+      opacity: 0.6;
+      // }
     }
 
     @media screen and (max-width: $top-grid-breakpoint) {
@@ -475,16 +478,9 @@ $top-grid-small-text-breakpoint: 370px;
 
     .suburbs-text {
       font-weight: normal;
-      font-size: 0.95rem;
-      margin-top: 0.2rem;
-
-      @media screen and (max-width: $top-grid-breakpoint) {
-        margin-top: 0.4rem;
-      }
-
-      &-suburbs {
-        font-weight: 500;
-      }
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 0.1rem;
     }
   }
   .stat-numbers {
