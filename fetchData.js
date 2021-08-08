@@ -8,12 +8,14 @@ const CASES_META_URL =
   "https://data.nsw.gov.au/data/api/3/action/package_show?id=97ea2424-abaf-4f3e-a9f2-b5c883f42b6a";
 
 async function fetchData() {
-  const [modified, csv] = await Promise.all([
+  let [modified, csv] = await Promise.all([
     fetch(CASES_META_URL)
       .then((r) => r.json())
       .then(({ result }) => result.metadata_modified),
     fetch(CASES_URL).then((r) => r.text()),
   ]);
+
+  modified += "Z";
 
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
 

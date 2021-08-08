@@ -7,9 +7,10 @@
     <h1 class="table-title">
       COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
     </h1>
-    <div class="table-subtitle" v-if="lastUpdatedString">
-      Data up to <mark>{{ lastUpdatedString }}</mark
-      >, updated daily by NSW Health around 2-3pm.
+    <div class="table-subtitle">
+      Last updated <mark>{{ lastUpdatedString }}</mark> by NSW Health, data up
+      to <mark>{{ temporalCoverageString }}</mark
+      >.
     </div>
     <div class="page-error" v-if="$store.state.error">
       ⚠ {{ $store.state.error }}
@@ -150,6 +151,7 @@ import {
   OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants";
+import dayjs from "dayjs";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
@@ -280,8 +282,26 @@ export default {
     rowCount() {
       return this.councilMode ? councilNamesLength : postcodesLength;
     },
-    lastUpdatedString() {
+    temporalCoverageString() {
       return this.$store.state.temporalCoverageTo?.format("ddd D MMMM");
+    },
+    lastUpdatedString() {
+      if (!this.$store.state.metadataModified) return;
+
+      const diff = dayjs()
+        .startOf("day")
+        .diff(this.$store.state.metadataModified.startOf("day"), "days");
+
+      switch (diff) {
+        case 0:
+          return "today @ " + this.$store.state.metadataModified.format("ha");
+        case 1:
+          return (
+            "yesterday @ " + this.$store.state.metadataModified.format("ha")
+          );
+        default:
+          return this.$store.state.metadataModified.format("dddd @ ha");
+      }
     },
   },
   methods: {
@@ -349,8 +369,9 @@ $fixed-num-col-width-breakpoint: 800px;
 }
 .table-subtitle {
   margin-top: 0.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
   text-align: center;
+  line-height: 1.5; // To stop <mark>s touching
   opacity: 0.8;
 
   @media screen and (max-width: $table-title-breakpoint) {

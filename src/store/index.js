@@ -23,6 +23,7 @@ const store = new Vuex.Store({
   state: {
     cases: [],
     error: null,
+    metadataModified: null,
     temporalCoverageTo: null,
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
@@ -44,6 +45,9 @@ const store = new Vuex.Store({
     },
     setTemporalCoverageTo(state, temporalCoverageTo) {
       state.temporalCoverageTo = temporalCoverageTo;
+    },
+    setMetadataModified(state, metadataModified) {
+      state.metadataModified = metadataModified;
     },
     setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
@@ -94,6 +98,7 @@ const store = new Vuex.Store({
           councilIsCityCouncil: !!y,
         }));
         console.timeEnd("Transform parsed JSON");
+        commit("setMetadataModified", dayjs(metadataModified));
         commit(
           "setTemporalCoverageTo",
           dayjs(metadataModified).startOf("day").subtract(1, "day")
