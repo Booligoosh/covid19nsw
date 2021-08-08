@@ -167,17 +167,16 @@ export default {
     avgPeriod() {
       return this.newCasesMode ? AVG_PERIOD : 1;
     },
-
     allTimeDays() {
-      return dayjs(this.$store.state.temporalCoverageT).diff(
-        ALL_TIME_START_DATE,
-        "day"
+      return (
+        this.$store.state.temporalCoverageTo.diff(ALL_TIME_START_DATE, "day") +
+        1
       );
     },
     outbreakDays() {
-      return dayjs(this.$store.state.temporalCoverageT).diff(
-        OUTBREAK_START_DATE,
-        "day"
+      return (
+        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
+        1
       );
     },
     suburbsText() {
