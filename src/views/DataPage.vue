@@ -126,12 +126,6 @@ import {
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants.js";
 
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import minMax from "dayjs/plugin/minMax";
-dayjs.extend(isSameOrBefore);
-dayjs.extend(minMax);
-
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 

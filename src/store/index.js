@@ -4,10 +4,16 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 import dayjs from "dayjs";
-const customParseFormat = require("dayjs/plugin/customParseFormat");
-dayjs.extend(customParseFormat);
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
-import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_DESCRIPTION } from "../constants";
+import {
+  DEFAULT_PAGE_TITLE,
+  DEFAULT_PAGE_DESCRIPTION,
+  SOURCE_TIMEZONE,
+} from "../constants";
 import councilNames from "@/data/built/councilNames.json";
 import postcodes from "@/data/built/postcodes.json";
 import dates from "@/data/built/dates.json";
@@ -98,10 +104,16 @@ const store = new Vuex.Store({
           councilIsCityCouncil: !!y,
         }));
         console.timeEnd("Transform parsed JSON");
-        commit("setMetadataModified", dayjs(metadataModified));
+        commit(
+          "setMetadataModified",
+          dayjs(metadataModified).tz(SOURCE_TIMEZONE)
+        );
         commit(
           "setTemporalCoverageTo",
-          dayjs(metadataModified).startOf("day").subtract(1, "day")
+          dayjs(metadataModified)
+            .tz(SOURCE_TIMEZONE)
+            .startOf("day")
+            .subtract(1, "day")
         );
         commit("setCases", cases);
       } catch (err) {
