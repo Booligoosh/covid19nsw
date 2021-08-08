@@ -4,6 +4,8 @@ import store from "@/store";
 
 import ListPage from "@/views/ListPage.vue";
 import AppShell from "@/views/AppShell.vue";
+import AboutPage from "@/views/AboutPage.vue";
+import PageNotFound from "@/views/PageNotFound.vue";
 
 Vue.use(VueRouter);
 
@@ -79,8 +81,7 @@ const routes = [
   {
     path: "/about",
     name: "AboutPage",
-    component: () =>
-      import(/* webpackChunkName: "aboutPage" */ "../views/AboutPage.vue"),
+    component: AboutPage,
     meta: {
       title: "About",
     },
@@ -92,10 +93,7 @@ const routes = [
   },
   {
     path: "*",
-    component: () =>
-      import(
-        /* webpackChunkName: "pageNotFound" */ "../views/PageNotFound.vue"
-      ),
+    component: PageNotFound,
   },
 ];
 

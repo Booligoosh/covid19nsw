@@ -4,7 +4,7 @@ const mkdirp = require("mkdirp");
 const Prerenderer = require("@prerenderer/prerenderer");
 const JSDOMRenderer = require("@prerenderer/renderer-jsdom");
 
-const routes = ["/app-shell", "/", "/postcodes", "/councils"];
+const routes = ["/app-shell", "/", "/postcodes", "/councils", "/about"];
 
 const staticDir = path.join(__dirname, "dist");
 
