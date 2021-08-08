@@ -18,6 +18,9 @@ new Vue({
   store,
   router,
   render: (h) => h(App),
+  mounted() {
+    this.$nextTick(() => document.dispatchEvent(new Event("x-render-trigger")));
+  },
 }).$mount("#app");
 
 // Unregister old service workers

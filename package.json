@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "node fetchData.js && node generateSitemap.js && vue-cli-service build --modern",
+    "build": "node fetchData.js && node generateSitemap.js && vue-cli-service build --modern && node prerender.js",
     "lint": "vue-cli-service lint",
     "update-browserslist": "npx browserslist@latest --update-db"
   },
@@ -20,6 +20,8 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@prerenderer/prerenderer": "^0.7.2",
+    "@prerenderer/renderer-jsdom": "^0.2.0",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.13",
     "@vue/cli-service": "^4.5.13",
@@ -31,7 +33,6 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-vue": "^7.13.0",
     "html-webpack-inline-source-plugin": "^0.0.10",
-    "prerender-spa-plugin": "^3.4.0",
     "prettier": "^2.3.2",
     "sass": "^1.35.2",
     "sass-loader": "^8.0.2",
