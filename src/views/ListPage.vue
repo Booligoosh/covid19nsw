@@ -150,6 +150,7 @@ import councilNames from "@/data/built/councilNames.json";
 import {
   OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
+  SOURCE_TIMEZONE,
 } from "@/constants";
 import dayjs from "dayjs";
 
@@ -289,6 +290,7 @@ export default {
       if (!this.$store.state.metadataModified) return;
 
       const diff = dayjs()
+        .tz(SOURCE_TIMEZONE)
         .startOf("day")
         .diff(this.$store.state.metadataModified.startOf("day"), "days");
 
