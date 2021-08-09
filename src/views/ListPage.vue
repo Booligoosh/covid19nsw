@@ -150,9 +150,7 @@ import councilNames from "@/data/built/councilNames.json";
 import {
   OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
-  SOURCE_TIMEZONE,
 } from "@/constants";
-import dayjs from "dayjs";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
@@ -287,23 +285,7 @@ export default {
       return this.$store.state.temporalCoverageTo?.format("ddd D MMMM");
     },
     lastUpdatedString() {
-      if (!this.$store.state.metadataModified) return;
-
-      const diff = dayjs()
-        .tz(SOURCE_TIMEZONE)
-        .startOf("day")
-        .diff(this.$store.state.metadataModified.startOf("day"), "days");
-
-      switch (diff) {
-        case 0:
-          return "today @ " + this.$store.state.metadataModified.format("ha");
-        case 1:
-          return (
-            "yesterday @ " + this.$store.state.metadataModified.format("ha")
-          );
-        default:
-          return this.$store.state.metadataModified.format("dddd @ ha");
-      }
+      return this.$store.state.metadataModified?.format("ddd D MMMM @ ha");
     },
   },
   methods: {
