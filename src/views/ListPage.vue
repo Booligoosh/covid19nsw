@@ -282,10 +282,10 @@ export default {
       return this.councilMode ? councilNamesLength : postcodesLength;
     },
     temporalCoverageString() {
-      return this.$store.state.temporalCoverageTo?.format("ddd D MMMM");
+      return this.$store.state.temporalCoverageTo?.format("ddd D MMM");
     },
     lastUpdatedString() {
-      return this.$store.state.metadataModified?.format("ddd D MMMM @ ha");
+      return this.$store.state.metadataModified?.format("ddd D MMM @ ha");
     },
   },
   methods: {
