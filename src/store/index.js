@@ -38,6 +38,8 @@ const store = new Vuex.Store({
     chartNumDays: calculateDefaultChartNumDays(),
     newCasesMode: true,
     sourceMode: false,
+    // Table options stored globally so they persist between pages
+    listPageSort: "newCasesThisWeek",
   },
   mutations: {
     setCases(state, cases = []) {
@@ -85,6 +87,9 @@ const store = new Vuex.Store({
     },
     setSourceMode(state, sourceMode) {
       state.sourceMode = sourceMode;
+    },
+    setListPageSort(state, listPageSort) {
+      state.listPageSort = listPageSort;
     },
   },
   actions: {

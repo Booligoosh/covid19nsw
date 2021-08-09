@@ -26,7 +26,7 @@
               <a
                 v-if="councilMode"
                 href="#"
-                @click.prevent="sort = 'col1Sort'"
+                @click.prevent="$store.commit('setListPageSort', 'col1Sort')"
                 title="Sort by Council/LGA"
               >
                 Council/LGA
@@ -35,7 +35,7 @@
               <a
                 v-else
                 href="#"
-                @click.prevent="sort = 'col1Sort'"
+                @click.prevent="$store.commit('setListPageSort', 'col1Sort')"
                 title="Sort by Postcode"
               >
                 Postcode
@@ -45,7 +45,9 @@
             <th class="num-col">
               <a
                 href="#"
-                @click.prevent="sort = 'newCasesToday'"
+                @click.prevent="
+                  $store.commit('setListPageSort', 'newCasesToday')
+                "
                 title="Sort by cases today"
               >
                 Today
@@ -55,7 +57,9 @@
             <th class="num-col">
               <a
                 href="#"
-                @click.prevent="sort = 'newCasesThisWeek'"
+                @click.prevent="
+                  $store.commit('setListPageSort', 'newCasesThisWeek')
+                "
                 title="Sort by cases this week"
               >
                 This week
@@ -65,7 +69,7 @@
             <th class="num-col">
               <a
                 href="#"
-                @click.prevent="sort = 'totalCases'"
+                @click.prevent="$store.commit('setListPageSort', 'totalCases')"
                 :title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
               >
                 <span>
@@ -162,11 +166,13 @@ export default {
     return {
       TRUNCATE_SIZE: 60,
       truncate: true,
-      sort: "newCasesThisWeek",
       OUTBREAK_START_DATE_FORMATTED,
     };
   },
   computed: {
+    sort() {
+      return this.$store.state.listPageSort;
+    },
     councilMode() {
       return (
         this.$route.name === "CouncilsPage" ||
