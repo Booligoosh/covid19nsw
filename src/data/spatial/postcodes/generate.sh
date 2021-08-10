@@ -1,0 +1,2 @@
+# Generates minified & transformed GeoJSON file ./geojson.json from ./source folder contents
+mapshaper ./source/POA_2016_AUST.shp -simplify dp 10% keep-shapes -o geojson.json format=geojson && node transformGeojson.js

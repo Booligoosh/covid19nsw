@@ -13,6 +13,7 @@
     "dayjs": "^1.10.6",
     "frappe-charts": "^1.6.2",
     "geolib": "^3.3.1",
+    "leaflet": "^1.7.1",
     "register-service-worker": "^1.7.2",
     "vue": "^2.6.14",
     "vue-gtag": "^1.16.1",

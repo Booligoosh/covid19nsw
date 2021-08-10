@@ -31,6 +31,11 @@ const routes = [
     },
   },
   {
+    path: "/postcodes/map",
+    name: "Map",
+    component: () => import(/* webpackChunkName: "map" */ "../views/Map.vue"),
+  },
+  {
     path: "/postcode/:postcode(2[0-9][0-9][0-9])",
     name: "PostcodePage",
     // route level code-splitting
