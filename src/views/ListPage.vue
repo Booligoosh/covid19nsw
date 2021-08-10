@@ -151,10 +151,9 @@ import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
-import {
-  OUTBREAK_START_DATE,
-  OUTBREAK_START_DATE_FORMATTED,
-} from "@/constants";
+import postcodeCounts from "@/data/built/postcodeCounts.json";
+import councilCounts from "@/data/built/councilCounts.json";
+import { OUTBREAK_START_DATE_FORMATTED } from "@/constants";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
@@ -210,74 +209,29 @@ export default {
     },
     postcodeRows() {
       console.time("Calculate postcodeRows");
-      // Initialise objects
-      // const totalCases = {};
-      const outbreakTotalCases = {};
-      const newCasesThisWeek = {};
-      const newCasesToday = {};
-
-      // Calculate dates to compare to
-      const today = this.$store.state.temporalCoverageTo.format("YYYY-MM-DD");
-      const oneWeekAgo = this.$store.state.temporalCoverageTo
-        .subtract(7, "days")
-        .format("YYYY-MM-DD");
-
-      const identifierKey = this.councilMode ? "councilName" : "postcode";
-
-      // Iterate through each case
-      this.$store.state.cases.forEach((caseObj) => {
-        const identifier = caseObj[identifierKey];
-        // Add the case to its postcode/council's total cases
-        // totalCases[identifier] = (totalCases[identifier] || 0) + 1;
-
-        // If the case is today:
-        if (caseObj.rawDate === today) {
-          // Add to Today col
-          newCasesToday[identifier] = (newCasesToday[identifier] || 0) + 1;
-          // Add to This Week col
-          newCasesThisWeek[identifier] =
-            (newCasesThisWeek[identifier] || 0) + 1;
-          // Add to Outbreak col
-          outbreakTotalCases[identifier] =
-            (outbreakTotalCases[identifier] || 0) + 1;
-        }
-
-        // If the case is this week:
-        else if (caseObj.rawDate > oneWeekAgo) {
-          // Add to This Week col
-          newCasesThisWeek[identifier] =
-            (newCasesThisWeek[identifier] || 0) + 1;
-          // Add to Outbreak col
-          outbreakTotalCases[identifier] =
-            (outbreakTotalCases[identifier] || 0) + 1;
-        }
-
-        // If the case is this outbreak:
-        else if (caseObj.rawDate > OUTBREAK_START_DATE) {
-          // Add to Outbreak col
-          outbreakTotalCases[identifier] =
-            (outbreakTotalCases[identifier] || 0) + 1;
-        }
-      });
+      const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
+        .councilMode
+        ? councilCounts
+        : postcodeCounts;
 
       // Return postcodes/councils using precalculated values
       const postcodeRows = this.councilMode
-        ? councilNames.map((councilName) => ({
+        ? councilNames.map((councilName, i) => ({
             councilName,
             col1Sort: councilName,
             councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
-            // totalCases: totalCases[councilName] || 0,
-            totalCases: outbreakTotalCases[councilName] || 0,
-            newCasesThisWeek: newCasesThisWeek[councilName] || 0,
-            newCasesToday: newCasesToday[councilName] || 0,
+            // totalCases: totalCases[i] || 0,
+            totalCases: outbreakTotalCases[i] || 0,
+            newCasesThisWeek: newCasesThisWeek[i] || 0,
+            newCasesToday: newCasesToday[i] || 0,
           }))
-        : postcodes.map((postcodeNumber) => ({
+        : postcodes.map((postcodeNumber, i) => ({
             postcodeNumber,
             col1Sort: postcodeNumber,
-            // totalCases: totalCases[postcodeNumber] || 0,
-            totalCases: outbreakTotalCases[postcodeNumber] || 0,
-            newCasesThisWeek: newCasesThisWeek[postcodeNumber] || 0,
-            newCasesToday: newCasesToday[postcodeNumber] || 0,
+            // totalCases: totalCases[i] || 0,
+            totalCases: outbreakTotalCases[i] || 0,
+            newCasesThisWeek: newCasesThisWeek[i] || 0,
+            newCasesToday: newCasesToday[i] || 0,
             suburbs: suburbsForPostcode[postcodeNumber],
           }));
 
