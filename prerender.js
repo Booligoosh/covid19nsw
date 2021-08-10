@@ -56,7 +56,7 @@ function postProcess(renderedRoute) {
     .replace(/<noscript>.+?<\/noscript>/g, "")
     // Remove gtag stuff so it doesn't get added twice
     .replace(
-      `<link href="https://www.googletagmanager.com" rel="preconnect"><script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-103555680-12&amp;l=dataLayer"></script>`,
+      `<link href="https://www.googletagmanager.com" rel="preconnect"><script src="https://www.googletagmanager.com/gtag/js?id=UA-103555680-12&amp;l=dataLayer"></script>`,
       ""
     )
     // Remove empty class attributes
