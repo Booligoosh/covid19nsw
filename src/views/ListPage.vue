@@ -12,13 +12,7 @@
       to <mark>{{ temporalCoverageString }}</mark
       >.
     </div>
-    <div class="page-error" v-if="$store.state.error">
-      ⚠ {{ $store.state.error }}
-    </div>
-    <div class="page-loading" v-else-if="$store.state.cases.length === 0">
-      Loading&hellip;
-    </div>
-    <div class="table" v-else>
+    <div class="table">
       <table>
         <thead>
           <tr>

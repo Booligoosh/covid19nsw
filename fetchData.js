@@ -22,6 +22,10 @@ async function fetchData() {
 
   modified += "Z";
 
+  fs.writeFileSync(
+    "./src/data/built/metadataModified.json",
+    JSON.stringify(modified)
+  );
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
 
   const parsed = parse(csv, {
@@ -94,10 +98,7 @@ async function fetchData() {
     ];
   });
 
-  fs.writeFileSync(
-    "./src/data/built/cases.json",
-    JSON.stringify([modified, casesMin])
-  );
+  fs.writeFileSync("./src/data/built/cases.json", JSON.stringify(casesMin));
 
   fs.writeFileSync(
     "./src/data/built/postcodeCounts.json",

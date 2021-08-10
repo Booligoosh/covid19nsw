@@ -1,14 +1,8 @@
 <!-- This file resolves the /postcode and /council routes -->
 
 <template>
-  <div class="page-error" v-if="$store.state.error">
-    ⚠ {{ $store.state.error }}
-  </div>
-  <div class="page-loading" v-else-if="$store.state.cases.length === 0">
-    Loading&hellip;
-  </div>
   <PageNotFound
-    v-else-if="isCouncil && allCases.length === 0"
+    v-if="isCouncil && allCases.length === 0"
     :isOnCouncilPage="true"
   />
   <div class="data-page" v-else>
@@ -125,9 +119,10 @@ import {
   OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants.js";
-
+import unminifyCases from "@/unminifyCases.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
+import cases from "@/data/built/cases.json";
 
 const AVG_PERIOD = 5;
 
@@ -183,15 +178,11 @@ export default {
       } Council`;
     },
     allCases() {
-      if (this.isCouncil) {
-        return this.$store.state.cases.filter(
-          ({ councilSlug }) => councilSlug === this.$route.params.councilSlug
-        );
-      } else {
-        return this.$store.state.cases.filter(
-          ({ postcode }) => postcode === this.postcodeNumber
-        );
-      }
+      const filterFn = this.isCouncil
+        ? ({ councilSlug }) => councilSlug === this.$route.params.councilSlug
+        : ({ postcode }) => postcode === this.postcodeNumber;
+
+      return unminifyCases(cases).filter(filterFn);
     },
     totalCases() {
       return this.allCases.length;

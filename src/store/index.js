@@ -14,10 +14,7 @@ import {
   DEFAULT_PAGE_DESCRIPTION,
   SOURCE_TIMEZONE,
 } from "../constants";
-import councilNames from "@/data/built/councilNames.json";
-import postcodes from "@/data/built/postcodes.json";
-import dates from "@/data/built/dates.json";
-import casesResImported from "@/data/built/cases.json";
+import metadataModified from "@/data/built/metadataModified.json";
 
 const CASE_LOCATIONS_URL =
   "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
@@ -27,10 +24,12 @@ localStorage.lastVisit = new Date().toISOString();
 
 const store = new Vuex.Store({
   state: {
-    cases: [],
     error: null,
-    metadataModified: null,
-    temporalCoverageTo: null,
+    metadataModified: dayjs(metadataModified).tz(SOURCE_TIMEZONE),
+    temporalCoverageTo: dayjs(metadataModified)
+      .tz(SOURCE_TIMEZONE)
+      .startOf("day")
+      .subtract(1, "day"),
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
@@ -42,20 +41,11 @@ const store = new Vuex.Store({
     listPageSort: "newCasesThisWeek",
   },
   mutations: {
-    setCases(state, cases = []) {
-      state.cases = cases;
-    },
     setError(state, error = "") {
       state.error = error.replace(
         "TypeError: Failed to fetch",
         "Failed to fetch data. This could be because data.nsw.gov.au isn't working, or you're not connected to the internet."
       );
-    },
-    setTemporalCoverageTo(state, temporalCoverageTo) {
-      state.temporalCoverageTo = temporalCoverageTo;
-    },
-    setMetadataModified(state, metadataModified) {
-      state.metadataModified = metadataModified;
     },
     setCaseLocations(state, caseLocations = null) {
       state.caseLocations = caseLocations;
@@ -93,39 +83,6 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async loadCsvData({ commit }) {
-      try {
-        const [metadataModified, casesMin] = casesResImported;
-        console.time("Transform parsed JSON");
-        const cases = casesMin.map(([p, d, s, x, y]) => ({
-          postcode: postcodes[p],
-          rawDate: `202${dates[d].substr(0, 1)}-${dates[d].substr(
-            1,
-            2
-          )}-${dates[d].substr(3, 2)}`,
-          source: ["Local", "Interstate", "Overseas"][s],
-          councilName: councilNames[x],
-          councilSlug: councilNames[x]?.replace(/ /g, "-").toLowerCase(),
-          councilIsCityCouncil: !!y,
-        }));
-        console.timeEnd("Transform parsed JSON");
-        commit(
-          "setMetadataModified",
-          dayjs(metadataModified).tz(SOURCE_TIMEZONE)
-        );
-        commit(
-          "setTemporalCoverageTo",
-          dayjs(metadataModified)
-            .tz(SOURCE_TIMEZONE)
-            .startOf("day")
-            .subtract(1, "day")
-        );
-        commit("setCases", cases);
-      } catch (err) {
-        console.log("CSV DATA ERROR:", err);
-        commit("setError", err.toString());
-      }
-    },
     async getCaseLocations({ commit }) {
       try {
         const json = await fetch(CASE_LOCATIONS_URL).then((r) => r.json());
@@ -148,8 +105,6 @@ const store = new Vuex.Store({
   },
   modules: {},
 });
-
-store.dispatch("loadCsvData");
 
 export default store;
 
