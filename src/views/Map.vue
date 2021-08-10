@@ -191,8 +191,7 @@ $border-radius: 7px;
   }
 }
 #map {
-  width: 100%;
-  height: 100%;
+  flex-grow: 1;
   border: 1px solid $border-color;
   border-top: none;
   border-bottom-left-radius: $border-radius;
