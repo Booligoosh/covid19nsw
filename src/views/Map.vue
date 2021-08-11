@@ -92,6 +92,8 @@ export default {
       this.map = L.map("map", {
         center: [-33.86785, 151],
         zoom: 10,
+        maxZoom: 12,
+        minZoom: 6,
         preferCanvas: true,
       });
 
