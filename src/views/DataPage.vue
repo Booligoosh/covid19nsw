@@ -93,16 +93,37 @@
         </button>
       </div>
     </div>
-    <router-link
-      v-if="!isCouncil"
-      class="alerts-link"
-      :to="{
-        name: 'PostcodeAlertsPage',
-        params: { postcode: postcodeNumber },
-      }"
-    >
-      See nearby alerts →
-    </router-link>
+    <div class="other-content" v-if="!isCouncil">
+      <div class="other-content-card">
+        <h2 class="other-content-card-title">Vaccinations</h2>
+        <div class="vaccinations">
+          <div class="vaccinations-card">
+            <div class="vaccinations-card-num">{{ vaccinePercentages[0] }}</div>
+            <div class="vaccinations-card-label">
+              of residents have had their 1st dose
+            </div>
+          </div>
+          <div class="vaccinations-card">
+            <div class="vaccinations-card-num">{{ vaccinePercentages[1] }}</div>
+            <div class="vaccinations-card-label">
+              of residents have had their 2nd dose
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="other-content-card">
+        <h2 class="other-content-card-title">Alerts</h2>
+        <router-link
+          class="alerts-link"
+          :to="{
+            name: 'PostcodeAlertsPage',
+            params: { postcode: postcodeNumber },
+          }"
+        >
+          See nearby alerts →
+        </router-link>
+      </div>
+    </div>
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <!-- <pre style="text-align: left">{{
       JSON.stringify(allCases, null, 2)
@@ -123,6 +144,7 @@ import unminifyCases from "@/unminifyCases.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
+import vaccinations from "@/data/built/vaccinations.json";
 
 const AVG_PERIOD = 5;
 
@@ -176,6 +198,10 @@ export default {
       return `${oneCase.councilName}${
         oneCase.councilIsCityCouncil ? " City" : ""
       } Council`;
+    },
+    vaccinePercentages() {
+      if (!this.isCouncil) return vaccinations[this.postcodeNumber];
+      else return [null, null];
     },
     allCases() {
       const filterFn = this.isCouncil
@@ -615,9 +641,47 @@ $top-grid-small-text-breakpoint: 370px;
     }
   }
 }
+
+.other-content {
+  // margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+
+  &-card {
+    padding: 1rem;
+    border: 1px solid hsl(0, 0%, 80%);
+    border-radius: 7px;
+
+    &-title {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.vaccinations {
+  &-card {
+    &-num {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    &-label {
+      opacity: 0.8;
+    }
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
 .alerts-link {
   display: block;
-  width: 100%;
+  width: max-content;
   color: inherit;
   text-decoration: none;
   font-size: 0.9rem;

@@ -112,6 +112,25 @@ async function fetchData() {
       getCounts("councilName", modified, cases, postcodes, councilNames)
     )
   );
+
+  // Calculate vaccinations
+  const vaccinationsByPostcode = {};
+  const vaccinationData = await fetch(
+    "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/vaccination_metrics-v3.json"
+  ).then((r) => r.json());
+  Object.keys(vaccinationData).forEach((postcode) => {
+    if (postcodeIsValid(postcode)) {
+      const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
+      vaccinationsByPostcode[postcode] = [
+        latestData.percPopAtLeastFirstDoseRange || "??",
+        latestData.percPopFullyVaccinated10WidthRange || "??",
+      ];
+    }
+  });
+  fs.writeFileSync(
+    "./src/data/built/vaccinations.json",
+    JSON.stringify(vaccinationsByPostcode)
+  );
 }
 
 fetchData();
