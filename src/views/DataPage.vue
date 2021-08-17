@@ -200,7 +200,8 @@ export default {
       } Council`;
     },
     vaccinePercentages() {
-      if (!this.isCouncil) return vaccinations[this.postcodeNumber];
+      if (!this.isCouncil)
+        return vaccinations[this.postcodeNumber] || ["??", "??"];
       else return [null, null];
     },
     allCases() {
