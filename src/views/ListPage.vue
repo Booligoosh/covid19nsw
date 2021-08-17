@@ -48,7 +48,7 @@
                 "
                 title="Sort by cases today"
               >
-                Today
+                <span>Today<span style="font-weight: normal">*</span></span>
                 <div v-if="sort === 'newCasesToday'">▼</div>
               </a>
             </th>
