@@ -12,8 +12,8 @@
       to <mark>{{ temporalCoverageString }}</mark
       >.
       <div class="table-subtitle-disclaimer">
-        *Some cases aren't uploaded by NSW Health on the day they test positive,
-        meaning today's numbers may appear lower.
+        *Many cases aren&rsquo;t uploaded by NSW Health within 1 day, meaning
+        today&rsquo;s numbers will appear lower than their final values.
       </div>
     </div>
     <div class="table">
