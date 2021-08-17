@@ -11,6 +11,10 @@
       Last updated <mark>{{ lastUpdatedString }}</mark> by NSW Health, data up
       to <mark>{{ temporalCoverageString }}</mark
       >.
+      <div class="table-subtitle-disclaimer">
+        *Some cases aren't uploaded by NSW Health on the day they test positive,
+        meaning today's numbers may appear lower.
+      </div>
     </div>
     <div class="table">
       <table>
@@ -320,6 +324,13 @@ $fixed-num-col-width-breakpoint: 800px;
   mark {
     font-weight: 500;
     background: hsl(0, 0%, 90%);
+  }
+
+  &-disclaimer {
+    font-size: 0.9em;
+    line-height: initial;
+    margin-top: 0.4rem;
+    opacity: 0.7;
   }
 }
 
