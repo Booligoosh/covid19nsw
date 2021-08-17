@@ -13,7 +13,7 @@
       >.
       <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t uploaded by NSW Health within 1 day, meaning
-        today&rsquo;s numbers will appear lower than their final values.
+        today&rsquo;s numbers appear lower than their final values.
       </div>
     </div>
     <div class="table">
