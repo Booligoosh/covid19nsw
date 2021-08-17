@@ -122,7 +122,7 @@ async function fetchData() {
     if (postcodeIsValid(postcode)) {
       const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
       vaccinationsByPostcode[postcode] = [
-        latestData.percPopAtLeastFirstDoseRange || "??",
+        latestData.percPopAtLeastFirstDose10WidthRange || "??",
         latestData.percPopFullyVaccinated10WidthRange || "??",
       ];
     }
