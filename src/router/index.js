@@ -92,7 +92,7 @@ const routes = [
     },
   },
   {
-    path: "/app-shell",
+    path: "/404",
     name: "AppShell",
     component: AppShell,
   },

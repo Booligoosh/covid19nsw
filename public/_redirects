@@ -9,5 +9,3 @@ https://covid19nsw.netlify.com/*            https://covid19nsw.ethan.link/:splat
 # Migrate old paths
 /all                                        /postcodes                                      301
 /locations                                  /alerts                                         301
-# Proxy all URLs to app-shell so that Vue Router works
-/*                                          /app-shell/index.html                           200
