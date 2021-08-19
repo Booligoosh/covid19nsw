@@ -144,7 +144,7 @@
             params: { postcode: postcodeNumber },
           }"
         >
-          See nearby alerts →
+          See alerts near {{ postcodeNumber }} →
         </router-link>
       </div>
     </div>
