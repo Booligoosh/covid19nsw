@@ -99,7 +99,9 @@
         <div class="vaccinations">
           <div class="vaccinations-card dose-1">
             <div class="vaccinations-card-num">
-              {{ vaccinePercentages[0] }}
+              <div class="vaccinations-card-num-text">
+                {{ vaccinePercentages[0] }}
+              </div>
               <div class="vaccinations-card-num-bar">
                 <div
                   :class="[
@@ -117,7 +119,9 @@
           </div>
           <div class="vaccinations-card dose-2">
             <div class="vaccinations-card-num">
-              {{ vaccinePercentages[1] }}
+              <div class="vaccinations-card-num-text">
+                {{ vaccinePercentages[1] }}
+              </div>
               <div class="vaccinations-card-num-bar">
                 <div
                   :class="[
@@ -730,12 +734,17 @@ $top-grid-small-text-breakpoint: 370px;
       display: flex;
       align-items: center;
 
+      &-text {
+        width: 76px; // Measured in devtools based on widest possible string, "40-49%"
+      }
+
       &-bar {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
         border-radius: 100px;
         overflow: hidden;
         flex-grow: 1;
+        width: 194px; // Measured in devtools based on width matching 2nd dose label
         margin-left: 0.5rem;
 
         &-segment {
