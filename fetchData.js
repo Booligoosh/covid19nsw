@@ -34,20 +34,14 @@ async function fetchData() {
   const parsed = parse(csv, {
     columns: true,
   });
+  const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
   console.timeEnd("Parse cases CSV");
 
   // Calculate postcodes
   console.time("Generate postcodes.json");
-  const postcodes = [...new Set(parsed.map((c) => Number(c.postcode)))]
-    .filter((c) => !!c)
-    .filter(postcodeIsValid)
-    // Sort so the most-used postcodes come first, leading to
-    // less >1-digit postcode indicies in the cases.json file.
-    .sort(
-      (a, b) =>
-        parsed.filter(({ postcode }) => postcode === b.toString()).length -
-        parsed.filter(({ postcode }) => postcode === a.toString()).length
-    );
+  const postcodes = uniqSortedByFreq(cases.map((c) => c.postcode)).map((p) =>
+    Number(p)
+  );
   fs.writeFileSync(
     "./src/data/built/postcodes.json",
     JSON.stringify(postcodes)
@@ -56,9 +50,9 @@ async function fetchData() {
 
   // Calculate councilNames
   console.time("Generate councilNames.json");
-  const councilNames = [
-    ...new Set(parsed.map((c) => c.lga_name19.replace(/\(.+?\)/g, "").trim())),
-  ].filter((c) => !!c);
+  const councilNames = uniqSortedByFreq(
+    cases.map((c) => c.lga_name19.replace(/\(.+?\)/g, "").trim())
+  );
   fs.writeFileSync(
     "./src/data/built/councilNames.json",
     JSON.stringify(councilNames)
@@ -67,21 +61,12 @@ async function fetchData() {
 
   // Calculate dates
   console.time("Generate dates.json");
-  const dates = [...new Set(parsed.map(getMinifiedDate))]
-    .filter((c) => !!c)
-    // Sort so the most-used dates come first, leading to
-    // less >1-digit dates indicies in the cases.json file.
-    .sort(
-      (a, b) =>
-        parsed.filter((c) => getMinifiedDate(c) === b).length -
-        parsed.filter((c) => getMinifiedDate(c) === a).length
-    );
+  const dates = uniqSortedByFreq(cases.map(getMinifiedDate));
   fs.writeFileSync("./src/data/built/dates.json", JSON.stringify(dates));
   console.timeEnd("Generate dates.json");
 
   // Calculate cases
   console.time("Generate cases.json");
-  const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
   const casesMin = cases.map((caseRow) => {
     const postcode = Number(caseRow.postcode);
     const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
@@ -219,4 +204,13 @@ function getCounts(
         (outbreakTotalCases[identifier] || 0) + 1;
   });
   return { outbreakTotalCases, newCasesThisWeek, newCasesToday };
+}
+
+function uniqSortedByFreq(array) {
+  // Inspired by https://stackoverflow.com/a/63427870
+  const freqs = array.reduce((freqs, value) => {
+    if (value) freqs[value] = (freqs[value] || 0) + 1;
+    return freqs;
+  }, {});
+  return Object.keys(freqs).sort((a, b) => freqs[b] - freqs[a]);
 }
