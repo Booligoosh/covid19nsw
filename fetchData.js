@@ -13,26 +13,31 @@ const CASES_META_URL =
   "https://data.nsw.gov.au/data/api/3/action/package_show?id=97ea2424-abaf-4f3e-a9f2-b5c883f42b6a";
 
 async function fetchData() {
+  console.time("Fetch cases endpoints");
   let [modified, csv] = await Promise.all([
     fetch(CASES_META_URL)
       .then((r) => r.json())
-      .then(({ result }) => result.metadata_modified),
+      .then(({ result }) => result.metadata_modified + "Z"),
     fetch(CASES_URL).then((r) => r.text()),
   ]);
+  console.timeEnd("Fetch cases endpoints");
 
-  modified += "Z";
-
+  console.time("Generate metadataModified.json + cases_modified.txt");
   fs.writeFileSync(
     "./src/data/built/metadataModified.json",
     JSON.stringify(modified)
   );
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
+  console.timeEnd("Generate metadataModified.json + cases_modified.txt");
 
+  console.time("Parse cases CSV");
   const parsed = parse(csv, {
     columns: true,
   });
+  console.timeEnd("Parse cases CSV");
 
   // Calculate postcodes
+  console.time("Generate postcodes.json");
   const postcodes = [...new Set(parsed.map((c) => Number(c.postcode)))]
     .filter((c) => !!c)
     .filter(postcodeIsValid)
@@ -47,8 +52,10 @@ async function fetchData() {
     "./src/data/built/postcodes.json",
     JSON.stringify(postcodes)
   );
+  console.timeEnd("Generate postcodes.json");
 
   // Calculate councilNames
+  console.time("Generate councilNames.json");
   const councilNames = [
     ...new Set(parsed.map((c) => c.lga_name19.replace(/\(.+?\)/g, "").trim())),
   ].filter((c) => !!c);
@@ -56,8 +63,10 @@ async function fetchData() {
     "./src/data/built/councilNames.json",
     JSON.stringify(councilNames)
   );
+  console.timeEnd("Generate councilNames.json");
 
   // Calculate dates
+  console.time("Generate dates.json");
   const dates = [...new Set(parsed.map(getMinifiedDate))]
     .filter((c) => !!c)
     // Sort so the most-used dates come first, leading to
@@ -68,8 +77,10 @@ async function fetchData() {
         parsed.filter((c) => getMinifiedDate(c) === a).length
     );
   fs.writeFileSync("./src/data/built/dates.json", JSON.stringify(dates));
+  console.timeEnd("Generate dates.json");
 
   // Calculate cases
+  console.time("Generate cases.json");
   const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
   const casesMin = cases.map((caseRow) => {
     const postcode = Number(caseRow.postcode);
@@ -97,27 +108,35 @@ async function fetchData() {
       Number(councilIsCityCouncil),
     ];
   });
-
   fs.writeFileSync("./src/data/built/cases.json", JSON.stringify(casesMin));
+  console.timeEnd("Generate cases.json");
 
+  console.time("Generate postcodeCounts.json");
   fs.writeFileSync(
     "./src/data/built/postcodeCounts.json",
     JSON.stringify(
       getCounts("postcode", modified, cases, postcodes, councilNames)
     )
   );
+  console.timeEnd("Generate postcodeCounts.json");
+
+  console.time("Generate councilCounts.json");
   fs.writeFileSync(
     "./src/data/built/councilCounts.json",
     JSON.stringify(
       getCounts("councilName", modified, cases, postcodes, councilNames)
     )
   );
+  console.timeEnd("Generate councilCounts.json");
 
   // Calculate vaccinations
-  const vaccinationsByPostcode = {};
+  console.time("Fetch vaccinations endpoint");
   const vaccinationData = await fetch(
     "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/vaccination_metrics-v3.json"
   ).then((r) => r.json());
+  console.timeEnd("Fetch vaccinations endpoint");
+  console.time("Generate vaccinations.json");
+  const vaccinationsByPostcode = {};
   Object.keys(vaccinationData).forEach((postcode) => {
     if (postcodeIsValid(postcode)) {
       const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
@@ -134,6 +153,7 @@ async function fetchData() {
     "./src/data/built/vaccinations.json",
     JSON.stringify(vaccinationsByPostcode)
   );
+  console.timeEnd("Generate vaccinations.json");
 }
 
 fetchData();
