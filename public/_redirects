@@ -1,6 +1,5 @@
 # Redirect from the old Netlify domain
-https://covid19nsw.netlify.com/             https://covid19nsw.ethan.link/                  301!
-https://covid19nsw.netlify.com/*            https://covid19nsw.ethan.link/:splat            301
+https://covid19nsw.netlify.com/*            https://covid19nsw.ethan.link/:splat            301!
 # Tell Google that old asset hashes are gone
 /css/*                                      /                                               410
 /js/*                                       /                                               410
