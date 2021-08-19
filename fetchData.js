@@ -121,10 +121,9 @@ async function fetchData() {
   Object.keys(vaccinationData).forEach((postcode) => {
     if (postcodeIsValid(postcode)) {
       const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
-      vaccinationsByPostcode[postcode] = [
-        latestData.percPopAtLeastFirstDose10WidthRange || "??",
-        latestData.percPopFullyVaccinated10WidthRange || "??",
-      ];
+      const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
+      const dose2 = latestData.percPopFullyVaccinated10WidthRange;
+      if (dose1 && dose2) vaccinationsByPostcode[postcode] = [dose1, dose2];
     }
   });
   fs.writeFileSync(

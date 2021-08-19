@@ -94,17 +94,41 @@
       </div>
     </div>
     <div class="other-content" v-if="!isCouncil">
-      <div class="other-content-card">
+      <div class="other-content-card" v-if="vaccinePercentages">
         <h2 class="other-content-card-title">Vaccinations</h2>
         <div class="vaccinations">
-          <div class="vaccinations-card">
-            <div class="vaccinations-card-num">{{ vaccinePercentages[0] }}</div>
+          <div class="vaccinations-card dose-1">
+            <div class="vaccinations-card-num">
+              {{ vaccinePercentages[0] }}
+              <div class="vaccinations-card-num-bar">
+                <div
+                  :class="[
+                    'vaccinations-card-num-bar-segment',
+                    `type-${segmentType}`,
+                  ]"
+                  v-for="(segmentType, i) of vaccineSegments[0]"
+                  :key="i"
+                />
+              </div>
+            </div>
             <div class="vaccinations-card-label">
               of residents have had their 1st dose
             </div>
           </div>
-          <div class="vaccinations-card">
-            <div class="vaccinations-card-num">{{ vaccinePercentages[1] }}</div>
+          <div class="vaccinations-card dose-2">
+            <div class="vaccinations-card-num">
+              {{ vaccinePercentages[1] }}
+              <div class="vaccinations-card-num-bar">
+                <div
+                  :class="[
+                    'vaccinations-card-num-bar-segment',
+                    `type-${segmentType}`,
+                  ]"
+                  v-for="(segmentType, i) of vaccineSegments[1]"
+                  :key="i"
+                />
+              </div>
+            </div>
             <div class="vaccinations-card-label">
               of residents have had their 2nd dose
             </div>
@@ -200,9 +224,34 @@ export default {
       } Council`;
     },
     vaccinePercentages() {
-      if (!this.isCouncil)
-        return vaccinations[this.postcodeNumber] || ["??", "??"];
-      else return [null, null];
+      if (!this.isCouncil) return vaccinations[this.postcodeNumber] || null;
+      else return null;
+    },
+    vaccineSegments() {
+      return this.vaccinePercentages?.map((range) => {
+        const rangeStart = range.match(/.+?\d+/)?.[0]; // Matches the first number and any characters before
+        const currentSegmentIndex = [
+          "<10",
+          "10",
+          "20",
+          "30",
+          "40",
+          "50",
+          "60",
+          "70",
+          "80",
+          "90",
+        ].indexOf(rangeStart);
+        console.log({ range, currentSegmentIndex });
+
+        const segments = new Array(10)
+          .fill()
+          .map((_, i) =>
+            i === currentSegmentIndex ? 1 : i < currentSegmentIndex ? 0 : 2
+          );
+
+        return segments;
+      });
     },
     allCases() {
       const filterFn = this.isCouncil
@@ -666,16 +715,66 @@ $top-grid-small-text-breakpoint: 370px;
 }
 
 .vaccinations {
+  display: flex;
+  flex-wrap: wrap;
+  $horizontal-gap: 1.5rem;
+  $vertical-gap: 0.5rem;
+  margin: $vertical-gap/-2 $horizontal-gap/-2;
+
   &-card {
+    margin: $vertical-gap/2 $horizontal-gap/2;
+
     &-num {
       font-size: 1.2rem;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      &-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        border-radius: 100px;
+        overflow: hidden;
+        flex-grow: 1;
+        margin-left: 0.5rem;
+
+        &-segment {
+          height: 15px;
+
+          &:not(:last-child) {
+            margin-right: 1px;
+          }
+
+          $secondary-color: hsl(0, 0%, 88%);
+
+          .dose-1 & {
+            --primary-color: hsl(123, 45%, 60%);
+          }
+          .dose-2 & {
+            --primary-color: hsl(123, 45%, 40%);
+          }
+
+          &.type-0 {
+            background: var(--primary-color);
+          }
+          &.type-1 {
+            $stripe-width: 2.5px;
+            background: repeating-linear-gradient(
+              -45deg,
+              var(--primary-color),
+              var(--primary-color) $stripe-width,
+              $secondary-color $stripe-width,
+              $secondary-color 2 * $stripe-width
+            );
+          }
+          &.type-2 {
+            background: $secondary-color;
+          }
+        }
+      }
     }
     &-label {
       opacity: 0.8;
-    }
-    &:not(:last-child) {
-      margin-bottom: 0.5rem;
     }
   }
 }
