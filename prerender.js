@@ -28,7 +28,10 @@ prerenderer
     renderedRoutes.forEach(async (renderedRoute) => {
       const { route, html } = postProcess(renderedRoute);
 
-      const outputPath = path.join(staticDir, route, "index.html");
+      const outputPath = path.join(
+        staticDir,
+        route === "/" ? "index.html" : route + ".html"
+      );
 
       console.log(outputPath);
       // console.log(html);
