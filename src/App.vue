@@ -110,12 +110,14 @@ body,
   }
   .nav {
     padding-bottom: 0;
+    $nav-breakpoint: 700px;
 
     &-logo {
       display: flex;
       justify-content: center;
       align-items: center;
 
+      $small-logo-title-breakpoint: 333px;
       $logo-links-width: 9rem;
 
       &-spacer {
@@ -124,7 +126,7 @@ body,
         &.left {
           margin-left: $logo-links-width;
 
-          @media screen and (max-width: 700px) {
+          @media screen and (max-width: $nav-breakpoint) {
             display: none;
           }
         }
@@ -134,7 +136,7 @@ body,
         height: 2rem;
         margin-right: 0.25rem;
 
-        @media screen and (max-width: 333px) {
+        @media screen and (max-width: $small-logo-title-breakpoint) {
           height: 1.5rem;
         }
       }
@@ -143,7 +145,7 @@ body,
         display: flex;
         align-items: center;
 
-        @media screen and (max-width: 333px) {
+        @media screen and (max-width: $small-logo-title-breakpoint) {
           font-size: 0.9rem;
         }
       }
@@ -153,7 +155,7 @@ body,
         justify-content: flex-end;
         width: $logo-links-width;
 
-        @media screen and (max-width: 700px) {
+        @media screen and (max-width: $nav-breakpoint) {
           width: unset;
         }
 
@@ -177,7 +179,7 @@ body,
       margin: 0 auto;
       margin-top: 1rem;
 
-      @media screen and (max-width: 700px) {
+      @media screen and (max-width: $nav-breakpoint) {
         width: 100%;
       }
 
