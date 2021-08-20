@@ -138,6 +138,9 @@
             </div>
           </div>
         </div>
+        <div class="vaccinations-note">
+          Based on ABS 2019 Estimated Residential Population aged 16+
+        </div>
       </div>
       <div class="other-content-card">
         <h2 class="other-content-card-title">Alerts</h2>
@@ -785,6 +788,12 @@ $top-grid-small-text-breakpoint: 370px;
     &-label {
       opacity: 0.8;
     }
+  }
+
+  &-note {
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    opacity: 0.5;
   }
 }
 
