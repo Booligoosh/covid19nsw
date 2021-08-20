@@ -3,11 +3,7 @@
     <div>
       <h1>About this site</h1>
       <p>
-        This site uses the latest
-        <a href="https://data.nsw.gov.au/nsw-covid-19-data" target="_blank"
-          >official COVID-19 data</a
-        >
-        provided by NSW Health.
+        This site uses the latest official COVID-19 data provided by NSW Health.
       </p>
       <p>
         It’s built and maintained by
@@ -18,10 +14,37 @@
         If you have any questions, feedback, or ideas (or job opportunities!),
         you can <a href="mailto:me@ethan.link">email me</a>.
       </p>
+      <h2>Data sources</h2>
+      <ul>
+        <li>
+          <a
+            href="https://data.nsw.gov.au/nsw-covid-19-data/cases"
+            target="_blank"
+          >
+            NSW COVID-19 cases by location and likely source of infection
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://data.nsw.gov.au/nsw-covid-19-data/case-locations"
+            target="_blank"
+          >
+            NSW COVID-19 case locations
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://www.nsw.gov.au/covid-19/find-the-facts-about-covid-19#map-of-nsw-vaccinations-by-home-postcode"
+            target="_blank"
+          >
+            Map of NSW vaccinations by home postcode
+          </a>
+        </li>
+      </ul>
       <p class="bottom-note">
-        <a href="https://github.com/Booligoosh/covid19nsw" target="_blank"
-          >Source code on GitHub</a
-        >
+        <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">
+          Source code on GitHub
+        </a>
         (if you're a software dev)
       </p>
       <!-- <a
@@ -46,8 +69,21 @@
     font-size: 1.5rem;
   }
 
+  h2 {
+    font-size: 1.17rem;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    margin: 0;
+
+    li {
+      margin: 0.5rem 0;
+    }
+  }
+
   .bottom-note {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     font-size: 0.8rem;
     opacity: 0.5;
 
