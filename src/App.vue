@@ -153,6 +153,10 @@ body,
         justify-content: flex-end;
         width: $logo-links-width;
 
+        @media screen and (max-width: 700px) {
+          width: unset;
+        }
+
         a {
           font-weight: normal;
           font-size: 0.85rem;
