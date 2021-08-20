@@ -586,7 +586,6 @@ $top-grid-small-text-breakpoint: 370px;
     .suburbs-text {
       font-weight: normal;
       font-size: 0.9rem;
-      font-weight: 500;
       margin-top: 0.1rem;
     }
   }
@@ -611,11 +610,11 @@ $top-grid-small-text-breakpoint: 370px;
       }
 
       &-num {
-        font-weight: bold;
+        font-weight: 600;
         font-size: 2.5rem;
 
         @media screen and (max-width: $top-grid-breakpoint) {
-          font-size: 2rem;
+          font-size: 1.5rem;
         }
       }
 
