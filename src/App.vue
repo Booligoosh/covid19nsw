@@ -116,7 +116,7 @@ body,
       justify-content: center;
       align-items: center;
 
-      $logo-links-width: 8rem;
+      $logo-links-width: 9rem;
 
       &-spacer {
         flex-grow: 1;
