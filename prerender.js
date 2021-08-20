@@ -21,10 +21,12 @@ const prerenderer = new Prerenderer({
 prerenderer
   .initialize()
   .then(() => {
+    console.time("renderRoutes");
     // List of routes to render.
     return prerenderer.renderRoutes(routes);
   })
   .then((renderedRoutes) => {
+    console.timeEnd("renderRoutes");
     renderedRoutes.forEach(async (renderedRoute) => {
       const { route, html } = postProcess(renderedRoute);
 
