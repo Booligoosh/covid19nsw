@@ -24,13 +24,13 @@
         >
         (if you're a software dev)
       </p>
-      <a
+      <!-- <a
         class="tip-jar"
         href="https://www.buymeacoffee.com/booligoosh"
         target="_blank"
       >
         💵 Tip Jar
-      </a>
+      </a> -->
     </div>
   </div>
 </template>

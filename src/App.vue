@@ -14,9 +14,12 @@
         />
         <div class="nav-logo-title">COVID-19 NSW</div>
         <div class="nav-logo-spacer right" />
-        <router-link :to="{ name: 'AboutPage' }" class="nav-logo-about"
-          >About this site</router-link
-        >
+        <div class="nav-logo-links">
+          <a href="https://www.buymeacoffee.com/booligoosh" target="_blank">
+            Tip jar
+          </a>
+          <router-link :to="{ name: 'AboutPage' }">About site</router-link>
+        </div>
       </div>
       <nav class="nav-links">
         <router-link :to="{ name: 'PostcodesPage' }">Postcodes</router-link>
@@ -98,8 +101,6 @@ body,
     flex-grow: 1;
   }
 
-  $about-width: 7rem;
-
   .nav,
   .page {
     padding: 1.5rem;
@@ -115,11 +116,13 @@ body,
       justify-content: center;
       align-items: center;
 
+      $logo-links-width: 8rem;
+
       &-spacer {
         flex-grow: 1;
 
         &.left {
-          margin-left: $about-width;
+          margin-left: $logo-links-width;
 
           @media screen and (max-width: 700px) {
             display: none;
@@ -130,20 +133,33 @@ body,
         width: auto;
         height: 2rem;
         margin-right: 0.25rem;
+
+        @media screen and (max-width: 333px) {
+          height: 1.5rem;
+        }
       }
       &-title {
         font-weight: bold;
         display: flex;
         align-items: center;
+
+        @media screen and (max-width: 333px) {
+          font-size: 0.9rem;
+        }
       }
-      &-about {
-        font-weight: normal;
-        font-size: 0.85rem;
-        color: inherit;
-        opacity: 0.6;
-        width: $about-width;
-        text-align: right;
-        margin-left: auto;
+      &-links {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: flex-end;
+        width: $logo-links-width;
+
+        a {
+          font-weight: normal;
+          font-size: 0.85rem;
+          color: inherit;
+          opacity: 0.6;
+          margin-left: 0.7rem;
+        }
       }
     }
 
