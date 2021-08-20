@@ -139,7 +139,8 @@
           </div>
         </div>
         <div class="vaccinations-note">
-          Based on ABS 2019 Estimated Residential Population aged 16+
+          Based on address at time of vaccination, using ABS 2019 Estimated
+          Residential Population aged 16+
         </div>
       </div>
       <div class="other-content-card">
