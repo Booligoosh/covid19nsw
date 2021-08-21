@@ -5,3 +5,4 @@ export const ALL_TIME_START_DATE = "2020-01-25";
 export const OUTBREAK_START_DATE = "2021-06-16";
 export const OUTBREAK_START_DATE_FORMATTED = "16 Jun";
 export const SOURCE_TIMEZONE = "Australia/Sydney";
+export const SOURCE_STRINGS = ["Linked local", "Unlinked local", "Outside NSW"];

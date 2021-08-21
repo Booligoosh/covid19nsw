@@ -71,11 +71,23 @@ async function fetchData() {
     const postcode = Number(caseRow.postcode);
     const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
     const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
-    const source = caseRow.likely_source_of_infection.startsWith(
-      "Locally acquired"
-    )
-      ? "Local"
-      : caseRow.likely_source_of_infection;
+    const source = caseRow.likely_source_of_infection;
+
+    const sourceIndex =
+      source === "Locally acquired - linked to known case or cluster"
+        ? 0 // Linked local
+        : [
+            "Locally acquired - no links to known case or cluster",
+            "Locally acquired - investigation ongoing",
+          ].includes(source)
+        ? 1 // Unlinked local
+        : ["Interstate", "Overseas"].includes(source)
+        ? 2 // Outside NSW
+        : -1; // Unknown string;
+
+    if (sourceIndex === -1)
+      console.warn("[WARNING] Unknown source string:", source);
+
     return [
       // postcode
       postcodes.indexOf(postcode),
@@ -84,7 +96,7 @@ async function fetchData() {
       // - Dashes removed
       dates.indexOf(getMinifiedDate(caseRow)),
       // source: Minified into number [0,1,2]
-      ["Local", "Interstate", "Overseas"].indexOf(source),
+      sourceIndex,
       // councilName
       councilNames.indexOf(councilName),
       // councilSlug: Not present, calculated from councilName on frontend

@@ -170,6 +170,7 @@ import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
   ALL_TIME_START_DATE,
   OUTBREAK_START_DATE,
+  SOURCE_STRINGS,
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants.js";
 import unminifyCases from "@/unminifyCases.js";
@@ -398,11 +399,10 @@ export default {
     },
     sourceChartDatasets() {
       console.time("Calculate sourceChartDatasets");
-      const SOURCES = ["Local", "Interstate", "Overseas"];
 
       const cumulative = !this.newCasesMode;
       let values = {};
-      SOURCES.forEach(
+      SOURCE_STRINGS.forEach(
         (source) => (values[source] = new Array(this.chartNumDays).fill(0))
       );
 
@@ -425,7 +425,7 @@ export default {
           });
         });
 
-      const sourceChartDatasets = SOURCES.map((targetSource) => ({
+      const sourceChartDatasets = SOURCE_STRINGS.map((targetSource) => ({
         name: targetSource,
         values: values[targetSource],
       }));
@@ -446,7 +446,7 @@ export default {
         // height: this.sourceMode ? 340 : 300,
         height: 300,
         colors: this.sourceMode
-          ? ["blue", "orange", "light-green"]
+          ? ["green", "orange", "dark-grey"]
           : this.newCasesMode
           ? ["light-blue", "green"]
           : ["purple"],
