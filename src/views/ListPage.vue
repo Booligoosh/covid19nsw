@@ -198,7 +198,7 @@ export default {
         a[this.sort] === b[this.sort]
           ? 0
           : // If A is less than B, put A after B
-            (a[this.sort] < b[this.sort] ? 1 : -1) *
+            ((a[this.sort] || "") < (b[this.sort] || "") ? 1 : -1) *
             // Unless it's col1, in which case reverse the order
             (this.sort === "col1Sort" ? -1 : 1)
       );
