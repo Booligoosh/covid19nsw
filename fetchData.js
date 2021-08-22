@@ -141,7 +141,7 @@ async function fetchData() {
       const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
       const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
       const dose2 = latestData.percPopFullyVaccinated10WidthRange;
-      if (dose1 && dose2)
+      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed")
         vaccinationsByPostcode[postcode] = [
           dose1.replace("%-", "-"), // Replace "20%-30%"
           dose2.replace("%-", "-"), // with "20-30%" etc.
