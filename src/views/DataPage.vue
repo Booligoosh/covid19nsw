@@ -302,9 +302,9 @@ export default {
       const key = this.isCouncil ? this.councilNameIndex : this.postcodeIndex;
 
       return {
-        today: newCasesToday[key],
-        thisWeek: newCasesThisWeek[key],
-        thisOutbreak: outbreakTotalCases[key],
+        today: newCasesToday[key] || 0,
+        thisWeek: newCasesThisWeek[key] || 0,
+        thisOutbreak: outbreakTotalCases[key] || 0,
       };
     },
     lastXDays() {
