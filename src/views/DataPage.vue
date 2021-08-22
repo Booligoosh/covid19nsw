@@ -178,6 +178,10 @@ import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
 import vaccinations from "@/data/built/vaccinations.json";
+import postcodes from "@/data/built/postcodes.json";
+import councilNames from "@/data/built/councilNames.json";
+import postcodeCounts from "@/data/built/postcodeCounts.json";
+import councilCounts from "@/data/built/councilCounts.json";
 
 const AVG_PERIOD = 5;
 
@@ -226,6 +230,11 @@ export default {
     suburbsText() {
       return suburbsForPostcode[this.postcodeNumber] || "(Suburbs unknown)";
     },
+    councilNameIndex() {
+      return councilNames
+        .map((cn) => cn.replace(/ /g, "-").toLowerCase())
+        .indexOf(this.$route.params.councilSlug);
+    },
     councilName() {
       const oneCase = this.allCases[0] || {};
       return `${oneCase.councilName}${
@@ -273,34 +282,20 @@ export default {
       return this.allCases.length;
     },
     caseCounts() {
-      if (!this.$store.state.temporalCoverageTo)
-        return { today: 0, thisWeek: 0, thisOutbreak: 0 };
-      // Both in 1 function to halve the number of iterations.
-      // See the individual getters based on its outputs below.
-      const todayDate =
-        this.$store.state.temporalCoverageTo.format("YYYY-MM-DD");
-      const oneWeekAgo = this.$store.state.temporalCoverageTo
-        .subtract(7, "days")
-        .format("YYYY-MM-DD");
+      const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
+        .isCouncil
+        ? councilCounts
+        : postcodeCounts;
 
-      let today = 0;
-      let thisWeek = 0;
-      let thisOutbreak = 0;
+      const key = this.isCouncil
+        ? this.councilNameIndex
+        : postcodes.indexOf(this.postcodeNumber);
 
-      this.allCases.forEach((caseObj) => {
-        if (caseObj.rawDate === todayDate) {
-          today++;
-          thisWeek++;
-          thisOutbreak++;
-        } else if (caseObj.rawDate > oneWeekAgo) {
-          thisWeek++;
-          thisOutbreak++;
-        } else if (caseObj.rawDate > OUTBREAK_START_DATE) {
-          thisOutbreak++;
-        }
-      });
-
-      return { today, thisWeek, thisOutbreak };
+      return {
+        today: newCasesToday[key],
+        thisWeek: newCasesThisWeek[key],
+        thisOutbreak: outbreakTotalCases[key],
+      };
     },
     lastXDays() {
       if (!this.$store.state.temporalCoverageTo) return [];
