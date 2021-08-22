@@ -2,7 +2,7 @@
 
 <template>
   <PageNotFound
-    v-if="isCouncil && allCases.length === 0"
+    v-if="isCouncil && councilNameIndex === -1"
     :isOnCouncilPage="true"
   />
   <div class="data-page" v-else>
@@ -175,10 +175,10 @@ import {
   SOURCE_STRINGS,
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants.js";
-import unminifyCases from "@/unminifyCases.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
+import dates from "@/data/built/dates.json";
 import vaccinations from "@/data/built/vaccinations.json";
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
@@ -277,14 +277,21 @@ export default {
       });
     },
     allCases() {
+      // Case schema from fetchData: [postcodeIndex, dateIndex, sourceIndex, councilNameIndex]
       const filterFn = this.isCouncil
-        ? ({ councilNameIndex }) => councilNameIndex === this.councilNameIndex
-        : ({ postcodeIndex }) => postcodeIndex === this.postcodeIndex;
-
-      return unminifyCases(cases).filter(filterFn);
+        ? (caseMin) => caseMin[3] === this.councilNameIndex
+        : (caseMin) => caseMin[0] === this.postcodeIndex;
+      return cases.filter(filterFn).map((c) => [c[1], c[2]]);
+      // Returned case schema: [dateIndex, sourceIndex]
     },
-    totalCases() {
+    allCasesLength() {
       return this.allCases.length;
+    },
+    allCasesRawDates() {
+      return this.allCases.map((c) => dates[c[0]]);
+    },
+    allCasesSources() {
+      return this.allCases.map((c) => c[1]);
     },
     caseCounts() {
       const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
@@ -309,7 +316,15 @@ export default {
         .reverse();
     },
     rawDates() {
-      return this.lastXDays.map((date) => date.format("YYYY-MM-DD"));
+      return this.lastXDays.map((date) =>
+        date
+          .format("YYYY-MM-DD")
+          // Emulates getMinifiedDate function in fetchData.js:
+          // - "2020" replaced with "0", "2021" replaced with "1" etc.
+          // - Dashes removed
+          .substr(3)
+          .replace(/-/g, "")
+      );
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
@@ -334,9 +349,9 @@ export default {
 
       console.log(
         this.chartNumDays,
-        this.totalCases,
+        this.allCasesLength,
         "Requires",
-        this.chartNumDays * this.totalCases,
+        this.chartNumDays * this.allCasesLength,
         "operations"
       );
 
@@ -349,7 +364,7 @@ export default {
       const prevPeriodTotals = new Array(
         this.chartNumDays + this.avgPeriod - 1
       ).fill(0);
-      const caseRawDates = this.allCases.map((c) => c.rawDate);
+      const caseRawDates = this.allCasesRawDates;
 
       // Interate through each date
       this.rawDates.forEach((date, i) => {
@@ -405,8 +420,8 @@ export default {
         .fill()
         .map(() => Array(this.chartNumDays).fill(0));
 
-      const caseRawDates = this.allCases.map((c) => c.rawDate);
-      const caseSources = this.allCases.map((c) => c.sourceIndex);
+      const caseRawDates = this.allCasesRawDates;
+      const caseSources = this.allCasesSources;
 
       this.rawDates
         // Remove the first avgPeriod-1 days
@@ -514,7 +529,7 @@ export default {
           "setPageDescription",
           `As of ${this.$store.state.temporalCoverageTo.format(
             "D MMMM YYYY"
-          )}, there are ${this.totalCases} cases of COVID-19 in ${
+          )}, there are ${this.allCasesLength} cases of COVID-19 in ${
             this.councilDisplayName
           }. Click to see the latest data for your area.`
         );
@@ -528,7 +543,9 @@ export default {
           "setPageDescription",
           `As of ${this.$store.state.temporalCoverageTo.format(
             "D MMMM YYYY"
-          )}, there are ${this.totalCases} cases of COVID-19 in the postcode ${
+          )}, there are ${
+            this.allCasesLength
+          } cases of COVID-19 in the postcode ${
             this.$route.params.postcode
           }. Click to see the latest data for your postcode.`
         );
