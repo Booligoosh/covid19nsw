@@ -143,8 +143,9 @@ async function fetchData() {
       const dose2 = latestData.percPopFullyVaccinated10WidthRange;
       if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed")
         vaccinationsByPostcode[postcode] = [
-          dose1.replace("%-", "-"), // Replace "20%-30%"
-          dose2.replace("%-", "-"), // with "20-30%" etc.
+          // Replace "20%-30%" with "20-30%" etc, replace "<10%" with "0-9%"
+          dose1.replace("%-", "-").replace("<10%", "0-9%"),
+          dose2.replace("%-", "-").replace("<10%", "0-9%"),
         ];
     }
   });

@@ -252,9 +252,9 @@ export default {
     },
     vaccineSegments() {
       return this.vaccinePercentages?.map((range) => {
-        const rangeStart = range.match(/.+?\d+/)?.[0]; // Matches the first number and any characters before
+        const rangeStart = range.match(/.+?\d*/)?.[0]; // Matches the first number and any characters before
         const currentSegmentIndex = [
-          "<10",
+          "0",
           "10",
           "20",
           "30",
