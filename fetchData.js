@@ -66,13 +66,18 @@ async function fetchData() {
   console.timeEnd("Generate dates.json");
 
   // Calculate cases
-  console.time("Generate cases.json");
+  console.time("Generate cases.json + cityCouncilIndices.json");
+  const cityCouncilIndices = [];
   const casesMin = cases.map((caseRow) => {
+    // POSTCODE STUFF
     const postcode = Number(caseRow.postcode);
-    const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
-    const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
-    const source = caseRow.likely_source_of_infection;
+    const postcodeIndex = postcodes.indexOf(postcode);
 
+    // DATE STUFF
+    const dateIndex = dates.indexOf(getMinifiedDate(caseRow));
+
+    // SOURCE STUFF
+    const source = caseRow.likely_source_of_infection;
     const sourceIndex =
       source === "Locally acquired - linked to known case or cluster"
         ? 0 // Linked local
@@ -84,29 +89,26 @@ async function fetchData() {
         : ["Interstate", "Overseas"].includes(source)
         ? 2 // Outside NSW
         : -1; // Unknown string;
-
     if (sourceIndex === -1)
       console.warn("[WARNING] Unknown source string:", source);
 
-    return [
-      // postcode
-      postcodes.indexOf(postcode),
-      // rawDate:
-      // - "2020" replaced with "0", "2021" replaced with "1" etc.
-      // - Dashes removed
-      dates.indexOf(getMinifiedDate(caseRow)),
-      // source: Minified into number [0,1,2]
-      sourceIndex,
-      // councilName
-      councilNames.indexOf(councilName),
-      // councilSlug: Not present, calculated from councilName on frontend
+    // COUNCIL STUFF
+    const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
+    const councilNameIndex = councilNames.indexOf(councilName);
+    const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
 
-      // councilIsCityCouncil: Minified into number [0,1]
-      Number(councilIsCityCouncil),
-    ];
+    if (councilIsCityCouncil && !cityCouncilIndices.includes(councilNameIndex))
+      cityCouncilIndices.push(councilNameIndex);
+
+    // RETURN
+    return [postcodeIndex, dateIndex, sourceIndex, councilNameIndex];
   });
   fs.writeFileSync("./src/data/built/cases.json", JSON.stringify(casesMin));
-  console.timeEnd("Generate cases.json");
+  fs.writeFileSync(
+    "./src/data/built/cityCouncilIndices.json",
+    JSON.stringify(cityCouncilIndices)
+  );
+  console.timeEnd("Generate cases.json + cityCouncilIndices.json");
 
   console.time("Generate postcodeCounts.json");
   fs.writeFileSync(
@@ -165,6 +167,8 @@ function postcodeIsValid(postcode) {
 }
 
 function getMinifiedDate(c) {
+  // - "2020" replaced with "0", "2021" replaced with "1" etc.
+  // - Dashes removed
   return c.notification_date.substr(3).replace(/-/g, "");
 }
 

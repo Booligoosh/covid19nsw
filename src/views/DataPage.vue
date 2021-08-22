@@ -9,7 +9,9 @@
     <RenderDetector @created="mainContentRendered" />
     <div class="top-grid">
       <h1 v-if="isCouncil">
-        <span><span class="not-bold">Cases in</span> {{ councilName }}</span>
+        <span
+          ><span class="not-bold">Cases in</span> {{ councilDisplayName }}</span
+        >
       </h1>
       <h1 v-else>
         <span
@@ -180,6 +182,7 @@ import cases from "@/data/built/cases.json";
 import vaccinations from "@/data/built/vaccinations.json";
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
+import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
 
@@ -212,6 +215,9 @@ export default {
     postcodeNumber() {
       return Number(this.$route.params.postcode);
     },
+    postcodeIndex() {
+      return postcodes.indexOf(this.postcodeNumber);
+    },
     avgPeriod() {
       return this.newCasesMode ? AVG_PERIOD : 1;
     },
@@ -235,10 +241,9 @@ export default {
         .map((cn) => cn.replace(/ /g, "-").toLowerCase())
         .indexOf(this.$route.params.councilSlug);
     },
-    councilName() {
-      const oneCase = this.allCases[0] || {};
-      return `${oneCase.councilName}${
-        oneCase.councilIsCityCouncil ? " City" : ""
+    councilDisplayName() {
+      return `${councilNames[this.councilNameIndex]}${
+        cityCouncilIndices.includes(this.councilNameIndex) ? " City" : ""
       } Council`;
     },
     vaccinePercentages() {
@@ -273,8 +278,8 @@ export default {
     },
     allCases() {
       const filterFn = this.isCouncil
-        ? ({ councilSlug }) => councilSlug === this.$route.params.councilSlug
-        : ({ postcode }) => postcode === this.postcodeNumber;
+        ? ({ councilNameIndex }) => councilNameIndex === this.councilNameIndex
+        : ({ postcodeIndex }) => postcodeIndex === this.postcodeIndex;
 
       return unminifyCases(cases).filter(filterFn);
     },
@@ -287,9 +292,7 @@ export default {
         ? councilCounts
         : postcodeCounts;
 
-      const key = this.isCouncil
-        ? this.councilNameIndex
-        : postcodes.indexOf(this.postcodeNumber);
+      const key = this.isCouncil ? this.councilNameIndex : this.postcodeIndex;
 
       return {
         today: newCasesToday[key],
@@ -501,7 +504,7 @@ export default {
       if (this.$route.name === "CouncilPage") {
         this.$store.commit(
           "setPageTitle",
-          `COVID-19 data for ${this.councilName}, NSW, Australia`
+          `COVID-19 data for ${this.councilDisplayName}, NSW, Australia`
         );
 
         this.$store.commit(
@@ -509,7 +512,7 @@ export default {
           `As of ${this.$store.state.temporalCoverageTo.format(
             "D MMMM YYYY"
           )}, there are ${this.totalCases} cases of COVID-19 in ${
-            this.councilName
+            this.councilDisplayName
           }. Click to see the latest data for your area.`
         );
       } else {
