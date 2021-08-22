@@ -399,13 +399,14 @@ export default {
       console.time("Calculate sourceChartDatasets");
 
       const cumulative = !this.newCasesMode;
-      let values = {};
-      SOURCE_STRINGS.forEach(
-        (source) => (values[source] = new Array(this.chartNumDays).fill(0))
-      );
+      // Creates an array of length <SOURCE_STRINGS.length>, filled with arrays of length <this.chartNumDays>.
+      // Done in this way to avoid all the nested arrays mutating each other, see https://stackoverflow.com/a/35578536
+      let values = new Array(SOURCE_STRINGS.length)
+        .fill()
+        .map(() => Array(this.chartNumDays).fill(0));
 
       const caseRawDates = this.allCases.map((c) => c.rawDate);
-      const caseSources = this.allCases.map((c) => c.source);
+      const caseSources = this.allCases.map((c) => c.sourceIndex);
 
       this.rawDates
         // Remove the first avgPeriod-1 days
@@ -423,10 +424,12 @@ export default {
           });
         });
 
-      const sourceChartDatasets = SOURCE_STRINGS.map((targetSource) => ({
-        name: targetSource,
-        values: values[targetSource],
-      }));
+      const sourceChartDatasets = SOURCE_STRINGS.map(
+        (sourceName, sourceIndex) => ({
+          name: sourceName,
+          values: values[sourceIndex],
+        })
+      );
 
       console.timeEnd("Calculate sourceChartDatasets");
       return sourceChartDatasets;
