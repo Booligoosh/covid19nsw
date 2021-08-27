@@ -1,7 +1,7 @@
 const array = JSON.parse(
-  require("fs").readFileSync(__dirname + "/suburbListNamePostcodeOnlyNSW.json")
+  require("fs").readFileSync(__dirname + "/suburbListNSW.json")
 );
-const postcodeNumbers = [...new Set(array.map((x) => x.p))].sort(
+const postcodeNumbers = [...new Set(array.map((x) => x.POSTCODE))].sort(
   (a, b) => a - b
 );
 console.log(postcodeNumbers);
@@ -9,8 +9,8 @@ const obj = {};
 postcodeNumbers.forEach(
   (postcode) =>
     (obj[postcode] = array
-      .filter(({ p }) => p === postcode)
-      .map((x) => x.n)
+      .filter(({ POSTCODE }) => POSTCODE === postcode)
+      .map((x) => x.NAME)
       .join(", "))
 );
 const final = JSON.stringify(obj);
