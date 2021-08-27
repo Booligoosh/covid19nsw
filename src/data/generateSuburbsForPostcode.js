@@ -4,7 +4,7 @@ const array = JSON.parse(
 const postcodeNumbers = [...new Set(array.map((x) => x.POSTCODE))].sort(
   (a, b) => a - b
 );
-console.log(postcodeNumbers);
+
 const obj = {};
 postcodeNumbers.forEach(
   (postcode) =>
@@ -14,5 +14,5 @@ postcodeNumbers.forEach(
       .join(", "))
 );
 const final = JSON.stringify(obj);
-// console.log(final);
+
 require("fs").writeFileSync(__dirname + "/suburbsForPostcode.json", final);
