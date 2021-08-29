@@ -15,6 +15,7 @@ import {
   SOURCE_TIMEZONE,
 } from "../constants";
 import metadataModified from "@/data/built/metadataModified.json";
+import vaccinationsAsOf from "@/data/built/vaccinationsAsOf.json";
 
 const CASE_LOCATIONS_URL =
   "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
@@ -30,6 +31,7 @@ const store = new Vuex.Store({
       .tz(SOURCE_TIMEZONE)
       .startOf("day")
       .subtract(1, "day"),
+    vaccinationsAsOf: dayjs(vaccinationsAsOf).tz(SOURCE_TIMEZONE),
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
@@ -38,7 +40,8 @@ const store = new Vuex.Store({
     newCasesMode: true,
     sourceMode: false,
     // Table options stored globally so they persist between pages
-    listPageSort: "newCasesThisWeek",
+    listPageCasesSort: "newCasesThisWeek",
+    listPageVaccinationsSort: "dose2",
   },
   mutations: {
     setError(state, error = "") {
@@ -78,8 +81,11 @@ const store = new Vuex.Store({
     setSourceMode(state, sourceMode) {
       state.sourceMode = sourceMode;
     },
-    setListPageSort(state, listPageSort) {
-      state.listPageSort = listPageSort;
+    setListPageCasesSort(state, key) {
+      state.listPageCasesSort = key;
+    },
+    setListPageVaccinationsSort(state, key) {
+      state.listPageVaccinationsSort = key;
     },
   },
   actions: {

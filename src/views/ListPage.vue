@@ -4,10 +4,25 @@
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
+    <div class="metric-toggle-tabs" v-if="!councilMode">
+      <router-link :to="{ name: 'PostcodesPage' }"> Cases </router-link>
+      <router-link :to="{ name: 'PostcodesVaccinationsPage' }">
+        Vaccinations
+      </router-link>
+    </div>
     <h1 class="table-title">
-      COVID-19 cases by {{ councilMode ? "council" : "postcode" }}
+      {{ vaccineMode ? "COVID-19 vaccination rates" : "COVID-19 cases" }}
+      by
+      {{ councilMode ? "council" : "postcode" }}
     </h1>
-    <div class="table-subtitle">
+    <div class="table-subtitle" v-if="vaccineMode">
+      Vaccination data up to <mark>{{ vaccineTemporalCoverageString }}</mark
+      >, updated twice a week by NSW Health.
+      <div class="table-subtitle-disclaimer">
+        {{ VACCINATIONS_NOTE }}
+      </div>
+    </div>
+    <div class="table-subtitle" v-else>
       Last updated <mark>{{ lastUpdatedString }}</mark> by NSW Health, data up
       to <mark>{{ temporalCoverageString }}</mark
       >.
@@ -24,7 +39,14 @@
               <a
                 v-if="councilMode"
                 href="#"
-                @click.prevent="$store.commit('setListPageSort', 'col1Sort')"
+                @click.prevent="
+                  $store.commit(
+                    vaccineMode
+                      ? 'setListPageVaccinationsSort'
+                      : 'setListPageCasesSort',
+                    'col1Sort'
+                  )
+                "
                 title="Sort by Council/LGA"
               >
                 Council/LGA
@@ -33,18 +55,25 @@
               <a
                 v-else
                 href="#"
-                @click.prevent="$store.commit('setListPageSort', 'col1Sort')"
+                @click.prevent="
+                  $store.commit(
+                    vaccineMode
+                      ? 'setListPageVaccinationsSort'
+                      : 'setListPageCasesSort',
+                    'col1Sort'
+                  )
+                "
                 title="Sort by Postcode"
               >
                 Postcode
                 <div v-if="sort === 'col1Sort'">▼</div>
               </a>
             </th>
-            <th class="num-col">
+            <th class="num-col" v-if="!vaccineMode">
               <a
                 href="#"
                 @click.prevent="
-                  $store.commit('setListPageSort', 'newCasesToday')
+                  $store.commit('setListPageCasesSort', 'newCasesToday')
                 "
                 title="Sort by cases today"
               >
@@ -52,11 +81,11 @@
                 <div v-if="sort === 'newCasesToday'">▼</div>
               </a>
             </th>
-            <th class="num-col">
+            <th class="num-col" v-if="!vaccineMode">
               <a
                 href="#"
                 @click.prevent="
-                  $store.commit('setListPageSort', 'newCasesThisWeek')
+                  $store.commit('setListPageCasesSort', 'newCasesThisWeek')
                 "
                 title="Sort by cases this week"
               >
@@ -64,10 +93,12 @@
                 <div v-if="sort === 'newCasesThisWeek'">▼</div>
               </a>
             </th>
-            <th class="num-col">
+            <th class="num-col" v-if="!vaccineMode">
               <a
                 href="#"
-                @click.prevent="$store.commit('setListPageSort', 'totalCases')"
+                @click.prevent="
+                  $store.commit('setListPageCasesSort', 'totalCases')
+                "
                 :title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
               >
                 <span>
@@ -77,6 +108,30 @@
                   }}</span>
                 </span>
                 <div v-if="sort === 'totalCases'">▼</div>
+              </a>
+            </th>
+            <th class="num-col" v-if="vaccineMode">
+              <a
+                href="#"
+                @click.prevent="
+                  $store.commit('setListPageVaccinationsSort', 'dose1')
+                "
+                title="Sort by cases this week"
+              >
+                <span style="white-space: nowrap">1st dose</span>
+                <div v-if="sort === 'dose1'">▼</div>
+              </a>
+            </th>
+            <th class="num-col" v-if="vaccineMode">
+              <a
+                href="#"
+                @click.prevent="
+                  $store.commit('setListPageVaccinationsSort', 'dose2')
+                "
+                title="Sort by cases this week"
+              >
+                <span style="white-space: nowrap">2nd dose</span>
+                <div v-if="sort === 'dose2'">▼</div>
               </a>
             </th>
           </tr>
@@ -121,9 +176,15 @@
               >&nbsp;
               <div>{{ value.suburbs }}</div>
             </td>
-            <td>{{ value.newCasesToday }}</td>
-            <td>{{ value.newCasesThisWeek }}</td>
-            <td>{{ value.totalCases }}</td>
+            <td v-if="!vaccineMode">{{ value.newCasesToday }}</td>
+            <td v-if="!vaccineMode">{{ value.newCasesThisWeek }}</td>
+            <td v-if="!vaccineMode">{{ value.totalCases }}</td>
+            <td v-if="vaccineMode">
+              {{ value.dose1 || "-" }}
+            </td>
+            <td v-if="vaccineMode">
+              {{ value.dose2 || "-" }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -153,7 +214,8 @@ import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
-import { OUTBREAK_START_DATE_FORMATTED } from "@/constants";
+import vaccinations from "@/data/built/vaccinations.json";
+import { OUTBREAK_START_DATE_FORMATTED, VACCINATIONS_NOTE } from "@/constants";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
@@ -166,11 +228,17 @@ export default {
       TRUNCATE_SIZE: 60,
       truncate: true,
       OUTBREAK_START_DATE_FORMATTED,
+      VACCINATIONS_NOTE,
     };
   },
   computed: {
+    vaccineMode() {
+      return this.$route.name === "PostcodesVaccinationsPage";
+    },
     sort() {
-      return this.$store.state.listPageSort;
+      return this.vaccineMode
+        ? this.$store.state.listPageVaccinationsSort
+        : this.$store.state.listPageCasesSort;
     },
     councilMode() {
       return (
@@ -195,14 +263,15 @@ export default {
     },
     postcodeRowsSorted() {
       console.time("Sort postcodeRows");
+      const sortKey = this.sort;
       const postcodeRowsSorted = [].concat(this.postcodeRows).sort((a, b) =>
         // If values are the same, return zero
-        a[this.sort] === b[this.sort]
+        a[sortKey] === b[sortKey]
           ? 0
           : // If A is less than B, put A after B
-            ((a[this.sort] || "") < (b[this.sort] || "") ? 1 : -1) *
+            ((a[sortKey] || "") < (b[sortKey] || "") ? 1 : -1) *
             // Unless it's col1, in which case reverse the order
-            (this.sort === "col1Sort" ? -1 : 1)
+            (sortKey === "col1Sort" ? -1 : 1)
       );
       console.timeEnd("Sort postcodeRows");
       return postcodeRowsSorted;
@@ -233,6 +302,8 @@ export default {
             newCasesThisWeek: newCasesThisWeek[i] || 0,
             newCasesToday: newCasesToday[i] || 0,
             suburbs: suburbsForPostcode[postcodeNumber],
+            dose1: vaccinations[postcodeNumber]?.[0],
+            dose2: vaccinations[postcodeNumber]?.[1],
           }));
 
       console.timeEnd("Calculate postcodeRows");
@@ -246,6 +317,9 @@ export default {
     },
     lastUpdatedString() {
       return this.$store.state.metadataModified?.format("ddd D MMM @ ha");
+    },
+    vaccineTemporalCoverageString() {
+      return this.$store.state.vaccinationsAsOf?.format("ddd D MMM");
     },
   },
   methods: {
@@ -264,6 +338,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/scss/mixins.scss";
+
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
 $fixed-num-col-width-breakpoint: 800px;
@@ -301,9 +377,14 @@ $fixed-num-col-width-breakpoint: 800px;
   }
 }
 
+.metric-toggle-tabs {
+  @include toggleTabs;
+  margin-top: 1rem;
+}
+
 .table-title {
   margin-bottom: 0;
-  margin-top: 2rem;
+  margin-top: 1.25rem;
   text-align: center;
   font-size: 1.8rem;
 

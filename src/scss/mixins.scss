@@ -1,0 +1,43 @@
+@mixin toggleTabs {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  > * {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: inherit;
+    padding: 0.25rem 1rem;
+    background: white;
+    border-radius: 7px;
+    border: 1px solid hsl(0, 0%, 80%);
+    margin: 0 auto;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:not(:first-child) {
+      border-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:hover {
+      background: hsl(0, 0%, 98%);
+    }
+
+    &.active,
+    &.router-link-exact-active {
+      background: hsl(0, 0%, 95%);
+    }
+  }
+}

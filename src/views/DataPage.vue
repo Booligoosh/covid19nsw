@@ -141,8 +141,7 @@
           </div>
         </div>
         <div class="vaccinations-note">
-          Based on address at time of vaccination, using ABS 2019 Estimated
-          Residential Population aged 16+
+          {{ VACCINATIONS_NOTE }}
         </div>
       </div>
       <div class="other-content-card">
@@ -174,6 +173,7 @@ import {
   OUTBREAK_START_DATE,
   SOURCE_STRINGS,
   OUTBREAK_START_DATE_FORMATTED,
+  VACCINATIONS_NOTE,
 } from "@/constants.js";
 import { getVaccineRangeIndex } from "@/functions.js";
 import { Chart } from "frappe-charts";
@@ -198,6 +198,7 @@ export default {
   data() {
     return {
       OUTBREAK_START_DATE_FORMATTED,
+      VACCINATIONS_NOTE,
     };
   },
   computed: {

@@ -131,7 +131,16 @@ async function fetchData() {
     "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/vaccination_metrics-v3.json"
   ).then((r) => r.json());
   console.timeEnd("Fetch vaccinations endpoint");
+
   console.time("Generate vaccinations.json");
+  const vaccinationsAsOfDate = Object.keys(
+    Object.values(vaccinationData)[0]
+  ).pop();
+  fs.writeFileSync(
+    "./src/data/built/vaccinationsAsOf.json",
+    JSON.stringify(vaccinationsAsOfDate)
+  );
+
   const vaccinationsByPostcode = {};
   Object.keys(vaccinationData).forEach((postcode) => {
     postcode = Number(postcode);

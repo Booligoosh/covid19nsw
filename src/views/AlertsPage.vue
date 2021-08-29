@@ -284,6 +284,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/scss/mixins.scss";
+
 .case-locations {
   width: 500px;
   max-width: 100%;
@@ -295,47 +297,11 @@ export default {
 
   &-location-picker {
     &-type-buttons {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      @include toggleTabs;
       margin: 1rem 0;
 
       &:last-child {
         margin-bottom: 0;
-      }
-
-      button {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: inherit;
-        padding: 0.25rem 1rem;
-        background: white;
-        border-radius: 7px;
-        border: 1px solid hsl(0, 0%, 80%);
-        margin: 0 auto;
-        font-size: 0.9rem;
-        cursor: pointer;
-
-        &:not(:first-child) {
-          border-left: 0;
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-        &:not(:last-child) {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-
-        &:hover {
-          background: hsl(0, 0%, 98%);
-        }
-
-        &.active {
-          background: hsl(0, 0%, 95%);
-        }
       }
     }
 

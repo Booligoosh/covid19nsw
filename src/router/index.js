@@ -31,6 +31,16 @@ const routes = [
     },
   },
   {
+    path: "/postcodes/vaccinations",
+    name: "PostcodesVaccinationsPage",
+    component: ListPage,
+    meta: {
+      title: "COVID-19 vaccination rates by postcode",
+      description:
+        "See the latest COVID-19 vaccination rates for your postcode/suburb.",
+    },
+  },
+  {
     path: "/postcodes/map",
     name: "Map",
     component: () => import(/* webpackChunkName: "map" */ "../views/Map.vue"),
