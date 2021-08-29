@@ -42,10 +42,7 @@ async function fetchData() {
   const postcodes = uniqSortedByFreq(cases.map((c) => c.postcode)).map((p) =>
     Number(p)
   );
-  fs.writeFileSync(
-    "./src/data/built/postcodes.json",
-    JSON.stringify(postcodes)
-  );
+  // Write postcodes.json at end of file, after appending during vaccinations step
   console.timeEnd("Generate postcodes.json");
 
   // Calculate councilNames
@@ -137,16 +134,19 @@ async function fetchData() {
   console.time("Generate vaccinations.json");
   const vaccinationsByPostcode = {};
   Object.keys(vaccinationData).forEach((postcode) => {
+    postcode = Number(postcode);
     if (postcodeIsValid(postcode)) {
-      const latestData = Object.values(vaccinationData[postcode]).slice(-1)[0];
+      const latestData = Object.values(vaccinationData[postcode]).pop();
       const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
       const dose2 = latestData.percPopFullyVaccinated10WidthRange;
-      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed")
+      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
         vaccinationsByPostcode[postcode] = [
           // Replace "20%-30%" with "20-30%" etc, replace "<10%" with "0-9%"
           dose1.replace("%-", "-").replace("<10%", "0-9%"),
           dose2.replace("%-", "-").replace("<10%", "0-9%"),
         ];
+        if (!postcodes.includes(postcode)) postcodes.push(postcode);
+      }
     }
   });
   fs.writeFileSync(
@@ -154,6 +154,12 @@ async function fetchData() {
     JSON.stringify(vaccinationsByPostcode)
   );
   console.timeEnd("Generate vaccinations.json");
+
+  // Write postcodes.json
+  fs.writeFileSync(
+    "./src/data/built/postcodes.json",
+    JSON.stringify(postcodes)
+  );
 }
 
 fetchData();
