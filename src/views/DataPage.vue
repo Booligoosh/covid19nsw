@@ -175,6 +175,7 @@ import {
   SOURCE_STRINGS,
   OUTBREAK_START_DATE_FORMATTED,
 } from "@/constants.js";
+import { getVaccineRangeIndex } from "@/functions.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
@@ -252,19 +253,7 @@ export default {
     },
     vaccineSegments() {
       return this.vaccinePercentages?.map((range) => {
-        const rangeStart = range.match(/.+?\d*/)?.[0]; // Matches the first number and any characters before
-        const currentSegmentIndex = [
-          "0",
-          "10",
-          "20",
-          "30",
-          "40",
-          "50",
-          "60",
-          "70",
-          "80",
-          "90",
-        ].indexOf(rangeStart);
+        const currentSegmentIndex = getVaccineRangeIndex(range);
         console.log({ range, currentSegmentIndex });
 
         const segments = new Array(10)
