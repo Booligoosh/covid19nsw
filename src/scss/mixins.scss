@@ -35,8 +35,7 @@
       background: hsl(0, 0%, 98%);
     }
 
-    &.active,
-    &.router-link-exact-active {
+    &.active {
       background: hsl(0, 0%, 95%);
     }
   }

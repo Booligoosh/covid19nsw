@@ -5,8 +5,16 @@
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
     <div class="metric-toggle-tabs" v-if="!councilMode">
-      <router-link :to="{ name: 'PostcodesPage' }"> Cases </router-link>
-      <router-link :to="{ name: 'PostcodesVaccinationsPage' }">
+      <router-link
+        :to="{ name: 'PostcodesPage' }"
+        :class="{ active: $route.name === 'PostcodesPage' }"
+      >
+        Cases
+      </router-link>
+      <router-link
+        :to="{ name: 'PostcodesVaccinationsPage' }"
+        :class="{ active: $route.name === 'PostcodesVaccinationsPage' }"
+      >
         Vaccinations
       </router-link>
     </div>
