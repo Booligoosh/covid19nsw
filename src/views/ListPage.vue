@@ -135,10 +135,10 @@
         Show more rows ↓
       </button>
       <div class="bottom-row no-postcodes-note" v-else>
-        {{ councilMode ? "Councils" : "Postcodes" }} with no cases{{
-          !councilMode ? " or vaccination data" : ""
+        {{ councilMode ? "Councils" : "Postcodes" }} with{{
+          !councilMode ? " no vaccination data as well as" : ""
         }}
-        since Jan 2020 aren&rsquo;t shown.
+        0 cases since Jan 2020 are not shown.
       </div>
     </div>
   </div>
