@@ -46,6 +46,14 @@
           locationType === "gps" ? "your location" : `the postcode ${postcode}`
         }}
       </h1>
+      <div class="case-locations-subtitle" v-if="latitude && longitude">
+        Note: NSW Health only adds alerts under
+        <a
+          href="https://www.health.nsw.gov.au/Infectious/covid-19/Pages/case-locations-and-alerts.aspx#caselocations"
+          target="_blank"
+          >certain conditions</a
+        >.
+      </div>
       <div
         class="page-error"
         v-if="latitude && longitude && $store.state.error"
@@ -317,8 +325,13 @@ export default {
   &-title {
     font-weight: 600;
     margin-top: 1.75rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.25rem;
     font-size: 1.3rem;
+    text-align: center;
+  }
+  &-subtitle {
+    opacity: 0.5;
+    margin-bottom: 1rem;
     text-align: center;
   }
 
