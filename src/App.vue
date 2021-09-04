@@ -22,8 +22,22 @@
         </div>
       </div>
       <nav class="nav-links">
-        <router-link :to="{ name: 'PostcodesPage' }">Postcodes</router-link>
-        <router-link :to="{ name: 'CouncilsPage' }">Councils</router-link>
+        <router-link
+          :to="{
+            name: ($route.name || '').endsWith('VaccinationsPage')
+              ? 'PostcodesVaccinationsPage'
+              : 'PostcodesPage',
+          }"
+          >Postcodes</router-link
+        >
+        <router-link
+          :to="{
+            name: ($route.name || '').endsWith('VaccinationsPage')
+              ? 'CouncilsVaccinationsPage'
+              : 'CouncilsPage',
+          }"
+          >Councils</router-link
+        >
         <router-link :to="{ name: 'AlertsPage' }">
           Alerts
           <!-- <span class="beta"
