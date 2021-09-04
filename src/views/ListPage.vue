@@ -1,9 +1,5 @@
 <template>
   <div class="all-page">
-    <div class="chooser" v-if="!councilMode">
-      <h2 class="chooser-title">See data for your postcode&hellip;</h2>
-      <PostcodePicker @submit="postcodeSubmitHandler" />
-    </div>
     <div class="metric-toggle-tabs">
       <router-link
         :to="{ name: councilMode ? 'CouncilsPage' : 'PostcodesPage' }"
@@ -28,6 +24,10 @@
       >
         Vaccinations
       </router-link>
+    </div>
+    <div class="chooser" v-if="!councilMode">
+      <h2 class="chooser-title">See data for your postcode&hellip;</h2>
+      <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
     <h1 class="table-title">
       {{ vaccineMode ? "COVID-19 vaccination rates" : "COVID-19 cases" }}
@@ -388,7 +388,7 @@ $fixed-num-col-width-breakpoint: 800px;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   padding: 1rem;
   border: 1px solid hsl(0, 0%, 80%);
   border-radius: 7px;
