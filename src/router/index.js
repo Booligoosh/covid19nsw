@@ -35,7 +35,7 @@ const routes = [
     name: "PostcodesVaccinationsPage",
     component: ListPage,
     meta: {
-      title: "COVID-19 vaccination rates by postcode",
+      title: "COVID-19 Vaccination Rates By Postcode",
       description:
         "See the latest COVID-19 vaccination rates for your postcode/suburb.",
     },
@@ -76,7 +76,7 @@ const routes = [
     name: "CouncilsVaccinationsPage",
     component: ListPage,
     meta: {
-      title: "COVID-19 vaccination rates by council/LGA",
+      title: "COVID-19 Vaccination Rates By Council/LGA",
       description:
         "See the latest COVID-19 vaccination rates for your council/LGA.",
     },
