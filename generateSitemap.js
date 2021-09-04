@@ -7,6 +7,8 @@ sitemap +=
   "<url><loc>https://covid19nsw.ethan.link/postcodes/vaccinations</loc><changefreq>daily</changefreq></url>";
 sitemap +=
   "<url><loc>https://covid19nsw.ethan.link/councils</loc><changefreq>daily</changefreq></url>";
+sitemap +=
+  "<url><loc>https://covid19nsw.ethan.link/councils/vaccinations</loc><changefreq>daily</changefreq></url>";
 sitemap += "<url><loc>https://covid19nsw.ethan.link/alerts</loc></url>";
 sitemap += "<url><loc>https://covid19nsw.ethan.link/about</loc></url>";
 

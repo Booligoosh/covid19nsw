@@ -10,6 +10,7 @@ const routes = [
   "/postcodes",
   "/postcodes/vaccinations",
   "/councils",
+  "/councils/vaccinations",
   "/about",
 ];
 
