@@ -48,12 +48,9 @@ async function fetchData() {
   // Calculate councilNames
   console.time("Generate councilNames.json");
   const councilNames = uniqSortedByFreq(
-    cases.map((c) => c.lga_name19.replace(/\(.+?\)/g, "").trim())
+    cases.map((c) => processCouncilName(c.lga_name19))
   );
-  fs.writeFileSync(
-    "./src/data/built/councilNames.json",
-    JSON.stringify(councilNames)
-  );
+  // Write councilNames.json at end of file, after appending during vaccinations step
   console.timeEnd("Generate councilNames.json");
 
   // Calculate dates
@@ -90,7 +87,7 @@ async function fetchData() {
       console.warn("[WARNING] Unknown source string:", source);
 
     // COUNCIL STUFF
-    const councilName = caseRow.lga_name19.replace(/\(.+?\)/g, "").trim();
+    const councilName = processCouncilName(caseRow.lga_name19);
     const councilNameIndex = councilNames.indexOf(councilName);
     const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
 
@@ -126,26 +123,22 @@ async function fetchData() {
   console.timeEnd("Generate councilCounts.json");
 
   // Calculate vaccinations
-  console.time("Fetch vaccinations endpoint");
-  const vaccinationData = await fetch(
+  console.time("Fetch postcode vaccinations endpoint");
+  const postcodeVaccinationData = await fetch(
     "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/vaccination_metrics-v3.json"
   ).then((r) => r.json());
-  console.timeEnd("Fetch vaccinations endpoint");
+  console.timeEnd("Fetch postcode vaccinations endpoint");
 
-  console.time("Generate vaccinations.json");
-  const vaccinationsAsOfDate = Object.keys(
-    Object.values(vaccinationData)[0]
+  console.time("Generate postcodeVaccinations.json");
+  const postcodeVaccinationsAsOf = Object.keys(
+    Object.values(postcodeVaccinationData)[0]
   ).pop();
-  fs.writeFileSync(
-    "./src/data/built/vaccinationsAsOf.json",
-    JSON.stringify(vaccinationsAsOfDate)
-  );
 
   const vaccinationsByPostcode = {};
-  Object.keys(vaccinationData).forEach((postcode) => {
+  Object.keys(postcodeVaccinationData).forEach((postcode) => {
     postcode = Number(postcode);
     if (postcodeIsValid(postcode)) {
-      const latestData = Object.values(vaccinationData[postcode]).pop();
+      const latestData = Object.values(postcodeVaccinationData[postcode]).pop();
       const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
       const dose2 = latestData.percPopFullyVaccinated10WidthRange;
       if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
@@ -159,15 +152,62 @@ async function fetchData() {
     }
   });
   fs.writeFileSync(
-    "./src/data/built/vaccinations.json",
+    "./src/data/built/postcodeVaccinations.json",
     JSON.stringify(vaccinationsByPostcode)
   );
-  console.timeEnd("Generate vaccinations.json");
+  console.timeEnd("Generate postcodeVaccinations.json");
+
+  console.time("Fetch council vaccinations endpoint");
+  const councilVaccinationData = await fetch(
+    "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/lga_daily_vaccines.json"
+  )
+    .then((r) => r.json())
+    .then((r) => r.data);
+  console.timeEnd("Fetch council vaccinations endpoint");
+
+  console.time("Generate councilVaccinations.json");
+  const councilVaccinationsAsOf = Object.keys(
+    Object.values(councilVaccinationData)[0]
+  ).pop();
+
+  const vaccinationsByCouncilIndex = {};
+  Object.values(councilVaccinationData).forEach((dateObjs) => {
+    const latestData = Object.values(dateObjs).pop();
+
+    const councilName = processCouncilName(latestData.lga_name);
+    const dose1 = latestData.percPopAtLeastFirst_commonwealth;
+    const dose2 = latestData.percPopFullyVaccinated_commonwealth;
+
+    if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
+      if (!councilNames.includes(councilName)) councilNames.push(councilName);
+
+      vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = [
+        dose1,
+        dose2,
+      ];
+    }
+  });
+  fs.writeFileSync(
+    "./src/data/built/councilVaccinations.json",
+    JSON.stringify(vaccinationsByCouncilIndex)
+  );
+  console.timeEnd("Generate councilVaccinations.json");
+
+  // Write vaccinationsAsOf.json
+  fs.writeFileSync(
+    "./src/data/built/vaccinationsAsOf.json",
+    JSON.stringify({ postcodeVaccinationsAsOf, councilVaccinationsAsOf })
+  );
 
   // Write postcodes.json
   fs.writeFileSync(
     "./src/data/built/postcodes.json",
     JSON.stringify(postcodes)
+  );
+  // Write councilNames.json
+  fs.writeFileSync(
+    "./src/data/built/councilNames.json",
+    JSON.stringify(councilNames)
   );
 }
 
@@ -180,6 +220,10 @@ function postcodeIsValid(postcode) {
     (postcode >= 2619 && postcode <= 2899) ||
     (postcode >= 2921 && postcode <= 2999)
   );
+}
+
+function processCouncilName(rawCouncilName) {
+  return rawCouncilName.replace(/\(.+?\)/g, "").trim();
 }
 
 function getMinifiedDate(c) {
@@ -215,9 +259,7 @@ function getCounts(
   cases.forEach((caseRow) => {
     const identifier =
       identifierKey === "councilName"
-        ? councilNames.indexOf(
-            caseRow.lga_name19.replace(/\(.+?\)/g, "").trim()
-          )
+        ? councilNames.indexOf(processCouncilName(caseRow.lga_name19))
         : postcodes.indexOf(Number(caseRow.postcode));
     // Add the case to its postcode/council's total cases
     // totalCases[identifier] = (totalCases[identifier] || 0) + 1;

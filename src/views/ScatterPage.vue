@@ -9,7 +9,7 @@
 import { getVaccineRangeIndex } from "@/functions.js";
 import postcodes from "@/data/built/postcodes.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
-import vaccinations from "@/data/built/vaccinations.json";
+import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
@@ -20,7 +20,7 @@ export default {
     const ysForXs = {};
     const postcodesData = postcodes
       .map((p, i) => {
-        const x = getVaccineRangeIndex(vaccinations[p]?.[1]);
+        const x = getVaccineRangeIndex(postcodeVaccinations[p]?.[1]);
         const y = postcodeCounts.newCasesThisWeek[i] || 0;
 
         if (x === -1) return null;

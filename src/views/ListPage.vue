@@ -4,16 +4,27 @@
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
-    <div class="metric-toggle-tabs" v-if="!councilMode">
+    <div class="metric-toggle-tabs">
       <router-link
-        :to="{ name: 'PostcodesPage' }"
-        :class="{ active: $route.name === 'PostcodesPage' }"
+        :to="{ name: councilMode ? 'CouncilsPage' : 'PostcodesPage' }"
+        :class="{
+          active:
+            $route.name === 'PostcodesPage' || $route.name === 'CouncilsPage',
+        }"
       >
         Cases
       </router-link>
       <router-link
-        :to="{ name: 'PostcodesVaccinationsPage' }"
-        :class="{ active: $route.name === 'PostcodesVaccinationsPage' }"
+        :to="{
+          name: councilMode
+            ? 'CouncilsVaccinationsPage'
+            : 'PostcodesVaccinationsPage',
+        }"
+        :class="{
+          active:
+            $route.name === 'PostcodesVaccinationsPage' ||
+            $route.name === 'CouncilsVaccinationsPage',
+        }"
       >
         Vaccinations
       </router-link>
@@ -24,7 +35,7 @@
       {{ councilMode ? "council" : "postcode" }}
     </h1>
     <div class="table-subtitle" v-if="vaccineMode">
-      Vaccination data up to <mark>{{ vaccineTemporalCoverageString }}</mark
+      Data up to <mark>{{ vaccineTemporalCoverageString }}</mark
       >, updated twice a week by NSW Health.
       <div class="table-subtitle-disclaimer">
         {{ VACCINATIONS_NOTE }}
@@ -222,7 +233,8 @@ import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
-import vaccinations from "@/data/built/vaccinations.json";
+import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
+import councilVaccinations from "@/data/built/councilVaccinations.json";
 import { OUTBREAK_START_DATE_FORMATTED, VACCINATIONS_NOTE } from "@/constants";
 
 const postcodesLength = postcodes.length;
@@ -241,7 +253,10 @@ export default {
   },
   computed: {
     vaccineMode() {
-      return this.$route.name === "PostcodesVaccinationsPage";
+      return (
+        this.$route.name === "PostcodesVaccinationsPage" ||
+        this.$route.name === "CouncilsVaccinationsPage"
+      );
     },
     sort() {
       return this.vaccineMode
@@ -251,7 +266,8 @@ export default {
     councilMode() {
       return (
         this.$route.name === "CouncilsPage" ||
-        // This second line prevents a complex bug where, when clicking on the
+        this.$route.name === "CouncilsVaccinationsPage" ||
+        // This last line prevents a complex bug where, when clicking on the
         // router-link, the @click handler on the <tr> fires before the router-link
         // click is recorded, changing this.$route.name away from CouncilsPage to
         // CouncilPage before the click. This means that without the line below,
@@ -301,6 +317,8 @@ export default {
             totalCases: outbreakTotalCases[i] || 0,
             newCasesThisWeek: newCasesThisWeek[i] || 0,
             newCasesToday: newCasesToday[i] || 0,
+            dose1: councilVaccinations[i]?.[0],
+            dose2: councilVaccinations[i]?.[1],
           }))
         : postcodes.map((postcodeNumber, i) => ({
             postcodeNumber,
@@ -310,8 +328,8 @@ export default {
             newCasesThisWeek: newCasesThisWeek[i] || 0,
             newCasesToday: newCasesToday[i] || 0,
             suburbs: suburbsForPostcode[postcodeNumber],
-            dose1: vaccinations[postcodeNumber]?.[0],
-            dose2: vaccinations[postcodeNumber]?.[1],
+            dose1: postcodeVaccinations[postcodeNumber]?.[0],
+            dose2: postcodeVaccinations[postcodeNumber]?.[1],
           }));
 
       console.timeEnd("Calculate postcodeRows");
@@ -327,7 +345,11 @@ export default {
       return this.$store.state.metadataModified?.format("ddd D MMM @ ha");
     },
     vaccineTemporalCoverageString() {
-      return this.$store.state.vaccinationsAsOf?.format("ddd D MMM");
+      return (
+        this.councilMode
+          ? this.$store.state.councilVaccinationsAsOf
+          : this.$store.state.postcodeVaccinationsAsOf
+      )?.format("ddd D MMM");
     },
   },
   methods: {

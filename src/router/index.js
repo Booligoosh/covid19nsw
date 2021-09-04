@@ -72,6 +72,16 @@ const routes = [
     },
   },
   {
+    path: "/councils/vaccinations",
+    name: "CouncilsVaccinationsPage",
+    component: ListPage,
+    meta: {
+      title: "COVID-19 vaccination rates by council/LGA",
+      description:
+        "See the latest COVID-19 vaccination rates for your council/LGA.",
+    },
+  },
+  {
     path: "/council/:councilSlug",
     name: "CouncilPage",
     component: () =>

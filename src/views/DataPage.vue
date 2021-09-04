@@ -95,7 +95,7 @@
         </button>
       </div>
     </div>
-    <div class="other-content" v-if="!isCouncil">
+    <div class="other-content">
       <div class="other-content-card" v-if="vaccinePercentages">
         <h2 class="other-content-card-title">Vaccinations</h2>
         <div class="vaccinations">
@@ -144,7 +144,7 @@
           {{ VACCINATIONS_NOTE }}
         </div>
       </div>
-      <div class="other-content-card">
+      <div class="other-content-card" v-if="!isCouncil">
         <h2 class="other-content-card-title">Alerts</h2>
         <router-link
           class="alerts-link"
@@ -180,7 +180,8 @@ import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
 import dates from "@/data/built/dates.json";
-import vaccinations from "@/data/built/vaccinations.json";
+import councilVaccinations from "@/data/built/councilVaccinations.json";
+import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
@@ -249,8 +250,9 @@ export default {
       } Council`;
     },
     vaccinePercentages() {
-      if (!this.isCouncil) return vaccinations[this.postcodeNumber] || null;
-      else return null;
+      if (this.isCouncil)
+        return councilVaccinations[this.councilNameIndex] || null;
+      else return postcodeVaccinations[this.postcodeNumber] || null;
     },
     vaccineSegments() {
       return this.vaccinePercentages?.map((range) => {
