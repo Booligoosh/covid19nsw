@@ -104,11 +104,17 @@
               <div class="vaccinations-card-num-text">
                 {{ vaccinePercentages[0] }}
               </div>
-              <div class="vaccinations-card-num-bar">
+              <div
+                class="vaccinations-card-num-bar"
+                :style="{
+                  '--last-segment-progress': vaccineLastSegmentProgress[0],
+                }"
+              >
                 <div
                   :class="[
                     'vaccinations-card-num-bar-segment',
                     `type-${segmentType}`,
+                    segmentType === 1 && isCouncil ? 'precise' : '',
                   ]"
                   v-for="(segmentType, i) of vaccineSegments[0]"
                   :key="i"
@@ -124,11 +130,17 @@
               <div class="vaccinations-card-num-text">
                 {{ vaccinePercentages[1] }}
               </div>
-              <div class="vaccinations-card-num-bar">
+              <div
+                class="vaccinations-card-num-bar"
+                :style="{
+                  '--last-segment-progress': vaccineLastSegmentProgress[1],
+                }"
+              >
                 <div
                   :class="[
                     'vaccinations-card-num-bar-segment',
                     `type-${segmentType}`,
+                    segmentType === 1 && isCouncil ? 'precise' : '',
                   ]"
                   v-for="(segmentType, i) of vaccineSegments[1]"
                   :key="i"
@@ -266,6 +278,17 @@ export default {
           );
 
         return segments;
+      });
+    },
+    vaccineLastSegmentProgress() {
+      if (!this.isCouncil) return [];
+      return this.vaccinePercentages?.map((percent) => {
+        // Returns what percentage filled the last segment should be.
+        // For example, 32.8 would return 28%.
+
+        const num = Number(percent.replace("%", ""));
+        const lastSegmentValue = num - Math.floor(num / 10) * 10;
+        return (lastSegmentValue * 10).toFixed(0) + "%";
       });
     },
     allCases() {
@@ -788,6 +811,14 @@ $top-grid-small-text-breakpoint: 370px;
               $secondary-color $stripe-width,
               $secondary-color 2 * $stripe-width
             );
+
+            &.precise {
+              background: linear-gradient(
+                90deg,
+                var(--primary-color) var(--last-segment-progress),
+                $secondary-color var(--last-segment-progress)
+              );
+            }
           }
           &.type-2 {
             background: $secondary-color;
