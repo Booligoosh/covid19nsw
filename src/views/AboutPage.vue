@@ -34,10 +34,10 @@
         </li>
         <li>
           <a
-            href="https://www.nsw.gov.au/covid-19/find-the-facts-about-covid-19#map-of-nsw-vaccinations-by-home-postcode"
+            href="https://www.nsw.gov.au/covid-19/find-the-facts-about-covid-19#map-of-nsw-vaccinations-by-home-postcode-and-lga"
             target="_blank"
           >
-            Map of NSW vaccinations by home postcode
+            Map of NSW vaccinations by home postcode and LGA
           </a>
         </li>
       </ul>
