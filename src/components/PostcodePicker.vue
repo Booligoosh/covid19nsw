@@ -58,7 +58,7 @@ export default {
     color: inherit;
     background: transparent;
     padding: 0.25em;
-    border: 1px solid hsl(0, 0%, 70%);
+    border: 1px solid hsl(0, 0%, 60%);
     border-right: none;
     border-radius: 10px 0 0 10px;
     min-width: 4em;
@@ -79,13 +79,13 @@ export default {
     }
 
     &::placeholder {
-      color: hsl(0, 0%, 70%);
+      color: hsl(0, 0%, 67%);
       opacity: 1;
     }
 
     &:focus {
       outline: none;
-      border-color: #aaa;
+      border-color: hsl(0, 0%, 57%);
     }
   }
 
@@ -98,7 +98,7 @@ export default {
     padding: 0.5rem 1rem;
     border-radius: 5rem;
     cursor: pointer;
-    border: 1px solid hsl(0, 0%, 70%);
+    border: 1px solid hsl(0, 0%, 60%);
     border-radius: 0 10px 10px 0;
     flex-shrink: 0;
 
