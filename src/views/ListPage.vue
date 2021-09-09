@@ -1,5 +1,6 @@
 <template>
   <div class="all-page">
+    <OverallVaccinations v-if="vaccineMode" />
     <div class="metric-toggle-tabs">
       <router-link
         :to="{
@@ -239,12 +240,13 @@ import councilCounts from "@/data/built/councilCounts.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
 import { OUTBREAK_START_DATE_FORMATTED, VACCINATIONS_NOTE } from "@/constants";
+import OverallVaccinations from "../components/OverallVaccinations.vue";
 
 const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
 
 export default {
-  components: { PostcodePicker },
+  components: { PostcodePicker, OverallVaccinations },
   name: "ListPage",
   data() {
     return {

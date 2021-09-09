@@ -122,7 +122,26 @@ async function fetchData() {
   );
   console.timeEnd("Generate councilCounts.json");
 
-  // Calculate vaccinations
+  // Calculate overall vaccinations
+  console.time("Fetch AIR vaccinations endpoint");
+  const airVaccinationData = await fetch(
+    "https://vaccinedata.covid19nearme.com.au/data/air.json"
+  ).then((r) => r.json());
+  console.timeEnd("Fetch AIR vaccinations endpoint");
+  console.time("Generate overallVaccinations.json");
+  const mostRecentAirData = airVaccinationData[airVaccinationData.length - 1];
+  const overallVaccinations = {
+    asAt: mostRecentAirData.DATE_AS_AT,
+    firstDose16Plus: mostRecentAirData.AIR_NSW_16_PLUS_FIRST_DOSE_PCT,
+    secondDose16Plus: mostRecentAirData.AIR_NSW_16_PLUS_SECOND_DOSE_PCT,
+  };
+  fs.writeFileSync(
+    "./src/data/built/overallVaccinations.json",
+    JSON.stringify(overallVaccinations)
+  );
+  console.timeEnd("Generate overallVaccinations.json");
+
+  // Calculate vaccinations by postcode/council
   console.time("Fetch postcode vaccinations endpoint");
   const postcodeVaccinationData = await fetch(
     "https://nswdac-covid-19-postcode-heatmap.azurewebsites.net/datafiles/vaccination_metrics-v3.json"

@@ -40,6 +40,14 @@
             Map of NSW vaccinations by home postcode and LGA
           </a>
         </li>
+        <li>
+          <a
+            href="https://www.health.gov.au/resources/collections/covid-19-vaccine-rollout-updates"
+            target="_blank"
+          >
+            COVID-19 vaccine rollout updates
+          </a>
+        </li>
       </ul>
       <p class="bottom-note">
         <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">
