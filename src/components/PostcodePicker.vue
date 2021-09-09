@@ -68,6 +68,9 @@ export default {
       width: 100%;
     }
 
+    // Remove input shadow on iOS
+    appearance: none;
+
     // Hide number input arrows, see:
     // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
     -moz-appearance: textfield; // For Firefox
