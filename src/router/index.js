@@ -16,11 +16,27 @@ const routes = [
   // Redirects
   {
     path: "/",
-    redirect: "/postcodes",
+    redirect: "/cases/by-postcode",
+  },
+  {
+    path: "/postcodes",
+    redirect: "/cases/by-postcode",
+  },
+  {
+    path: "/postcodes/vaccinations",
+    redirect: "/vaccines/by-postcode",
+  },
+  {
+    path: "/councils",
+    redirect: "/cases/by-council",
+  },
+  {
+    path: "/councils/vaccinations",
+    redirect: "/vaccines/by-council",
   },
   // Actual routes
   {
-    path: "/postcodes",
+    path: "/cases/by-postcode",
     name: "PostcodesPage",
     component: ListPage,
     meta: {
@@ -31,7 +47,7 @@ const routes = [
     },
   },
   {
-    path: "/postcodes/vaccinations",
+    path: "/vaccines/by-postcode",
     name: "PostcodesVaccinationsPage",
     component: ListPage,
     meta: {
@@ -61,7 +77,7 @@ const routes = [
       import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
   },
   {
-    path: "/councils",
+    path: "/cases/by-council",
     name: "CouncilsPage",
     component: ListPage,
     meta: {
@@ -72,7 +88,7 @@ const routes = [
     },
   },
   {
-    path: "/councils/vaccinations",
+    path: "/vaccines/by-council",
     name: "CouncilsVaccinationsPage",
     component: ListPage,
     meta: {

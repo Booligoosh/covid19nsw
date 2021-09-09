@@ -6,12 +6,17 @@ const JSDOMRenderer = require("@prerenderer/renderer-jsdom");
 
 const routes = [
   "/404",
+  "/cases/by-postcode",
+  "/cases/by-council",
+  "/vaccines/by-postcode",
+  "/vaccines/by-council",
+  "/about",
+  // Old routes for compat reasons
   "/",
   "/postcodes",
   "/postcodes/vaccinations",
   "/councils",
   "/councils/vaccinations",
-  "/about",
 ];
 
 const staticDir = path.join(__dirname, "dist");
