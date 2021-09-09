@@ -7,13 +7,16 @@
         '--second-pct': secondDose16Plus + '%',
       }"
     ></div>
+    <div class="overall-vaccinations-title">
+      Total vaccinations in NSW (age 16+)
+    </div>
     <div class="overall-vaccinations-metrics">
       <div class="overall-vaccinations-metrics-metric">
         <span class="overall-vaccinations-metrics-metric-num">
           {{ secondDose16Plus.toFixed(1) }}%
         </span>
         <span class="overall-vaccinations-metrics-metric-label">
-          2nd dose 16+
+          2nd dose
         </span>
       </div>
       <div class="overall-vaccinations-metrics-metric">
@@ -21,7 +24,7 @@
           {{ firstDose16Plus.toFixed(1) }}%
         </span>
         <span class="overall-vaccinations-metrics-metric-label">
-          1st dose 16+
+          1st dose
         </span>
       </div>
     </div>
@@ -48,17 +51,15 @@ export default {
 <style lang="scss">
 .overall-vaccinations {
   border: 1px solid hsl(0, 0%, 80%);
-  background: hsl(0, 0%, 97%);
   border-radius: 7px;
   overflow: hidden;
   width: 500px;
   max-width: 100%;
   margin: 0 auto;
   margin-top: 1rem;
-  padding: 0.4rem;
 
   &-bar {
-    height: 15px;
+    height: 10px;
     width: 100%;
     flex-shrink: 0;
     --first-color: hsl(123, 45%, 70%);
@@ -72,8 +73,15 @@ export default {
       var(--unfilled-color) var(--first-pct),
       var(--unfilled-color) 100%
     );
-    border-radius: 4px;
     // border: 1px solid hsl(0, 0%, 70%);
+  }
+
+  &-title {
+    padding: 0.4rem;
+    text-align: center;
+    font-size: 0.8rem;
+    padding-bottom: 0;
+    margin-bottom: -0.1rem;
   }
 
   &-metrics {
@@ -82,7 +90,10 @@ export default {
     text-align: center;
     justify-content: center;
     align-items: center;
-    margin-top: 0.4rem;
+    padding: 0.4rem;
+    grid-gap: 1rem;
+    width: max-content;
+    margin: 0 auto;
 
     &-metric {
       &-num {
