@@ -2,27 +2,32 @@
   <div class="all-page">
     <div class="metric-toggle-tabs">
       <router-link
-        :to="{ name: councilMode ? 'CouncilsPage' : 'PostcodesPage' }"
+        :to="{
+          name: ($route.name || '').endsWith('VaccinationsPage')
+            ? 'PostcodesVaccinationsPage'
+            : 'PostcodesPage',
+        }"
         :class="{
           active:
-            $route.name === 'PostcodesPage' || $route.name === 'CouncilsPage',
+            $route.name === 'PostcodesPage' ||
+            $route.name === 'PostcodesVaccinationsPage',
         }"
       >
-        Cases
+        By postcode
       </router-link>
       <router-link
         :to="{
-          name: councilMode
+          name: ($route.name || '').endsWith('VaccinationsPage')
             ? 'CouncilsVaccinationsPage'
-            : 'PostcodesVaccinationsPage',
+            : 'CouncilsPage',
         }"
         :class="{
           active:
-            $route.name === 'PostcodesVaccinationsPage' ||
+            $route.name === 'CouncilsPage' ||
             $route.name === 'CouncilsVaccinationsPage',
         }"
       >
-        Vaccinations
+        By council
       </router-link>
     </div>
     <div class="chooser" v-if="!councilMode">

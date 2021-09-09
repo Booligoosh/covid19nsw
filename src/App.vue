@@ -24,21 +24,43 @@
       <nav class="nav-links">
         <router-link
           :to="{
-            name: ($route.name || '').endsWith('VaccinationsPage')
-              ? 'PostcodesVaccinationsPage'
-              : 'PostcodesPage',
+            name:
+              $route.name === 'CouncilsPage' ||
+              $route.name === 'CouncilsVaccinationsPage'
+                ? 'CouncilsPage'
+                : 'PostcodesPage',
           }"
-          >Postcodes</router-link
+          :class="{
+            active:
+              $route.name === 'PostcodesPage' || $route.name === 'CouncilsPage',
+          }"
         >
+          Cases
+        </router-link>
         <router-link
           :to="{
-            name: ($route.name || '').endsWith('VaccinationsPage')
-              ? 'CouncilsVaccinationsPage'
-              : 'CouncilsPage',
+            name:
+              $route.name === 'CouncilsPage' ||
+              $route.name === 'CouncilsVaccinationsPage'
+                ? 'CouncilsVaccinationsPage'
+                : 'PostcodesVaccinationsPage',
           }"
-          >Councils</router-link
+          :class="{
+            active:
+              $route.name === 'PostcodesVaccinationsPage' ||
+              $route.name === 'CouncilsVaccinationsPage',
+          }"
         >
-        <router-link :to="{ name: 'AlertsPage' }">
+          Vaccines
+        </router-link>
+        <router-link
+          :to="{ name: 'AlertsPage' }"
+          :class="{
+            active:
+              $route.name === 'AlertsPage' ||
+              $route.name === 'PostcodeAlertsPage',
+          }"
+        >
           Alerts
           <!-- <span class="beta"
           ><span class="bracket">(</span>beta<span class="bracket"
@@ -216,7 +238,7 @@ body,
           background: hsl(0, 0%, 96%);
         }
 
-        &.router-link-active {
+        &.active {
           background: hsl(0, 0%, 92%);
         }
       }
