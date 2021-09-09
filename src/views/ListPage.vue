@@ -1,6 +1,5 @@
 <template>
   <div class="all-page">
-    <OverallVaccinations v-if="vaccineMode" />
     <div class="metric-toggle-tabs">
       <router-link
         :to="{
@@ -31,6 +30,7 @@
         By council
       </router-link>
     </div>
+    <OverallVaccinations v-if="vaccineMode" />
     <div class="chooser" v-if="!councilMode">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />

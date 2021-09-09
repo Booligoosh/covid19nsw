@@ -54,6 +54,7 @@ export default {
   width: 500px;
   max-width: 100%;
   margin: 0 auto;
+  margin-top: 1rem;
   padding: 0.4rem;
 
   &-bar {
