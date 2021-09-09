@@ -2,7 +2,7 @@
   <form @submit.prevent="formSubmitHandler" class="postcode-picker">
     <input
       v-model="inputValue"
-      :placeholder="textPlaceholder ? 'Enter a postcode' : '2000'"
+      placeholder="Enter postcode (eg. 2000)"
       type="number"
       min="2000"
       max="2999"
@@ -29,11 +29,6 @@ export default {
       default: true,
     },
     fullwidth: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    textPlaceholder: {
       type: Boolean,
       required: false,
       default: false,
@@ -68,6 +63,7 @@ export default {
     border-radius: 10px 0 0 10px;
     min-width: 4em;
     width: 257px; // Firefox default
+    flex-grow: 1;
     &.fullwidth {
       width: 100%;
     }

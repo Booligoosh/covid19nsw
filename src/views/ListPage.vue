@@ -371,6 +371,7 @@ export default {
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
 $fixed-num-col-width-breakpoint: 800px;
+$chooser-compact-breakpoint: 460px;
 
 .all-page {
   width: 948px !important;
@@ -391,16 +392,23 @@ $fixed-num-col-width-breakpoint: 800px;
   border: 1px solid hsl(0, 0%, 80%);
   border-radius: 7px;
 
+  @media screen and (max-width: $chooser-compact-breakpoint) {
+    border: none;
+    padding: 0;
+
+    .postcode-picker {
+      width: 100%;
+    }
+  }
+
   &-title {
     margin: 0;
     font-weight: 500;
     text-align: center;
     font-size: 1.3rem;
 
-    @media screen and (max-width: $table-title-breakpoint) {
-      // Shrinks font-size by ~77%, about the
-      // same as the table title font size
-      font-size: 1rem;
+    @media screen and (max-width: $chooser-compact-breakpoint) {
+      display: none;
     }
   }
 }

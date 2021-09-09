@@ -35,7 +35,6 @@
             :key="postcode"
             :autofocus="false"
             :fullwidth="true"
-            :textPlaceholder="true"
             @submit="postcodeSubmitHandler"
           />
         </div>
