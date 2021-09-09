@@ -30,11 +30,11 @@
         By council
       </router-link>
     </div>
-    <OverallVaccinations v-if="vaccineMode" />
     <div class="chooser" v-if="!councilMode">
       <h2 class="chooser-title">See data for your postcode&hellip;</h2>
       <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
+    <OverallVaccinations v-if="vaccineMode" />
     <h1 class="table-title">
       {{ vaccineMode ? "COVID-19 vaccination rates" : "COVID-19 cases" }}
       by
