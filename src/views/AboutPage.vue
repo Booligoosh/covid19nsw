@@ -45,8 +45,13 @@
             href="https://www.health.gov.au/resources/collections/covid-19-vaccine-rollout-updates"
             target="_blank"
           >
-            COVID-19 vaccine rollout updates
-          </a>
+            COVID-19 vaccine rollout updates</a
+          >
+          (<a
+            href="https://github.com/jxeeno/aust-govt-covid19-vaccine-pdf"
+            target="_blank"
+            >extracted by Ken Tsang</a
+          >)
         </li>
       </ul>
       <p class="bottom-note">
