@@ -25,6 +25,7 @@
         <router-link
           :to="{
             name:
+              $route.name === 'CouncilPage' ||
               $route.name === 'CouncilsPage' ||
               $route.name === 'CouncilsVaccinationsPage'
                 ? 'CouncilsPage'
@@ -40,6 +41,7 @@
         <router-link
           :to="{
             name:
+              $route.name === 'CouncilPage' ||
               $route.name === 'CouncilsPage' ||
               $route.name === 'CouncilsVaccinationsPage'
                 ? 'CouncilsVaccinationsPage'
