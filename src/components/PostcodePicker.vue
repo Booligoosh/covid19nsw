@@ -26,6 +26,7 @@
         )
           inputFocused = false;
       "
+      @input="inputHandler"
     />
     <button class="postcode-picker-button">Go →</button>
     <div class="postcode-picker-results" v-if="shouldShowResults">
@@ -144,6 +145,12 @@ export default {
     },
   },
   methods: {
+    inputHandler(event) {
+      // Fixes super weird bug on Android Chrome where v-model doesn't always update the variable on input
+      // Todo: Investigate the bug and see if it's Vue's fault, Chrome's fault, or my fault, and if there's
+      // a less hacky workaround/fix.
+      this.inputValue = event.target.value;
+    },
     formSubmitHandler() {
       const result = this.results[this.focusedResultIndex];
       if (result)
