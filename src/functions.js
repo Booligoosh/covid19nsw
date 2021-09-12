@@ -1,3 +1,5 @@
+import councilNames from "@/data/built/councilNames.json";
+import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
 const RANGE_STARTS = [
   "0",
   "10",
@@ -25,4 +27,11 @@ export function getVaccineRangeIndex(rangeString) {
   }
 
   return index;
+}
+
+export function getCouncilDisplayName(councilNameIndex) {
+  const councilName = councilNames[councilNameIndex];
+  return `${councilName}${
+    cityCouncilIndices.includes(councilNameIndex) ? " City" : ""
+  } Council`;
 }

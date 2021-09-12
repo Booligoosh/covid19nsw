@@ -1,5 +1,6 @@
 <template>
   <div class="all-page">
+    <hr />
     <div class="metric-toggle-tabs">
       <router-link
         :to="{
@@ -29,10 +30,6 @@
       >
         By council
       </router-link>
-    </div>
-    <div class="chooser" v-if="!councilMode">
-      <h2 class="chooser-title">See data for your postcode&hellip;</h2>
-      <PostcodePicker @submit="postcodeSubmitHandler" />
     </div>
     <OverallVaccinations v-if="vaccineMode" />
     <h1 class="table-title">
@@ -229,10 +226,7 @@
 </template>
 
 <script>
-import PostcodePicker from "../components/PostcodePicker.vue";
-
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
-
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
@@ -246,7 +240,7 @@ const postcodesLength = postcodes.length;
 const councilNamesLength = councilNames.length;
 
 export default {
-  components: { PostcodePicker, OverallVaccinations },
+  components: { OverallVaccinations },
   name: "ListPage",
   data() {
     return {
@@ -332,7 +326,7 @@ export default {
             totalCases: outbreakTotalCases[i] || 0,
             newCasesThisWeek: newCasesThisWeek[i] || 0,
             newCasesToday: newCasesToday[i] || 0,
-            suburbs: suburbsForPostcode[postcodeNumber],
+            suburbs: suburbsForPostcode[postcodeNumber]?.join(", "),
             dose1: postcodeVaccinations[postcodeNumber]?.[0],
             dose2: postcodeVaccinations[postcodeNumber]?.[1],
           }));
@@ -358,12 +352,6 @@ export default {
     },
   },
   methods: {
-    postcodeSubmitHandler(postcode) {
-      this.$router.push({
-        name: "PostcodePage",
-        params: { postcode },
-      });
-    },
     suburbsSeeMoreClickHandler(event) {
       event.preventDefault();
       event.target.parentElement.classList.add("show-full");
@@ -378,6 +366,8 @@ export default {
 $compact-breakpoint: 492px;
 $table-title-breakpoint: 460px;
 $fixed-num-col-width-breakpoint: 800px;
+// NOTE: If changing $chooser-compact-breakpoint,
+// change in GlobalChooser.vue as well
 $chooser-compact-breakpoint: 460px;
 
 .all-page {
@@ -386,35 +376,14 @@ $chooser-compact-breakpoint: 460px;
   @media screen and (max-width: $compact-breakpoint) {
     padding-bottom: 0 !important;
   }
-}
 
-.chooser {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid hsl(0, 0%, 80%);
-  border-radius: 7px;
-
-  @media screen and (max-width: $chooser-compact-breakpoint) {
+  hr {
     border: none;
-    padding: 0;
-
-    .postcode-picker {
-      width: 100%;
-    }
-  }
-
-  &-title {
     margin: 0;
-    font-weight: 500;
-    text-align: center;
-    font-size: 1.3rem;
+    width: 100%;
+    border-bottom: 2px solid hsl(0, 0%, 90%);
 
-    @media screen and (max-width: $chooser-compact-breakpoint) {
+    @media screen and (min-width: $chooser-compact-breakpoint + 1) {
       display: none;
     }
   }

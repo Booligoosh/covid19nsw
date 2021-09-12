@@ -119,7 +119,7 @@ export default {
         const today = postcodeCounts.newCasesToday[i] || 0;
         const thisWeek = postcodeCounts.newCasesThisWeek[i] || 0;
         const total = postcodeCounts.outbreakTotalCases[i] || 0;
-        const suburbs = suburbsForPostcode[props?.p];
+        const suburbs = suburbsForPostcode[props?.p]?.join(", ");
 
         this._div.innerHTML = props
           ? `<h3>${props.p}</h3>

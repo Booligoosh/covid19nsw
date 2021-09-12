@@ -33,6 +33,8 @@
         <div v-if="locationType === 'postcode'">
           <PostcodePicker
             :key="postcode"
+            :usePostcodes="true"
+            :useCouncils="false"
             :autofocus="false"
             :fullwidth="true"
             @submit="postcodeSubmitHandler"
@@ -234,10 +236,10 @@ export default {
     },
   },
   methods: {
-    postcodeSubmitHandler(postcode) {
+    postcodeSubmitHandler({ value }) {
       this.$router.push({
         name: "PostcodeAlertsPage",
-        params: { postcode },
+        params: { postcode: value },
       });
     },
     setLocationType(type) {

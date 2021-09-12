@@ -71,6 +71,7 @@
         > -->
         </router-link>
       </nav>
+      <GlobalChooser v-if="$route.meta.showSearch" />
     </div>
     <div class="page-wrapper">
       <router-view class="page" />
@@ -79,7 +80,9 @@
 </template>
 
 <script>
+import GlobalChooser from "./components/GlobalChooser.vue";
 export default {
+  components: { GlobalChooser },
   created() {
     if (window.location.origin === "https://covid19nsw.netlify.com") {
       window.location.href = window.location.href.replace(

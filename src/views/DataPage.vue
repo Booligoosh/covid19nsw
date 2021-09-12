@@ -187,7 +187,7 @@ import {
   OUTBREAK_START_DATE_FORMATTED,
   VACCINATIONS_NOTE,
 } from "@/constants.js";
-import { getVaccineRangeIndex } from "@/functions.js";
+import { getVaccineRangeIndex, getCouncilDisplayName } from "@/functions.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
@@ -196,7 +196,6 @@ import councilVaccinations from "@/data/built/councilVaccinations.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
-import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
 
@@ -249,7 +248,10 @@ export default {
       );
     },
     suburbsText() {
-      return suburbsForPostcode[this.postcodeNumber] || "(Suburbs unknown)";
+      return (
+        suburbsForPostcode[this.postcodeNumber]?.join(", ") ||
+        "(Suburbs unknown)"
+      );
     },
     councilNameIndex() {
       return councilNames
@@ -257,9 +259,7 @@ export default {
         .indexOf(this.$route.params.councilSlug);
     },
     councilDisplayName() {
-      return `${councilNames[this.councilNameIndex]}${
-        cityCouncilIndices.includes(this.councilNameIndex) ? " City" : ""
-      } Council`;
+      return getCouncilDisplayName(this.councilNameIndex);
     },
     vaccinePercentages() {
       if (this.isCouncil)

@@ -10,8 +10,7 @@ postcodeNumbers.forEach(
   (postcode) =>
     (obj[postcode] = array
       .filter(({ POSTCODE }) => POSTCODE === postcode)
-      .map((x) => x.NAME)
-      .join(", "))
+      .map((x) => x.NAME))
 );
 const final = JSON.stringify(obj);
 

@@ -44,6 +44,7 @@ const routes = [
       description:
         "See the latest COVID-19 data for your postcode/suburb" +
         LIST_PAGE_DESCRIPTION_SUFFIX,
+      showSearch: true,
     },
   },
   {
@@ -54,6 +55,7 @@ const routes = [
       title: "COVID-19 Vaccination Rates By Postcode",
       description:
         "See the latest COVID-19 vaccination rates for your postcode/suburb.",
+      showSearch: true,
     },
   },
   {
@@ -75,6 +77,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
+    meta: { showSearch: true },
   },
   {
     path: "/cases/by-council",
@@ -85,6 +88,7 @@ const routes = [
       description:
         "See the latest COVID-19 data for your council/LGA" +
         LIST_PAGE_DESCRIPTION_SUFFIX,
+      showSearch: true,
     },
   },
   {
@@ -95,6 +99,7 @@ const routes = [
       title: "COVID-19 Vaccination Rates By Council/LGA",
       description:
         "See the latest COVID-19 vaccination rates for your council/LGA.",
+      showSearch: true,
     },
   },
   {
@@ -102,6 +107,7 @@ const routes = [
     name: "CouncilPage",
     component: () =>
       import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
+    meta: { showSearch: true },
   },
   {
     path: "/alerts",
