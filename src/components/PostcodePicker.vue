@@ -14,8 +14,18 @@
       required
       :class="{ 'postcode-picker-input': true, fullwidth }"
       @keydown="keydownHandler"
-      @focus="setInputFocused(true)"
-      @blur="setInputFocused(false)"
+      @focus="inputFocused = true"
+      @blur="
+        // Don't close results if tapping on result button,
+        // otherwise it gets removed before @click event fires
+        if (
+          !$event.relatedTarget ||
+          !$event.relatedTarget.classList.contains(
+            'postcode-picker-results-result'
+          )
+        )
+          inputFocused = false;
+      "
     />
     <button class="postcode-picker-button">Go →</button>
     <div class="postcode-picker-results" v-if="shouldShowResults">
@@ -163,12 +173,6 @@ export default {
           Math.min(this.results.length, RESULTS_LIMIT) - 1
       )
         this.focusedResultIndex++;
-    },
-    setInputFocused(value) {
-      // Wait for next frame before setting inputFocused to false when blurring
-      // so that the buttons are still around for the click event to fire when
-      // tapping on them and blurring the input
-      setTimeout(() => (this.inputFocused = value), 0);
     },
   },
 };
