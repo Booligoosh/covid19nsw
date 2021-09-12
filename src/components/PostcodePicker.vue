@@ -62,11 +62,6 @@ const RESULTS_LIMIT = 6;
 export default {
   name: "PostcodePicker",
   props: {
-    value: {
-      type: String,
-      required: false,
-      default: "",
-    },
     autofocus: {
       type: Boolean,
       required: false,
@@ -90,7 +85,7 @@ export default {
   },
   data() {
     return {
-      inputValue: this.value,
+      inputValue: "",
       inputFocused: false,
       focusedResultIndex: 0,
       RESULTS_LIMIT,
