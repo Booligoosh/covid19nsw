@@ -151,6 +151,8 @@ body,
   }
   .nav {
     padding-bottom: 0;
+    // NOTE: If changing $nav-breakpoint,
+    // change in GlobalChooser.vue as well
     $nav-breakpoint: 700px;
 
     &-logo {

@@ -1,6 +1,6 @@
 <template>
   <div class="chooser">
-    <h2 class="chooser-title">See data for your area&hellip;</h2>
+    <h2 class="chooser-title">See data for your area:</h2>
     <PostcodePicker
       :usePostcodes="true"
       :useCouncils="true"
@@ -39,6 +39,9 @@ export default {
 // NOTE: If changing $chooser-compact-breakpoint,
 // change in ListPage.vue as well
 $chooser-compact-breakpoint: 460px;
+// NOTE: If changing $nav-breakpoint,
+// change in ListPage.vue as well
+$nav-breakpoint: 700px;
 
 .chooser {
   display: flex;
@@ -46,12 +49,17 @@ $chooser-compact-breakpoint: 460px;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  max-width: calc(948px - 3rem);
+  width: max-content;
+  max-width: 100%;
   margin: 0 auto;
   margin-top: 1rem;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border: 1px solid hsl(0, 0%, 80%);
   border-radius: 7px;
+
+  @media screen and (max-width: $nav-breakpoint) {
+    width: 100%;
+  }
 
   @media screen and (max-width: $chooser-compact-breakpoint) {
     border: none;
@@ -67,7 +75,7 @@ $chooser-compact-breakpoint: 460px;
     margin: 0;
     font-weight: 500;
     text-align: center;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 
     @media screen and (max-width: $chooser-compact-breakpoint) {
       display: none;
