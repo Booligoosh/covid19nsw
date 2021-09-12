@@ -31,6 +31,7 @@ export function getVaccineRangeIndex(rangeString) {
 
 export function getCouncilDisplayName(councilNameIndex) {
   const councilName = councilNames[councilNameIndex];
+  if (councilName === "Correctional settings") return councilName;
   return `${councilName}${
     cityCouncilIndices.includes(councilNameIndex) ? " City" : ""
   } Council`;
