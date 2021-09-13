@@ -166,15 +166,19 @@ export default {
     },
     keydownHandler(event) {
       // Up arrow handler
-      if (event.keyCode === 38 && this.focusedResultIndex > 0)
+      if (event.keyCode === 38 && this.focusedResultIndex > 0) {
         this.focusedResultIndex--;
+        event.preventDefault();
+      }
       // Down arrow handler
       if (
         event.keyCode === 40 &&
         this.focusedResultIndex <
           Math.min(this.results.length, RESULTS_LIMIT) - 1
-      )
+      ) {
         this.focusedResultIndex++;
+        event.preventDefault();
+      }
     },
   },
 };
