@@ -39,7 +39,7 @@
     </h1>
     <div class="table-subtitle" v-if="vaccineMode">
       Data up to <mark>{{ vaccineTemporalCoverageString }}</mark
-      >, updated twice a week by NSW Health.
+      >, updated {{ councilMode ? "weekly" : "twice a week" }} by NSW Health.
       <div class="table-subtitle-disclaimer">
         {{ VACCINATIONS_NOTE }}
       </div>
