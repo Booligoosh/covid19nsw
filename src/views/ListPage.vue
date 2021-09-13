@@ -384,7 +384,8 @@ $chooser-compact-breakpoint: 460px;
     border-bottom: 2px solid hsl(0, 0%, 90%);
 
     @media screen and (min-width: $chooser-compact-breakpoint + 1) {
-      display: none;
+      border-bottom: none;
+      margin-bottom: -1rem;
     }
   }
 }
