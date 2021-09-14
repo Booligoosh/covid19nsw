@@ -59,7 +59,7 @@ export default {
   margin-top: 1rem;
 
   &-bar {
-    height: 10px;
+    height: 4px;
     width: 100%;
     flex-shrink: 0;
     --first-color: hsl(123, 45%, 70%);
