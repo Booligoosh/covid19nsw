@@ -103,7 +103,7 @@ export default {
             max: 9,
             title: {
               display: true,
-              text: "% population aged 16+ fully vaccinated",
+              text: "% population aged 15+ fully vaccinated",
             },
             ticks: {
               minRotation: 90,
