@@ -12,12 +12,12 @@
     align-items: center;
     text-align: center;
     color: inherit;
-    padding: 0.35rem 1rem;
+    padding: 0.39em 1.1em; // 0.35rem/0.9, 1rem/0.9
     background: white;
-    border-radius: 7px;
+    border-radius: 0.486em; // (7px/16px)/0.9
     border: 1px solid hsl(0, 0%, 80%);
     margin: 0 auto;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     cursor: pointer;
     text-decoration: none;
 

@@ -54,8 +54,18 @@
       </div>
     </div>
     <label v-if="!vaccineMode" class="per-pop-toggle">
-      <input type="checkbox" v-model="$store.state.listPagePerPopMode" /> Per
-      {{ PER_POPULATION }} people
+      <button
+        :class="{ active: !perPopMode }"
+        @click="$store.state.listPagePerPopMode = false"
+      >
+        Cases
+      </button>
+      <button
+        :class="{ active: perPopMode }"
+        @click="$store.state.listPagePerPopMode = true"
+      >
+        Cases per {{ PER_POPULATION }} people
+      </button>
     </label>
     <div class="table">
       <table>
@@ -423,13 +433,11 @@ $chooser-compact-breakpoint: 460px;
   }
 
   .per-pop-toggle {
-    text-align: center;
+    @include toggleTabs;
     margin-bottom: 1rem;
     margin-top: -1rem;
     font-size: 0.9rem;
-    font-weight: 500;
-    color: hsl(0, 0%, 30%);
-    user-select: none;
+    width: max-content;
   }
 }
 
