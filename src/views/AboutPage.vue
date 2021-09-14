@@ -53,6 +53,14 @@
             >extracted by Ken Tsang</a
           >)
         </li>
+        <li>
+          <a
+            href="https://www.abs.gov.au/statistics/people/population/regional-population-age-and-sex/2020"
+            target="_blank"
+          >
+            ABS 2020 Regional population by age and sex
+          </a>
+        </li>
       </ul>
       <p class="bottom-note">
         <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">

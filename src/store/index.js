@@ -48,6 +48,7 @@ const store = new Vuex.Store({
     // Table options stored globally so they persist between pages
     listPageCasesSort: "newCasesThisWeek",
     listPageVaccinationsSort: "dose2",
+    listPagePerPopMode: false,
   },
   mutations: {
     setError(state, error = "") {

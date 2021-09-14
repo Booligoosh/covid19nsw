@@ -53,6 +53,10 @@
         today&rsquo;s numbers appear lower than their final values.
       </div>
     </div>
+    <label v-if="!vaccineMode" class="per-pop-toggle">
+      <input type="checkbox" v-model="$store.state.listPagePerPopMode" /> Per
+      {{ PER_POPULATION }} people
+    </label>
     <div class="table">
       <table>
         <thead>
@@ -198,9 +202,15 @@
               >&nbsp;
               <div>{{ value.suburbs }}</div>
             </td>
-            <td v-if="!vaccineMode">{{ value.newCasesToday }}</td>
-            <td v-if="!vaccineMode">{{ value.newCasesThisWeek }}</td>
-            <td v-if="!vaccineMode">{{ value.totalCases }}</td>
+            <td v-if="!vaccineMode">
+              {{ formatCasesValue(value.newCasesToday) }}
+            </td>
+            <td v-if="!vaccineMode">
+              {{ formatCasesValue(value.newCasesThisWeek) }}
+            </td>
+            <td v-if="!vaccineMode">
+              {{ formatCasesValue(value.totalCases) }}
+            </td>
             <td v-if="vaccineMode">
               {{ value.dose1 || "-" }}
             </td>
@@ -233,6 +243,8 @@ import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
+import populationByPostcode from "@/data/population/populationByPostcode.json";
+import populationByCouncil from "@/data/population/populationByCouncil.json";
 import { OUTBREAK_START_DATE_FORMATTED, VACCINATIONS_NOTE } from "@/constants";
 import OverallVaccinations from "../components/OverallVaccinations.vue";
 
@@ -248,6 +260,7 @@ export default {
       truncate: true,
       OUTBREAK_START_DATE_FORMATTED,
       VACCINATIONS_NOTE,
+      PER_POPULATION: 100,
     };
   },
   computed: {
@@ -256,6 +269,9 @@ export default {
         this.$route.name === "PostcodesVaccinationsPage" ||
         this.$route.name === "CouncilsVaccinationsPage"
       );
+    },
+    perPopMode() {
+      return this.$store.state.listPagePerPopMode;
     },
     sort() {
       return this.vaccineMode
@@ -308,28 +324,38 @@ export default {
 
       // Return postcodes/councils using precalculated values
       const postcodeRows = this.councilMode
-        ? councilNames.map((councilName, i) => ({
-            councilName,
-            col1Sort: councilName,
-            councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
-            // totalCases: totalCases[i] || 0,
-            totalCases: outbreakTotalCases[i] || 0,
-            newCasesThisWeek: newCasesThisWeek[i] || 0,
-            newCasesToday: newCasesToday[i] || 0,
-            dose1: councilVaccinations[i]?.[0],
-            dose2: councilVaccinations[i]?.[1],
-          }))
-        : postcodes.map((postcodeNumber, i) => ({
-            postcodeNumber,
-            col1Sort: postcodeNumber,
-            // totalCases: totalCases[i] || 0,
-            totalCases: outbreakTotalCases[i] || 0,
-            newCasesThisWeek: newCasesThisWeek[i] || 0,
-            newCasesToday: newCasesToday[i] || 0,
-            suburbs: suburbsForPostcode[postcodeNumber]?.join(", "),
-            dose1: postcodeVaccinations[postcodeNumber]?.[0],
-            dose2: postcodeVaccinations[postcodeNumber]?.[1],
-          }));
+        ? councilNames.map((councilName, i) => {
+            const multiplier = this.perPopMode
+              ? this.PER_POPULATION / populationByCouncil[councilName]
+              : 1;
+            return {
+              councilName,
+              col1Sort: councilName,
+              councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
+              // totalCases: totalCases[i] || 0,
+              totalCases: (outbreakTotalCases[i] || 0) * multiplier,
+              newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
+              newCasesToday: (newCasesToday[i] || 0) * multiplier,
+              dose1: councilVaccinations[i]?.[0],
+              dose2: councilVaccinations[i]?.[1],
+            };
+          })
+        : postcodes.map((postcodeNumber, i) => {
+            const multiplier = this.perPopMode
+              ? this.PER_POPULATION / populationByPostcode[postcodeNumber]
+              : 1;
+            return {
+              postcodeNumber,
+              col1Sort: postcodeNumber,
+              // totalCases: totalCases[i] || 0,
+              totalCases: (outbreakTotalCases[i] || 0) * multiplier,
+              newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
+              newCasesToday: (newCasesToday[i] || 0) * multiplier,
+              suburbs: suburbsForPostcode[postcodeNumber]?.join(", "),
+              dose1: postcodeVaccinations[postcodeNumber]?.[0],
+              dose2: postcodeVaccinations[postcodeNumber]?.[1],
+            };
+          });
 
       console.timeEnd("Calculate postcodeRows");
       return postcodeRows;
@@ -352,6 +378,13 @@ export default {
     },
   },
   methods: {
+    formatCasesValue(value) {
+      if (!this.perPopMode) return value;
+      if (isNaN(value)) return "-";
+      if (value === 0) return 0;
+      // if (value < 0.01) return "<0.01";
+      return value.toFixed(2);
+    },
     suburbsSeeMoreClickHandler(event) {
       event.preventDefault();
       event.target.parentElement.classList.add("show-full");
@@ -387,6 +420,16 @@ $chooser-compact-breakpoint: 460px;
       border-bottom: none;
       margin-bottom: -1rem;
     }
+  }
+
+  .per-pop-toggle {
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-top: -1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: hsl(0, 0%, 30%);
+    user-select: none;
   }
 }
 
