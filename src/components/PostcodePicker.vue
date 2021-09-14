@@ -4,7 +4,12 @@
     :class="{ 'postcode-picker': true, 'has-results': shouldShowResults }"
   >
     <input
-      v-model="inputValue"
+      :value="inputValue"
+      @input="
+        // Using :value/@input instead of v-model fixes issues with Android keyboards
+        // See https://github.com/vuejs/vue/issues/9777#issuecomment-478831263
+        inputValue = $event.target.value
+      "
       :placeholder="`Enter postcode${usePostcodes ? '/suburb' : ''}${
         useCouncils ? '/council' : ''
       }`"
@@ -16,7 +21,6 @@
       @keydown="keydownHandler"
       @focus="inputFocused = true"
       @blur="inputFocused = false"
-      @input="inputHandler"
     />
     <button class="postcode-picker-button">Go →</button>
     <div class="postcode-picker-results" v-if="shouldShowResults">
@@ -135,12 +139,6 @@ export default {
     },
   },
   methods: {
-    inputHandler(event) {
-      // Fixes super weird bug on Android Chrome where v-model doesn't always update the variable on input
-      // Todo: Investigate the bug and see if it's Vue's fault, Chrome's fault, or my fault, and if there's
-      // a less hacky workaround/fix.
-      this.inputValue = event.target.value;
-    },
     formSubmitHandler() {
       const result = this.results[this.focusedResultIndex];
       if (result)
