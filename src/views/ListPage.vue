@@ -49,8 +49,8 @@
       to <mark>{{ temporalCoverageString }}</mark
       >.
       <div class="table-subtitle-disclaimer">
-        *Many cases aren&rsquo;t uploaded by NSW Health within 1 day, meaning
-        today&rsquo;s numbers appear lower than their final values.
+        *Many cases aren&rsquo;t added by NSW Health within 1 day, so
+        today&rsquo;s numbers are less than final values.
       </div>
     </div>
     <label v-if="!vaccineMode" class="per-pop-toggle">
