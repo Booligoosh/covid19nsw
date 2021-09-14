@@ -15,17 +15,7 @@
       :class="{ 'postcode-picker-input': true, fullwidth }"
       @keydown="keydownHandler"
       @focus="inputFocused = true"
-      @blur="
-        // Don't close results if tapping on result button,
-        // otherwise it gets removed before @click event fires
-        if (
-          !$event.relatedTarget ||
-          !$event.relatedTarget.classList.contains(
-            'postcode-picker-results-result'
-          )
-        )
-          inputFocused = false;
-      "
+      @blur="inputFocused = false"
       @input="inputHandler"
     />
     <button class="postcode-picker-button">Go →</button>
@@ -38,7 +28,7 @@
           focused: focusedResultIndex === index,
         }"
         :key="result[1]"
-        @click="emitResultObj({ type: result[0], value: result[1] })"
+        @mousedown="emitResultObj({ type: result[0], value: result[1] })"
       >
         <div class="postcode-picker-results-result-primary-text">
           {{ result[2] }}
