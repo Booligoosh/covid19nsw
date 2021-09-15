@@ -438,6 +438,7 @@ $chooser-compact-breakpoint: 460px;
     margin-top: -1rem;
     font-size: 0.9rem;
     width: max-content;
+    max-width: 100%;
   }
 }
 
