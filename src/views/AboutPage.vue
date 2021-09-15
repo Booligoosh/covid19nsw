@@ -42,6 +42,14 @@
         </li>
         <li>
           <a
+            href="https://www.health.gov.au/resources/collections/covid-19-vaccination-geographic-vaccination-rates-lga"
+            target="_blank"
+          >
+            COVID-19 vaccination rates by LGA
+          </a>
+        </li>
+        <li>
+          <a
             href="https://www.health.gov.au/resources/collections/covid-19-vaccine-rollout-updates"
             target="_blank"
           >
