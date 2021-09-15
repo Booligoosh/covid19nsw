@@ -185,27 +185,48 @@ async function fetchData() {
   console.timeEnd("Fetch council vaccinations endpoint");
 
   console.time("Generate councilVaccinations.json");
-  const councilVaccinationsAsOf = Object.keys(
+  let councilVaccinationsAsOf = Object.keys(
     Object.values(councilVaccinationData)[0]
   ).pop();
+  const spreadsheetAsOf = require("./src/data/lga-vaccinations/asOf.json");
 
   const vaccinationsByCouncilIndex = {};
-  Object.values(councilVaccinationData).forEach((dateObjs) => {
-    const latestData = Object.values(dateObjs).pop();
 
-    const councilName = processCouncilName(latestData.lga_name);
-    const dose1 = latestData.percPopAtLeastFirst_commonwealth;
-    const dose2 = latestData.percPopFullyVaccinated_commonwealth;
+  if (councilVaccinationsAsOf >= spreadsheetAsOf) {
+    // NSW Gov data is more recent, use traditional method
+    console.log("Council vaccinations method: Traditional");
 
-    if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
+    Object.values(councilVaccinationData).forEach((dateObjs) => {
+      const latestData = Object.values(dateObjs).pop();
+
+      const councilName = processCouncilName(latestData.lga_name);
+      const dose1 = latestData.percPopAtLeastFirst_commonwealth;
+      const dose2 = latestData.percPopFullyVaccinated_commonwealth;
+
+      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
+        if (!councilNames.includes(councilName)) councilNames.push(councilName);
+
+        vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = [
+          dose1,
+          dose2,
+        ];
+      }
+    });
+  } else {
+    // Spreadsheet data is more recent, use spreadsheet parsing method
+    console.log("Council vaccinations method: Spreadsheet parsing");
+
+    councilVaccinationsAsOf = spreadsheetAsOf;
+
+    const vaccinationsByRawLgaName =
+      require("./src/data/lga-vaccinations/getVaccinationsByRawLgaName")();
+
+    Object.entries(vaccinationsByRawLgaName).forEach(([rawLgaName, data]) => {
+      const councilName = processCouncilName(rawLgaName);
       if (!councilNames.includes(councilName)) councilNames.push(councilName);
-
-      vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = [
-        dose1,
-        dose2,
-      ];
-    }
-  });
+      vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = data;
+    });
+  }
   fs.writeFileSync(
     "./src/data/built/councilVaccinations.json",
     JSON.stringify(vaccinationsByCouncilIndex)
