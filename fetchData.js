@@ -151,13 +151,16 @@ async function fetchData() {
   console.time("Generate postcodeVaccinations.json");
   const postcodeVaccinationsAsOf = Object.keys(
     Object.values(postcodeVaccinationData)[0]
-  ).pop();
+  )
+    .sort()
+    .pop();
 
   const vaccinationsByPostcode = {};
   Object.keys(postcodeVaccinationData).forEach((postcode) => {
     postcode = Number(postcode);
     if (postcodeIsValid(postcode)) {
-      const latestData = Object.values(postcodeVaccinationData[postcode]).pop();
+      const latestData =
+        postcodeVaccinationData[postcode][postcodeVaccinationsAsOf];
       const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
       const dose2 = latestData.percPopFullyVaccinated10WidthRange;
       if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
@@ -187,7 +190,9 @@ async function fetchData() {
   console.time("Generate councilVaccinations.json");
   let councilVaccinationsAsOf = Object.keys(
     Object.values(councilVaccinationData)[0]
-  ).pop();
+  )
+    .sort()
+    .pop();
   const spreadsheetAsOf = require("./src/data/lga-vaccinations/asOf.json");
 
   const vaccinationsByCouncilIndex = {};
@@ -197,7 +202,7 @@ async function fetchData() {
     console.log("Council vaccinations method: Traditional");
 
     Object.values(councilVaccinationData).forEach((dateObjs) => {
-      const latestData = Object.values(dateObjs).pop();
+      const latestData = dateObjs[councilVaccinationsAsOf];
 
       const councilName = processCouncilName(latestData.lga_name);
       const dose1 = latestData.percPopAtLeastFirst_commonwealth;
