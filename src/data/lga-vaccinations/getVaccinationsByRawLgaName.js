@@ -11,11 +11,10 @@ module.exports = () => {
   const FILE_NAME = "source.xlsx";
   const RANGE = "A9:F9999";
   const STATE_NAME = "New South Wales";
-  const STATE_NAME_HEADER = "Jurisdiction";
-  const LGA_NAME_HEADER = "LGA Name";
-  const DOSE_1_HEADER = "Dose 1 % coverage of 15+";
-  const DOSE_2_HEADER = "Dose 2 % coverage of 15+";
-  const DECIMAL_PLACES = 1;
+  const STATE_NAME_HEADER = "State of Residence";
+  const LGA_NAME_HEADER = "LGA 2019 Name of Residence";
+  const DOSE_1_HEADER = "% Received dose 1 REMOTE_FLAGGED";
+  const DOSE_2_HEADER = "% Received dose 2 REMOTE_FLAGGED";
 
   const file = xlsx.readFile(__dirname + "/" + FILE_NAME);
 
@@ -31,14 +30,8 @@ module.exports = () => {
         const firstDosePct = row[DOSE_1_HEADER];
         const secondDosePct = row[DOSE_2_HEADER];
 
-        if (
-          typeof firstDosePct === "number" &&
-          typeof secondDosePct === "number"
-        )
-          vaccinationsByRawLgaName[lgaName] = [
-            (firstDosePct * 100).toFixed(DECIMAL_PLACES) + "%",
-            (secondDosePct * 100).toFixed(DECIMAL_PLACES) + "%",
-          ];
+        if (firstDosePct !== "N/A" && secondDosePct !== "N/A")
+          vaccinationsByRawLgaName[lgaName] = [firstDosePct, secondDosePct];
       }
     });
 
