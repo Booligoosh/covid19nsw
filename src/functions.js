@@ -15,6 +15,7 @@ const RANGE_STARTS = [
 
 export function getVaccineRangeIndex(rangeString) {
   if (!rangeString) return -1;
+  if (rangeString === ">95%") return 9;
   const rangeStart = rangeString.match(/.+?\d*/)?.[0]; // Matches the first number and any characters before
   let index = RANGE_STARTS.indexOf(rangeStart);
 

@@ -111,13 +111,17 @@
                 }"
               >
                 <div
+                  v-for="(segmentType, i) of vaccineSegments[0]"
+                  :key="i"
                   :class="[
                     'vaccinations-card-num-bar-segment',
                     `type-${segmentType}`,
-                    segmentType === 1 && isCouncil ? 'precise' : '',
+                    segmentType === 1 &&
+                    isCouncil &&
+                    vaccinePercentages[0] !== '>95%'
+                      ? 'precise'
+                      : '',
                   ]"
-                  v-for="(segmentType, i) of vaccineSegments[0]"
-                  :key="i"
                 />
               </div>
             </div>
@@ -137,13 +141,17 @@
                 }"
               >
                 <div
+                  v-for="(segmentType, i) of vaccineSegments[1]"
+                  :key="i"
                   :class="[
                     'vaccinations-card-num-bar-segment',
                     `type-${segmentType}`,
-                    segmentType === 1 && isCouncil ? 'precise' : '',
+                    segmentType === 1 &&
+                    isCouncil &&
+                    vaccinePercentages[1] !== '>95%'
+                      ? 'precise'
+                      : '',
                   ]"
-                  v-for="(segmentType, i) of vaccineSegments[1]"
-                  :key="i"
                 />
               </div>
             </div>
