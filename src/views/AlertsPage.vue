@@ -68,68 +68,94 @@
         Loading&hellip;
       </div>
       <div v-else-if="latitude && longitude">
-        <details
-          class="case-locations-location"
-          v-for="caseLocation of truncate
-            ? caseLocationRowsTruncated
-            : caseLocationRows"
-          :key="caseLocation.id"
-          :open="openToggle === caseLocation.id"
+        <div
+          class="no-nearby-alerts-placeholder"
+          v-if="
+            truncate &&
+            caseLocationRowsTruncated.length === 0 &&
+            truncatedCount > 0
+          "
         >
-          <summary
-            @click.prevent="
-              openToggle =
-                openToggle === caseLocation.id ? null : caseLocation.id
-            "
+          There are no alerts within {{ DISTANCE_THRESHOLD }}km of
+          {{
+            locationType === "gps"
+              ? "your current location"
+              : ` the centre of the postcode ${postcode}`
+          }}.
+        </div>
+        <div>
+          <details
+            class="case-locations-location"
+            v-for="caseLocation of truncate
+              ? caseLocationRowsTruncated
+              : caseLocationRows"
+            :key="caseLocation.id"
+            :open="openToggle === caseLocation.id"
           >
-            <div class="case-locations-location-place">
-              <span :title="caseLocation.Address">
-                {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
-              </span>
-              <span
-                class="case-locations-location-place-distance"
-                v-if="caseLocation.distance"
-              >
-                {{ caseLocation.distance.toFixed(1) }}km away
-              </span>
-            </div>
-            <div class="case-locations-location-date-time">
-              {{ caseLocation.Time }}
-              <span class="case-locations-location-date-time-connector"
-                >on</span
-              >
-              {{ caseLocation.Date }}
-            </div>
-            <div
-              :class="[
-                'case-locations-location-alert',
-                `alert-type-${caseLocation.type}`,
-              ]"
+            <summary
+              @click.prevent="
+                openToggle =
+                  openToggle === caseLocation.id ? null : caseLocation.id
+              "
             >
-              {{ caseLocation.Alert }}
+              <div class="case-locations-location-place">
+                <span :title="caseLocation.Address">
+                  {{ caseLocation.Venue }}, {{ caseLocation.Suburb }}
+                </span>
+                <span
+                  class="case-locations-location-place-distance"
+                  v-if="caseLocation.distance"
+                >
+                  {{ caseLocation.distance.toFixed(1) }}km away
+                </span>
+              </div>
+              <div class="case-locations-location-date-time">
+                {{ caseLocation.Time }}
+                <span class="case-locations-location-date-time-connector"
+                  >on</span
+                >
+                {{ caseLocation.Date }}
+              </div>
+              <div
+                :class="[
+                  'case-locations-location-alert',
+                  `alert-type-${caseLocation.type}`,
+                ]"
+              >
+                {{ caseLocation.Alert }}
+              </div>
+            </summary>
+            <div class="case-locations-location-more-info">
+              <div class="case-locations-location-more-info-address">
+                <strong>Address:</strong> {{ caseLocation.Address }}
+              </div>
+              <div class="case-locations-location-more-info-html">
+                <strong>Health advice:</strong>&nbsp;
+                <span v-html="caseLocation.HealthAdviceHTML"></span>
+              </div>
+              <div class="case-locations-location-more-info-last-updated">
+                <strong>Last updated:</strong>
+                {{ caseLocation["Last updated date"] }}
+              </div>
             </div>
-          </summary>
-          <div class="case-locations-location-more-info">
-            <div class="case-locations-location-more-info-address">
-              <strong>Address:</strong> {{ caseLocation.Address }}
-            </div>
-            <div class="case-locations-location-more-info-html">
-              <strong>Health advice:</strong>&nbsp;
-              <span v-html="caseLocation.HealthAdviceHTML"></span>
-            </div>
-            <div class="case-locations-location-more-info-last-updated">
-              <strong>Last updated:</strong>
-              {{ caseLocation["Last updated date"] }}
-            </div>
+          </details>
+        </div>
+        <div v-if="truncate && truncatedCount > 0">
+          <button class="show-more-btn" @click="truncate = false">
+            ↓ Show {{ truncatedCount }} alerts more than
+            {{ DISTANCE_THRESHOLD }}km away
+          </button>
+          <div class="regional-note" v-if="locationType !== 'gps'">
+            <b
+              >If you live in a postcode larger than
+              {{ DISTANCE_THRESHOLD }}km</b
+            >, there may be alerts in your area that aren&rsquo;t shown. Press
+            the button above to see all alerts, or see alerts near your
+            <a href="/alerts" @click.prevent="setLocationType('gps')"
+              >device&rsquo;s location</a
+            >.
           </div>
-        </details>
-        <button
-          class="show-more-btn"
-          v-if="truncate && caseLocationRows.length > TRUNCATE_SIZE"
-          @click="truncate = false"
-        >
-          ↓ Show {{ caseLocationRows.length - TRUNCATE_SIZE }} more alerts
-        </button>
+        </div>
         <div
           class="no-locations-placeholder"
           v-if="$store.state.caseLocations.length === 0"
@@ -158,7 +184,7 @@ export default {
       hasLocationPermission: false,
       openToggle: null,
       truncate: true,
-      TRUNCATE_SIZE: 100,
+      DISTANCE_THRESHOLD: 20,
     };
   },
   created() {
@@ -169,6 +195,13 @@ export default {
   watch: {
     locationType() {
       if (this.locationType === "gps") this.getLocationIfAlreadyAllowed();
+    },
+    // When changing the location, reset truncate to true
+    latitude() {
+      this.truncate = true;
+    },
+    longitude() {
+      this.truncate = true;
     },
   },
   computed: {
@@ -229,7 +262,20 @@ export default {
         .sort((a, b) => a.distance - b.distance);
     },
     caseLocationRowsTruncated() {
-      return this.caseLocationRows.slice(0, 100);
+      // Use .slice & .findIndex rather than .filter since alerts
+      // are already sorted by distance, so running the filter function
+      // the first element it returns false for is pointless
+      return this.caseLocationRows.slice(
+        0,
+        this.caseLocationRows.findIndex(
+          ({ distance }) => distance > this.DISTANCE_THRESHOLD
+        )
+      );
+    },
+    truncatedCount() {
+      return (
+        this.caseLocationRows.length - this.caseLocationRowsTruncated.length
+      );
     },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
@@ -338,7 +384,12 @@ export default {
 
   &-location {
     margin: 0 -1.5rem;
-    border-top: 1px solid hsl(0, 0%, 85%);
+    border: 1px hsl(0, 0%, 85%);
+    border-top-style: solid;
+
+    &:last-child {
+      border-bottom-style: solid;
+    }
 
     &[open] {
       background: hsl(0, 0%, 97%);
@@ -437,5 +488,50 @@ export default {
   font-weight: 500;
   color: hsl(0, 0%, 40%);
   line-height: 1.5;
+}
+
+.no-nearby-alerts-placeholder {
+  border-top: 1px solid hsl(0, 0%, 85%);
+  padding-top: 2rem;
+  text-align: center;
+  font-weight: normal;
+}
+
+.show-more-btn {
+  display: block;
+  margin: 0 auto;
+  margin-top: 2rem;
+  text-align: center;
+  color: inherit;
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid hsl(0, 0%, 80%);
+  background: hsl(0, 0%, 97%);
+
+  &:hover {
+    background: hsl(0, 0%, 95%);
+  }
+
+  &.active {
+    background: hsl(0, 0%, 92%);
+  }
+}
+
+.regional-note {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+  opacity: 0.7;
+  text-align: center;
+
+  b {
+    font-weight: 600;
+  }
+
+  a {
+    color: inherit;
+  }
 }
 </style>
