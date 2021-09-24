@@ -21,7 +21,10 @@
         <div class="suburbs-text">
           {{ suburbsText }}
         </div>
-        <div class="postcode-council-text">
+        <div
+          class="postcode-council-text"
+          v-if="postcodeCouncilSlugs.length > 0"
+        >
           Part of
           <span v-for="(slug, i) of postcodeCouncilSlugs" :key="slug">
             <router-link
