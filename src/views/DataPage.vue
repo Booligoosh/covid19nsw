@@ -328,13 +328,16 @@ export default {
       );
     },
     postcodeCouncilDisplayNames() {
-      return councilsForPostcode[this.postcodeIndex]?.map(
-        getCouncilDisplayName
+      return (
+        councilsForPostcode[this.postcodeIndex]?.map(getCouncilDisplayName) ||
+        []
       );
     },
     postcodeCouncilSlugs() {
-      return councilsForPostcode[this.postcodeIndex]?.map((councilIndex) =>
-        councilNames[councilIndex].replace(/ /g, "-").toLowerCase()
+      return (
+        councilsForPostcode[this.postcodeIndex]?.map((councilIndex) =>
+          councilNames[councilIndex].replace(/ /g, "-").toLowerCase()
+        ) || []
       );
     },
     vaccinePercentages() {
