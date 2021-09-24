@@ -192,7 +192,7 @@
           <router-link
             class="council-postcodes-postcode"
             v-for="postcode of postcodesInCouncil"
-            :key="postcode"
+            :key="postcode.postcodeNumber"
             :to="{
               name: 'PostcodePage',
               params: { postcode: postcode.postcodeNumber },
