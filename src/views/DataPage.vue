@@ -964,6 +964,7 @@ $top-grid-small-text-breakpoint: 370px;
       font-size: 1.1rem;
       color: hsl(123, 50%, 28%);
       text-decoration: underline;
+      min-width: 2.8rem;
     }
 
     &-suburbs {
