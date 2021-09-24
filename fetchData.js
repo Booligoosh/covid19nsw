@@ -149,9 +149,7 @@ async function fetchData() {
   console.timeEnd("Fetch postcode vaccinations endpoint");
 
   console.time("Generate postcodeVaccinations.json");
-  const postcodeVaccinationsAsOf = Object.keys(
-    Object.values(postcodeVaccinationData)[0]
-  )
+  const postcodeVaccinationsAsOf = Object.keys(postcodeVaccinationData[2000])
     .sort()
     .pop();
 
