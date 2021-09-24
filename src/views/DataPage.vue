@@ -176,6 +176,37 @@
           See alerts near {{ postcodeNumber }} →
         </router-link>
       </div>
+      <div
+        class="other-content-card"
+        v-if="
+          isCouncil &&
+          postcodesInCouncil &&
+          councilDisplayName !== 'Correctional settings'
+        "
+      >
+        <h2 class="other-content-card-title">Postcodes in this council</h2>
+        <div class="council-postcodes-note">
+          Postcodes with 0 cases are not shown.
+        </div>
+        <div class="council-postcodes">
+          <router-link
+            class="council-postcodes-postcode"
+            v-for="postcode of postcodesInCouncil"
+            :key="postcode"
+            :to="{
+              name: 'PostcodePage',
+              params: { postcode: postcode.postcodeNumber },
+            }"
+          >
+            <div class="council-postcodes-postcode-num">
+              {{ postcode.postcodeNumber }}
+            </div>
+            <div class="council-postcodes-postcode-suburbs">
+              {{ postcode.suburbs.join(", ") }}
+            </div>
+          </router-link>
+        </div>
+      </div>
     </div>
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
     <!-- <pre style="text-align: left">{{
@@ -206,6 +237,7 @@ import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
+import postcodesForCouncil from "@/data/built/postcodesForCouncil.json";
 
 const AVG_PERIOD = 5;
 
@@ -268,6 +300,15 @@ export default {
     },
     councilDisplayName() {
       return getCouncilDisplayName(this.councilNameIndex);
+    },
+    postcodesInCouncil() {
+      return postcodesForCouncil[this.councilNameIndex]?.map(
+        (postcodeIndex) => {
+          const postcodeNumber = postcodes[postcodeIndex];
+          const suburbs = suburbsForPostcode[postcodeNumber];
+          return { postcodeNumber, suburbs };
+        }
+      );
     },
     vaccinePercentages() {
       if (this.isCouncil)
@@ -754,6 +795,12 @@ $top-grid-small-text-breakpoint: 370px;
     padding: 1rem;
     border: 1px solid hsl(0, 0%, 80%);
     border-radius: 7px;
+    height: max-content;
+    // For some reason, this stops grid items stretching
+    // and taking up more than their assigned `1fr` of space.
+    // CSS is strange someitmes.
+    // https://css-tricks.com/preventing-a-grid-blowout/
+    min-width: 0;
 
     &-title {
       margin-top: 0;
@@ -843,6 +890,47 @@ $top-grid-small-text-breakpoint: 370px;
     font-size: 0.8rem;
     margin-top: 0.75rem;
     opacity: 0.5;
+  }
+}
+
+.council-postcodes {
+  &-note {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+  }
+
+  &-postcode {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0;
+    color: inherit;
+    text-decoration: none;
+    border-top: 1px solid hsl(0, 0%, 90%);
+
+    &:hover {
+      background: hsl(0, 0%, 98%);
+    }
+
+    &:active {
+      background: hsl(0, 0%, 97%);
+    }
+
+    &-num {
+      margin-right: 0.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: hsl(123, 50%, 28%);
+      text-decoration: underline;
+    }
+
+    &-suburbs {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
   }
 }
 
