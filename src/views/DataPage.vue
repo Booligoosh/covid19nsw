@@ -21,6 +21,19 @@
         <div class="suburbs-text">
           {{ suburbsText }}
         </div>
+        <div class="postcode-council-text">
+          Part of
+          <span v-for="(slug, i) of postcodeCouncilSlugs" :key="slug">
+            <router-link
+              :to="{
+                name: 'CouncilPage',
+                params: { councilSlug: slug },
+              }"
+              >{{ postcodeCouncilDisplayNames[i] }}</router-link
+            >
+            {{ postcodeCouncilSlugs.length - 1 > i ? "& " : "" }}
+          </span>
+        </div>
       </h1>
       <div class="stat-numbers">
         <div class="stat-numbers-item">
@@ -238,6 +251,7 @@ import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
 import postcodesForCouncil from "@/data/built/postcodesForCouncil.json";
+import councilsForPostcode from "@/data/built/councilsForPostcode.json";
 
 const AVG_PERIOD = 5;
 
@@ -308,6 +322,16 @@ export default {
           const suburbs = suburbsForPostcode[postcodeNumber];
           return { postcodeNumber, suburbs };
         }
+      );
+    },
+    postcodeCouncilDisplayNames() {
+      return councilsForPostcode[this.postcodeIndex]?.map(
+        getCouncilDisplayName
+      );
+    },
+    postcodeCouncilSlugs() {
+      return councilsForPostcode[this.postcodeIndex]?.map((councilIndex) =>
+        councilNames[councilIndex].replace(/ /g, "-").toLowerCase()
       );
     },
     vaccinePercentages() {
@@ -669,6 +693,22 @@ $top-grid-small-text-breakpoint: 370px;
       font-weight: normal;
       font-size: 0.9rem;
       margin-top: 0.1rem;
+    }
+
+    .postcode-council-text {
+      margin-top: 0.4rem;
+      font-weight: 400;
+      font-size: 0.9rem;
+
+      @media screen and (max-width: $top-grid-breakpoint) {
+        font-size: 0.85rem;
+        opacity: 0.8;
+      }
+
+      a {
+        color: inherit;
+        font-weight: 600;
+      }
     }
   }
   .stat-numbers {

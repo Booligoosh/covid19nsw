@@ -61,12 +61,16 @@ async function fetchData() {
 
   // Calculate cases
   console.time(
-    "Generate cases.json, cityCouncilIndices.json & postcodesForCouncil.json"
+    "Generate cases.json, cityCouncilIndices.json, postcodesForCouncil.json & councilsForPostcode.json"
   );
   const cityCouncilIndices = [];
   const postcodesForCouncil = new Array(councilNames.length)
     .fill(0)
     .map(() => new Set());
+  const councilsForPostcode = new Array(postcodes.length)
+    .fill(0)
+    .map(() => new Set());
+
   const casesMin = cases.map((caseRow) => {
     // POSTCODE STUFF
     const postcode = Number(caseRow.postcode);
@@ -104,6 +108,14 @@ async function fetchData() {
     if (councilNameIndex !== -1)
       postcodesForCouncil[councilNameIndex].add(postcode);
 
+    // Side quest: add to councilsForPostcode.json
+    if (
+      postcodeIndex !== -1 &&
+      councilNameIndex !== -1 &&
+      councilName !== "Correctional settings"
+    )
+      councilsForPostcode[postcodeIndex].add(councilNameIndex);
+
     // RETURN
     return [postcodeIndex, dateIndex, sourceIndex, councilNameIndex];
   });
@@ -123,8 +135,12 @@ async function fetchData() {
       )
     )
   );
+  fs.writeFileSync(
+    "./src/data/built/councilsForPostcode.json",
+    JSON.stringify(councilsForPostcode.map((set) => Array.from(set).sort()))
+  );
   console.timeEnd(
-    "Generate cases.json, cityCouncilIndices.json & postcodesForCouncil.json"
+    "Generate cases.json, cityCouncilIndices.json, postcodesForCouncil.json & councilsForPostcode.json"
   );
 
   console.time("Generate postcodeCounts.json");
