@@ -74,11 +74,17 @@
       <GlobalChooser v-if="$route.meta.showSearch" />
       <a
         class="nav-back-btn"
-        v-if="
-          $store.getters.canGoBack &&
-          ($route.name === 'PostcodePage' || $route.name === 'CouncilPage')
+        v-if="$route.name === 'PostcodePage' || $route.name === 'CouncilPage'"
+        @click="
+          $store.getters.canGoBack
+            ? $router.go(-1)
+            : $router.push({
+                name:
+                  $route.name === 'CouncilPage'
+                    ? 'CouncilsPage'
+                    : 'PostcodesPage',
+              })
         "
-        @click="$router.go(-1)"
       >
         ← Go back
       </a>
