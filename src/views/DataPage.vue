@@ -547,8 +547,8 @@ export default {
         type: this.sourceMode ? "bar" : "axis-mixed",
         // Possibly todo later - make graphs line up
         // regardless of if legend is present:
-        // height: this.sourceMode ? 340 : 300,
-        height: 300,
+        // height: this.sourceMode ? 315 : 275,
+        height: 275,
         colors: this.sourceMode
           ? ["green", "orange", "dark-grey"]
           : this.newCasesMode
@@ -755,8 +755,8 @@ $top-grid-small-text-breakpoint: 370px;
   margin-right: -23px;
   // Hard-coded height measured in DevTools so the page doesn't scroll
   // back to the top when the contents are briefly removed and re-rendered.
-  height: 303.5px;
-  // height: 343.5px;
+  height: 278.5px;
+  // height: 318.5px;
 
   .chart-container svg.frappe-chart.chart {
     max-width: 100%;
