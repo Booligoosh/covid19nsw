@@ -72,6 +72,16 @@
         </router-link>
       </nav>
       <GlobalChooser v-if="$route.meta.showSearch" />
+      <a
+        class="nav-back-btn"
+        v-if="
+          $store.getters.canGoBack &&
+          ($route.name === 'PostcodePage' || $route.name === 'CouncilPage')
+        "
+        @click="$router.go(-1)"
+      >
+        ← Go back
+      </a>
     </div>
     <div class="page-wrapper">
       <router-view class="page" />
@@ -249,6 +259,17 @@ body,
           background: hsl(0, 0%, 92%);
         }
       }
+    }
+
+    &-back-btn {
+      display: block;
+      width: max-content;
+      color: inherit;
+      opacity: 0.5;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      text-decoration: underline;
     }
   }
   .page {

@@ -156,6 +156,8 @@ const router = new VueRouter({
   routes,
 });
 
+let prevHistoryStateKey = null;
+
 router.afterEach((to) => {
   store.commit(
     "setPageTitle",
@@ -165,6 +167,14 @@ router.afterEach((to) => {
     "setPageDescription",
     to.meta.description?.replace("<postcode>", to.params.postcode)
   );
+  // Detect whether the navigation was back or forwards,
+  // and update the navigation stack size accordingly.
+  // This relies on the fact that Vue Router state keys
+  // always increment for each new page added to the history.
+  const newHistoryStateKey = Number(window.history.state.key);
+  const isBack = prevHistoryStateKey > newHistoryStateKey;
+  store.commit("changeNavigationStackSize", isBack ? -1 : 1);
+  prevHistoryStateKey = newHistoryStateKey;
 
   document
     .querySelector("link[rel=canonical]")

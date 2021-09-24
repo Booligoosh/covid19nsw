@@ -41,6 +41,7 @@ const store = new Vuex.Store({
     caseLocations: null,
     pageTitle: DEFAULT_PAGE_TITLE,
     pageDescription: DEFAULT_PAGE_DESCRIPTION,
+    navigationStackSize: 0,
     // Chart options stored globally so they persist between pages
     chartNumDays: calculateDefaultChartNumDays(),
     newCasesMode: true,
@@ -49,6 +50,17 @@ const store = new Vuex.Store({
     listPageCasesSort: "newCasesThisWeek",
     listPageVaccinationsSort: "dose2",
     listPagePerPopMode: false,
+  },
+  getters: {
+    canGoBack(state) {
+      console.log("navigationStackSize:", state.navigationStackSize);
+      // 0 is before the first route has been loaded
+      // 1 is after the first rote has been loaded
+      // >1 indicates more than 1 route has been loaded,
+      // therefore going back is safe and will stay in
+      // the domain.
+      return state.navigationStackSize > 1;
+    },
   },
   mutations: {
     setError(state, error = "") {
@@ -78,6 +90,9 @@ const store = new Vuex.Store({
       document
         .querySelectorAll(".page-description-meta")
         .forEach((el) => el.setAttribute("content", pageDescription));
+    },
+    changeNavigationStackSize(state, change) {
+      state.navigationStackSize += change;
     },
     setChartNumDays(state, chartNumDays) {
       state.chartNumDays = chartNumDays;
