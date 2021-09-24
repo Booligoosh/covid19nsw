@@ -53,7 +53,6 @@ const store = new Vuex.Store({
   },
   getters: {
     canGoBack(state) {
-      console.log("navigationStackSize:", state.navigationStackSize);
       // 0 is before the first route has been loaded
       // 1 is after the first rote has been loaded
       // >1 indicates more than 1 route has been loaded,
@@ -93,6 +92,7 @@ const store = new Vuex.Store({
     },
     changeNavigationStackSize(state, change) {
       state.navigationStackSize += change;
+      console.log("navigationStackSize:", state.navigationStackSize);
     },
     setChartNumDays(state, chartNumDays) {
       state.chartNumDays = chartNumDays;
