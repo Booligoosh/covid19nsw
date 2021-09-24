@@ -815,9 +815,11 @@ $top-grid-small-text-breakpoint: 370px;
   $horizontal-gap: 1.5rem;
   $vertical-gap: 0.5rem;
   margin: $vertical-gap * -0.5 $horizontal-gap * -0.5;
+  max-width: 100%;
 
   &-card {
     margin: $vertical-gap * 0.5 $horizontal-gap * 0.5;
+    max-width: 100%;
 
     &-num {
       font-size: 1.2rem;
