@@ -134,7 +134,7 @@
                     `type-${segmentType}`,
                     segmentType === 1 &&
                     isCouncil &&
-                    vaccinePercentages[0] !== '>95%'
+                    vaccinePercentages[0] !== '95%+'
                       ? 'precise'
                       : '',
                   ]"
@@ -164,7 +164,7 @@
                     `type-${segmentType}`,
                     segmentType === 1 &&
                     isCouncil &&
-                    vaccinePercentages[1] !== '>95%'
+                    vaccinePercentages[1] !== '95%+'
                       ? 'precise'
                       : '',
                   ]"

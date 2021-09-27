@@ -27,8 +27,8 @@ module.exports = () => {
       const state = row[STATE_NAME_HEADER];
       if (state === STATE_NAME) {
         const lgaName = row[LGA_NAME_HEADER];
-        const firstDosePct = row[DOSE_1_HEADER];
-        const secondDosePct = row[DOSE_2_HEADER];
+        const firstDosePct = row[DOSE_1_HEADER].replace(">95%", "95%+");
+        const secondDosePct = row[DOSE_2_HEADER].replace(">95%", "95%+");
 
         if (firstDosePct !== "N/A" && secondDosePct !== "N/A")
           vaccinationsByRawLgaName[lgaName] = [firstDosePct, secondDosePct];
