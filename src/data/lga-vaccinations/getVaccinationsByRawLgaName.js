@@ -13,8 +13,8 @@ module.exports = () => {
   const STATE_NAME = "New South Wales";
   const STATE_NAME_HEADER = "State of Residence";
   const LGA_NAME_HEADER = "LGA 2019 Name of Residence";
-  const DOSE_1_HEADER = "% Received dose 1 REMOTE_FLAGGED";
-  const DOSE_2_HEADER = "% Received dose 2 REMOTE_FLAGGED";
+  const DOSE_1_HEADER = "% Received dose 1 ";
+  const DOSE_2_HEADER = "% Received dose 2 ";
 
   const file = xlsx.readFile(__dirname + "/" + FILE_NAME);
 
