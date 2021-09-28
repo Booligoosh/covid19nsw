@@ -187,7 +187,9 @@ async function fetchData() {
   ).then((r) => r.json());
   console.timeEnd("Fetch postcode vaccinations endpoint");
 
-  console.time("Generate postcodeVaccinations.json");
+  console.time(
+    "Generate postcodeVaccinations.json + postcodeVaccinationHistory.json"
+  );
   const postcodeVaccinationsAsOf = Object.keys(postcodeVaccinationData[2000])
     .sort()
     .pop();
@@ -246,7 +248,9 @@ async function fetchData() {
     "./src/data/built/postcodeVaccinationHistory.json",
     JSON.stringify(vaccinationHistoryByPostcode)
   );
-  console.timeEnd("Generate postcodeVaccinations.json");
+  console.timeEnd(
+    "Generate postcodeVaccinations.json + postcodeVaccinationHistory.json"
+  );
 
   console.time("Fetch council vaccinations endpoint");
   const councilVaccinationData = await fetch(
@@ -256,7 +260,6 @@ async function fetchData() {
     .then((r) => r.data);
   console.timeEnd("Fetch council vaccinations endpoint");
 
-  console.time("Generate councilVaccinations.json");
   let councilVaccinationsAsOf = Object.keys(
     Object.values(councilVaccinationData)[0]
   )
@@ -264,31 +267,10 @@ async function fetchData() {
     .pop();
   const spreadsheetAsOf = require("./src/data/lga-vaccinations/asOf.json");
 
-  const vaccinationsByCouncilIndex = {};
-
-  if (councilVaccinationsAsOf >= spreadsheetAsOf) {
-    // NSW Gov data is more recent, use traditional method
-    console.log("Council vaccinations method: Traditional");
-
-    Object.values(councilVaccinationData).forEach((dateObjs) => {
-      const latestData = dateObjs[councilVaccinationsAsOf];
-
-      const councilName = processCouncilName(latestData.lga_name);
-      const dose1 = latestData.percPopAtLeastFirst_commonwealth;
-      const dose2 = latestData.percPopFullyVaccinated_commonwealth;
-
-      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
-        if (!councilNames.includes(councilName)) councilNames.push(councilName);
-
-        vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = [
-          dose1,
-          dose2,
-        ];
-      }
-    });
-  } else {
-    // Spreadsheet data is more recent, use spreadsheet parsing method
-    console.log("Council vaccinations method: Spreadsheet parsing");
+  // If latest spreadsheet data is more recent than latest NSW Health
+  // endpoint data, supplement that data with the latest spreadsheet values
+  if (spreadsheetAsOf > councilVaccinationsAsOf) {
+    console.time("Supplement NSW Health data with spreadsheet parsing");
 
     councilVaccinationsAsOf = spreadsheetAsOf;
 
@@ -296,16 +278,81 @@ async function fetchData() {
       require("./src/data/lga-vaccinations/getVaccinationsByRawLgaName")();
 
     Object.entries(vaccinationsByRawLgaName).forEach(([rawLgaName, data]) => {
-      const councilName = processCouncilName(rawLgaName);
-      if (!councilNames.includes(councilName)) councilNames.push(councilName);
-      vaccinationsByCouncilIndex[councilNames.indexOf(councilName)] = data;
+      let objForRawLgaName = Object.values(councilVaccinationData).find(
+        (councilObj) => Object.values(councilObj)[0].lga_name === rawLgaName
+      );
+      // if (!objForRawLgaName) {
+      //   const key = Math.random();
+      //   councilVaccinationData[key] = {};
+      //   objForRawLgaName = councilVaccinationData[key];
+      // }
+      objForRawLgaName[spreadsheetAsOf] = {
+        lga_name: rawLgaName,
+        percPopAtLeastFirst_commonwealth: data[0],
+        percPopFullyVaccinated_commonwealth: data[1],
+      };
     });
+    console.timeEnd("Supplement NSW Health data with spreadsheet parsing");
   }
+
+  console.time(
+    "Generate councilVaccinations.json + councilVaccinationHistory.json"
+  );
+  // Regular council vaccinations processing code
+  const vaccinationsByCouncilIndex = {};
+  const vaccinationHistoryByCouncilIndex = {};
+
+  Object.values(councilVaccinationData).forEach((allData) => {
+    const latestData = allData[councilVaccinationsAsOf];
+    const latestPercents = getCouncilPctsFromDateObj(latestData);
+
+    if (latestPercents) {
+      const councilName = processCouncilName(latestData.lga_name);
+      // Add to councilNames array if not there already
+      if (!councilNames.includes(councilName)) councilNames.push(councilName);
+      const councilNameIndex = councilNames.indexOf(councilName);
+      // Add to vaccinationsByCouncilIndex
+      vaccinationsByCouncilIndex[councilNameIndex] = latestPercents;
+      // Historical stuff
+      let last1stDosePct = null;
+      let last2ndDosePct = null;
+      const dose1History = {};
+      const dose2History = {};
+      for (const dateKey of Object.keys(allData).sort()) {
+        const percents = getCouncilPctsFromDateObj(allData[dateKey]);
+        if (percents) {
+          const [dose1, dose2] = percents;
+          if (dose1 && dose1 !== last1stDosePct) {
+            dose1History[minifyDate(dateKey)] = Number(
+              dose1.replace(/[+%]/g, "")
+            );
+            last1stDosePct = dose1;
+          }
+          if (dose2 && dose2 !== last2ndDosePct) {
+            dose2History[minifyDate(dateKey)] = Number(
+              dose2.replace(/[+%]/g, "")
+            );
+            last2ndDosePct = dose2;
+          }
+        }
+      }
+      vaccinationHistoryByCouncilIndex[councilNameIndex] = [
+        dose1History,
+        dose2History,
+      ];
+    }
+  });
   fs.writeFileSync(
     "./src/data/built/councilVaccinations.json",
     JSON.stringify(vaccinationsByCouncilIndex)
   );
-  console.timeEnd("Generate councilVaccinations.json");
+  fs.writeFileSync(
+    "./src/data/built/councilVaccinationHistory.json",
+    JSON.stringify(vaccinationHistoryByCouncilIndex)
+  );
+  console.timeEnd(
+    "Generate councilVaccinations.json + councilVaccinationHistory.json"
+  );
 
   // Write vaccinationsAsOf.json
   fs.writeFileSync(
@@ -407,16 +454,28 @@ function uniqSortedByFreq(array) {
   return Object.keys(freqs).sort((a, b) => freqs[b] - freqs[a]);
 }
 
-function processPostcodePct(str) {
+function processVaccinePct(str) {
   if (!str || str === "suppressed") return null;
-  // Replace "20%-30%" with "20-30%" etc, replace "<10%" with "0-9%"
-  return str.replace("%-", "-").replace("<10%", "0-9%");
+  // - Replace "20%-30%" with "20-30%" etc
+  // - Replace "<10%" with "0-9%"
+  // - Replace ">95%" with "95%+"
+  return str.replace("%-", "-").replace("<10%", "0-9%").replace(">95%", "95%+");
 }
 
 function getPostcodePctsFromDateObj(dateObj) {
   // dateObj is the object for each date
-  const dose1 = processPostcodePct(dateObj.percPopAtLeastFirstDose10WidthRange);
-  const dose2 = processPostcodePct(dateObj.percPopFullyVaccinated10WidthRange);
+  if (!dateObj) return null;
+  const dose1 = processVaccinePct(dateObj.percPopAtLeastFirstDose10WidthRange);
+  const dose2 = processVaccinePct(dateObj.percPopFullyVaccinated10WidthRange);
+  if (dose1 && dose2) return [dose1, dose2];
+  else return null;
+}
+
+function getCouncilPctsFromDateObj(dateObj) {
+  // dateObj is the object for each date
+  if (!dateObj) return null;
+  const dose1 = processVaccinePct(dateObj.percPopAtLeastFirst_commonwealth);
+  const dose2 = processVaccinePct(dateObj.percPopFullyVaccinated_commonwealth);
   if (dose1 && dose2) return [dose1, dose2];
   else return null;
 }

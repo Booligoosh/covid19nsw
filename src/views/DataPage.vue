@@ -82,13 +82,7 @@
         </button>
         <button
           v-if="vaccinePercentages"
-          @click="
-            if (isCouncil) {
-              alert('Council vaccination charts are coming soon!');
-            } else {
-              $store.commit('setChartVaccineMode', true);
-            }
-          "
+          @click="$store.commit('setChartVaccineMode', true)"
           :class="{ active: !newCasesMode && vaccineMode }"
         >
           Vaccinations
@@ -269,6 +263,7 @@ import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
 import dates from "@/data/built/dates.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
+import councilVaccinationHistory from "@/data/built/councilVaccinationHistory.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import postcodeVaccinationHistory from "@/data/built/postcodeVaccinationHistory.json";
 import postcodes from "@/data/built/postcodes.json";
@@ -294,11 +289,7 @@ export default {
   },
   computed: {
     vaccineMode() {
-      return (
-        !this.isCouncil &&
-        this.vaccinePercentages &&
-        this.$store.state.chartVaccineMode
-      );
+      return this.vaccinePercentages && this.$store.state.chartVaccineMode;
     },
     chartNumDays() {
       return this.vaccineMode
@@ -569,11 +560,14 @@ export default {
       return sourceChartDatasets;
     },
     vaccineChartDatasets() {
-      const [dose1History, dose2History] =
-        postcodeVaccinationHistory[this.postcodeNumber];
+      const [dose1History, dose2History] = this.isCouncil
+        ? councilVaccinationHistory[this.councilNameIndex]
+        : postcodeVaccinationHistory[this.postcodeNumber];
 
       const dose1Values = [];
       const dose2Values = [];
+
+      const multiplier = this.isCouncil ? 1 : 10;
 
       this.rawDates.forEach((date) => {
         const dose1Index =
@@ -582,7 +576,7 @@ export default {
               .filter((dateKey) => dateKey <= date)
               .pop()
           ];
-        dose1Values.push((dose1Index || 0) * 10);
+        dose1Values.push((dose1Index || 0) * multiplier);
 
         const dose2Index =
           dose2History[
@@ -590,7 +584,7 @@ export default {
               .filter((dateKey) => dateKey <= date)
               .pop()
           ];
-        dose2Values.push((dose2Index || 0) * 10);
+        dose2Values.push((dose2Index || 0) * multiplier);
       });
 
       return [
@@ -633,7 +627,10 @@ export default {
           !this.sourceMode && !this.allTimeMode && !this.outbreakMode,
         tooltipOptions: {
           formatTooltipY: this.vaccineMode
-            ? (n) => getVaccineRangeStringFromIndex(n / 10)
+            ? this.isCouncil
+              ? // If the council % is EXACTLY 95.0, assume it's 95%+
+                (n) => (n + "%").replace("95%", "95%+")
+              : (n) => getVaccineRangeStringFromIndex(n / 10)
             : (n) => n,
         },
         lineOptions: {
