@@ -93,7 +93,7 @@
         >
           Vaccinations
         </button>
-        <label v-if="!vaccineMode">
+        <label v-show="!vaccineMode">
           <input type="checkbox" v-model="$store.state.sourceMode" />
           By source
         </label>
