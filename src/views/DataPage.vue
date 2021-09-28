@@ -671,7 +671,7 @@ export default {
         },
         axisOptions: {
           xIsSeries: true,
-          xAxisMode: this.allTimeMode ? "tick" : "span",
+          xAxisMode: this.allTimeMode || this.outbreakMode ? "tick" : "span",
         },
         barOptions: { stacked: this.sourceMode ? 1 : 0, spaceRatio: 0.25 },
         animate: false,
