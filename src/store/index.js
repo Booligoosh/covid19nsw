@@ -13,8 +13,7 @@ import {
   DEFAULT_PAGE_TITLE,
   DEFAULT_PAGE_DESCRIPTION,
   SOURCE_TIMEZONE,
-  ALL_TIME_START_DATE,
-  OUTBREAK_START_DATE,
+  ALL_TIME_FLAG,
 } from "../constants";
 import metadataModified from "@/data/built/metadataModified.json";
 import {
@@ -46,7 +45,7 @@ const store = new Vuex.Store({
     navigationStackSize: 0,
     // Chart options stored globally so they persist between pages
     casesChartNumDays: calculateDefaultChartNumDays(),
-    vaccineChartNumDays: 0,
+    vaccineChartNumDays: ALL_TIME_FLAG,
     newCasesMode: true,
     sourceMode: false,
     chartVaccineMode: false,
@@ -63,12 +62,6 @@ const store = new Vuex.Store({
       // therefore going back is safe and will stay in
       // the domain.
       return state.navigationStackSize > 1;
-    },
-    allTimeDays(state) {
-      return state.temporalCoverageTo.diff(ALL_TIME_START_DATE, "day") + 1;
-    },
-    outbreakDays(state) {
-      return state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") + 1;
     },
   },
   mutations: {
@@ -147,8 +140,6 @@ const store = new Vuex.Store({
   },
   modules: {},
 });
-
-store.state.vaccineChartNumDays = store.getters.outbreakDays;
 
 export default store;
 

@@ -113,11 +113,14 @@
         <button
           @click="$store.commit('setChartNumDays', [outbreakDays, vaccineMode])"
           :class="{ active: outbreakMode }"
+          v-if="!vaccineMode"
         >
           This wave
         </button>
         <button
-          @click="$store.commit('setChartNumDays', [allTimeDays, vaccineMode])"
+          @click="
+            $store.commit('setChartNumDays', [ALL_TIME_FLAG, vaccineMode])
+          "
           :class="{ active: allTimeMode }"
         >
           All-time
@@ -250,8 +253,13 @@ import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
   SOURCE_STRINGS,
+  ALL_TIME_START_DATE,
+  OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
+  POSTCODE_VACCINATIONS_START_DATE,
+  COUNCIL_VACCINATIONS_START_DATE,
   VACCINATIONS_NOTE,
+  ALL_TIME_FLAG,
 } from "@/constants.js";
 import {
   getVaccineRangeIndex,
@@ -285,6 +293,7 @@ export default {
     return {
       OUTBREAK_START_DATE_FORMATTED,
       VACCINATIONS_NOTE,
+      ALL_TIME_FLAG,
     };
   },
   computed: {
@@ -292,9 +301,12 @@ export default {
       return this.vaccinePercentages && this.$store.state.chartVaccineMode;
     },
     chartNumDays() {
-      return this.vaccineMode
+      const chartNumDays = this.vaccineMode
         ? this.$store.state.vaccineChartNumDays
         : this.$store.state.casesChartNumDays;
+
+      if (chartNumDays === ALL_TIME_FLAG) return this.allTimeDays;
+      else return chartNumDays;
     },
     newCasesMode() {
       return !this.vaccineMode && this.$store.state.newCasesMode;
@@ -315,10 +327,24 @@ export default {
       return this.newCasesMode ? AVG_PERIOD : 1;
     },
     allTimeDays() {
-      return this.$store.getters.allTimeDays;
+      return this.vaccineMode
+        ? this.daysSinceVaccinationStart
+        : this.$store.state.temporalCoverageTo.diff(
+            ALL_TIME_START_DATE,
+            "day"
+          ) + 1;
     },
     outbreakDays() {
-      return this.$store.getters.outbreakDays;
+      return (
+        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
+        1
+      );
+    },
+    daysSinceVaccinationStart() {
+      const startDate = this.isCouncil
+        ? COUNCIL_VACCINATIONS_START_DATE
+        : POSTCODE_VACCINATIONS_START_DATE;
+      return this.$store.state.temporalCoverageTo.diff(startDate, "day") + 1;
     },
     suburbsText() {
       return (
