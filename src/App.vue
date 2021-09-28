@@ -2,19 +2,21 @@
   <div id="app">
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
-      <div class="nav-logo">
-        <div class="nav-logo-spacer left" />
-        <img
-          svg-inline
-          src="@/assets/logo.svg"
-          class="nav-logo-img"
-          title="COVID-19 NSW"
-          width="450"
-          height="450"
-        />
-        <div class="nav-logo-title">COVID-19 NSW</div>
-        <div class="nav-logo-spacer right" />
-        <div class="nav-logo-links">
+      <div class="nav-top">
+        <div class="nav-top-spacer left" />
+        <router-link to="/" class="nav-top-logo">
+          <img
+            svg-inline
+            src="@/assets/logo.svg"
+            class="nav-top-logo-img"
+            title="COVID-19 NSW"
+            width="450"
+            height="450"
+          />
+          <div class="nav-top-logo-title">COVID-19 NSW</div>
+        </router-link>
+        <div class="nav-top-spacer right" />
+        <div class="nav-top-links">
           <a href="https://www.buymeacoffee.com/booligoosh" target="_blank">
             Tip jar
           </a>
@@ -171,48 +173,55 @@ body,
     // change in GlobalChooser.vue as well
     $nav-breakpoint: 700px;
 
-    &-logo {
+    &-top {
       display: flex;
       justify-content: center;
       align-items: center;
 
       $small-logo-title-breakpoint: 333px;
-      $logo-links-width: 9rem;
+      $top-links-width: 9rem;
 
       &-spacer {
         flex-grow: 1;
 
         &.left {
-          margin-left: $logo-links-width;
+          margin-left: $top-links-width;
 
           @media screen and (max-width: $nav-breakpoint) {
             display: none;
           }
         }
       }
-      &-img {
-        width: auto;
-        height: 2rem;
-        margin-right: 0.25rem;
-
-        @media screen and (max-width: $small-logo-title-breakpoint) {
-          height: 1.5rem;
-        }
-      }
-      &-title {
-        font-weight: bold;
+      &-logo {
         display: flex;
         align-items: center;
+        color: inherit;
+        text-decoration: none;
 
-        @media screen and (max-width: $small-logo-title-breakpoint) {
-          font-size: 0.9rem;
+        &-img {
+          width: auto;
+          height: 2rem;
+          margin-right: 0.25rem;
+
+          @media screen and (max-width: $small-logo-title-breakpoint) {
+            height: 1.5rem;
+          }
+        }
+        &-title {
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+
+          @media screen and (max-width: $small-logo-title-breakpoint) {
+            font-size: 0.9rem;
+          }
         }
       }
       &-links {
         flex-shrink: 0;
         display: flex;
         justify-content: flex-end;
-        width: $logo-links-width;
+        width: $top-links-width;
 
         @media screen and (max-width: $nav-breakpoint) {
           width: unset;
