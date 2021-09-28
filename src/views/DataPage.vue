@@ -101,7 +101,7 @@
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph time period: &nbsp;</span>
         <button
-          @click="$store.commit('setChartNumDays', 14)"
+          @click="$store.commit('setChartNumDays', [14, vaccineMode])"
           :class="{ active: chartNumDays === 14 }"
         >
           2<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -109,7 +109,7 @@
           >
         </button>
         <button
-          @click="$store.commit('setChartNumDays', 28)"
+          @click="$store.commit('setChartNumDays', [28, vaccineMode])"
           :class="{ active: chartNumDays === 28 }"
         >
           4<span class="non-compact">&nbsp;</span>w<span class="non-compact"
@@ -117,13 +117,13 @@
           >
         </button>
         <button
-          @click="$store.commit('setChartNumDays', outbreakDays)"
+          @click="$store.commit('setChartNumDays', [outbreakDays, vaccineMode])"
           :class="{ active: outbreakMode }"
         >
           This wave
         </button>
         <button
-          @click="$store.commit('setChartNumDays', allTimeDays)"
+          @click="$store.commit('setChartNumDays', [allTimeDays, vaccineMode])"
           :class="{ active: allTimeMode }"
         >
           All-time
@@ -255,8 +255,6 @@
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
-  ALL_TIME_START_DATE,
-  OUTBREAK_START_DATE,
   SOURCE_STRINGS,
   OUTBREAK_START_DATE_FORMATTED,
   VACCINATIONS_NOTE,
@@ -303,7 +301,9 @@ export default {
       );
     },
     chartNumDays() {
-      return this.$store.state.chartNumDays;
+      return this.vaccineMode
+        ? this.$store.state.vaccineChartNumDays
+        : this.$store.state.casesChartNumDays;
     },
     newCasesMode() {
       return !this.vaccineMode && this.$store.state.newCasesMode;
@@ -324,16 +324,10 @@ export default {
       return this.newCasesMode ? AVG_PERIOD : 1;
     },
     allTimeDays() {
-      return (
-        this.$store.state.temporalCoverageTo.diff(ALL_TIME_START_DATE, "day") +
-        1
-      );
+      return this.$store.getters.allTimeDays;
     },
     outbreakDays() {
-      return (
-        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
-        1
-      );
+      return this.$store.getters.outbreakDays;
     },
     suburbsText() {
       return (
