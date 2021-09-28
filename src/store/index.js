@@ -46,6 +46,7 @@ const store = new Vuex.Store({
     chartNumDays: calculateDefaultChartNumDays(),
     newCasesMode: true,
     sourceMode: false,
+    chartVaccineMode: false,
     // Table options stored globally so they persist between pages
     listPageCasesSort: "newCasesThisWeek",
     listPageVaccinationsSort: "dose2",
@@ -102,6 +103,9 @@ const store = new Vuex.Store({
     },
     setSourceMode(state, sourceMode) {
       state.sourceMode = sourceMode;
+    },
+    setChartVaccineMode(state, chartVaccineMode) {
+      state.chartVaccineMode = chartVaccineMode;
     },
     setListPageCasesSort(state, key) {
       state.listPageCasesSort = key;

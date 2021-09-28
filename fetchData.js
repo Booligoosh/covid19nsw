@@ -193,26 +193,58 @@ async function fetchData() {
     .pop();
 
   const vaccinationsByPostcode = {};
+  const vaccinationHistoryByPostcode = {};
   Object.keys(postcodeVaccinationData).forEach((postcode) => {
     postcode = Number(postcode);
     if (postcodeIsValid(postcode)) {
-      const latestData =
-        postcodeVaccinationData[postcode][postcodeVaccinationsAsOf];
-      const dose1 = latestData.percPopAtLeastFirstDose10WidthRange;
-      const dose2 = latestData.percPopFullyVaccinated10WidthRange;
-      if (dose1 && dose1 !== "suppressed" && dose2 && dose2 !== "suppressed") {
-        vaccinationsByPostcode[postcode] = [
-          // Replace "20%-30%" with "20-30%" etc, replace "<10%" with "0-9%"
-          dose1.replace("%-", "-").replace("<10%", "0-9%"),
-          dose2.replace("%-", "-").replace("<10%", "0-9%"),
-        ];
+      const allData = postcodeVaccinationData[postcode];
+      const latestData = allData[postcodeVaccinationsAsOf];
+      const latestPercents = getPostcodePctsFromDateObj(latestData);
+      if (latestPercents) {
+        // Add to vaccinationsByPostcode
+        vaccinationsByPostcode[postcode] = latestPercents;
+        // Add to postcodes array if not there already
         if (!postcodes.includes(postcode)) postcodes.push(postcode);
+        // Historical stuff
+        let last1stDosePct = null;
+        let last2ndDosePct = null;
+        const dose1History = {};
+        const dose2History = {};
+        // History object:
+        // {
+        //   ...
+        //   "Date reached (YYYY-MM-DD)": "20-30%",
+        //   "Date reached (YYYY-MM-DD)": "30-40%",
+        //   ...
+        // }
+        // Basically the same as the input date structure, but
+        // only including the *first* date each new number was
+        // reached to save file size
+        for (const dateKey of Object.keys(allData).sort()) {
+          const percents = getPostcodePctsFromDateObj(allData[dateKey]);
+          if (percents) {
+            const [dose1, dose2] = percents;
+            if (dose1 && dose1 !== last1stDosePct) {
+              dose1History[minifyDate(dateKey)] = getVaccineRangeIndex(dose1);
+              last1stDosePct = dose1;
+            }
+            if (dose2 && dose2 !== last2ndDosePct) {
+              dose2History[minifyDate(dateKey)] = getVaccineRangeIndex(dose2);
+              last2ndDosePct = dose2;
+            }
+          }
+        }
+        vaccinationHistoryByPostcode[postcode] = [dose1History, dose2History];
       }
     }
   });
   fs.writeFileSync(
     "./src/data/built/postcodeVaccinations.json",
     JSON.stringify(vaccinationsByPostcode)
+  );
+  fs.writeFileSync(
+    "./src/data/built/postcodeVaccinationHistory.json",
+    JSON.stringify(vaccinationHistoryByPostcode)
   );
   console.timeEnd("Generate postcodeVaccinations.json");
 
@@ -309,9 +341,13 @@ function processCouncilName(rawCouncilName) {
 }
 
 function getMinifiedDate(c) {
+  return minifyDate(c.notification_date);
+}
+
+function minifyDate(dateString) {
   // - "2020" replaced with "0", "2021" replaced with "1" etc.
   // - Dashes removed
-  return c.notification_date.substr(3).replace(/-/g, "");
+  return dateString.substr(3).replace(/-/g, "");
 }
 
 function getCounts(
@@ -369,4 +405,25 @@ function uniqSortedByFreq(array) {
     return freqs;
   }, {});
   return Object.keys(freqs).sort((a, b) => freqs[b] - freqs[a]);
+}
+
+function processPostcodePct(str) {
+  if (!str || str === "suppressed") return null;
+  // Replace "20%-30%" with "20-30%" etc, replace "<10%" with "0-9%"
+  return str.replace("%-", "-").replace("<10%", "0-9%");
+}
+
+function getPostcodePctsFromDateObj(dateObj) {
+  // dateObj is the object for each date
+  const dose1 = processPostcodePct(dateObj.percPopAtLeastFirstDose10WidthRange);
+  const dose2 = processPostcodePct(dateObj.percPopFullyVaccinated10WidthRange);
+  if (dose1 && dose2) return [dose1, dose2];
+  else return null;
+}
+
+// Also in src/functions.js, make sure to update both at once
+function getVaccineRangeIndex(rangeString) {
+  if (!rangeString) return -1;
+  const rangeStart = rangeString.match(/^\d*/)[0]; // Matches the first number before non-digit characters
+  return Math.floor(Number(rangeStart) / 10);
 }

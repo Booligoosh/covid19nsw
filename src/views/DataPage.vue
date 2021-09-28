@@ -63,18 +63,37 @@
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph type: &nbsp;</span>
         <button
-          @click="$store.commit('setNewCasesMode', false)"
-          :class="{ active: !newCasesMode }"
+          @click="
+            $store.commit('setNewCasesMode', false);
+            $store.commit('setChartVaccineMode', false);
+          "
+          :class="{ active: !newCasesMode && !vaccineMode }"
         >
           Total cases
         </button>
         <button
-          @click="$store.commit('setNewCasesMode', true)"
-          :class="{ active: newCasesMode }"
+          @click="
+            $store.commit('setNewCasesMode', true);
+            $store.commit('setChartVaccineMode', false);
+          "
+          :class="{ active: newCasesMode && !vaccineMode }"
         >
           New cases
         </button>
-        <label>
+        <button
+          v-if="vaccinePercentages"
+          @click="
+            if (isCouncil) {
+              alert('Council vaccination charts are coming soon!');
+            } else {
+              $store.commit('setChartVaccineMode', true);
+            }
+          "
+          :class="{ active: !newCasesMode && vaccineMode }"
+        >
+          Vaccinations
+        </button>
+        <label v-if="!vaccineMode">
           <input type="checkbox" v-model="$store.state.sourceMode" />
           By source
         </label>
@@ -242,13 +261,18 @@ import {
   OUTBREAK_START_DATE_FORMATTED,
   VACCINATIONS_NOTE,
 } from "@/constants.js";
-import { getVaccineRangeIndex, getCouncilDisplayName } from "@/functions.js";
+import {
+  getVaccineRangeIndex,
+  getVaccineRangeStringFromIndex,
+  getCouncilDisplayName,
+} from "@/functions.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
 import cases from "@/data/built/cases.json";
 import dates from "@/data/built/dates.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
+import postcodeVaccinationHistory from "@/data/built/postcodeVaccinationHistory.json";
 import postcodes from "@/data/built/postcodes.json";
 import councilNames from "@/data/built/councilNames.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
@@ -271,14 +295,21 @@ export default {
     };
   },
   computed: {
+    vaccineMode() {
+      return (
+        !this.isCouncil &&
+        this.vaccinePercentages &&
+        this.$store.state.chartVaccineMode
+      );
+    },
     chartNumDays() {
       return this.$store.state.chartNumDays;
     },
     newCasesMode() {
-      return this.$store.state.newCasesMode;
+      return !this.vaccineMode && this.$store.state.newCasesMode;
     },
     sourceMode() {
-      return this.$store.state.sourceMode;
+      return !this.vaccineMode && this.$store.state.sourceMode;
     },
     isCouncil() {
       return this.$route.name === "CouncilPage";
@@ -543,8 +574,48 @@ export default {
       console.timeEnd("Calculate sourceChartDatasets");
       return sourceChartDatasets;
     },
+    vaccineChartDatasets() {
+      const [dose1History, dose2History] =
+        postcodeVaccinationHistory[this.postcodeNumber];
+
+      const dose1Values = [];
+      const dose2Values = [];
+
+      this.rawDates.forEach((date) => {
+        const dose1Index =
+          dose1History[
+            Object.keys(dose1History)
+              .filter((dateKey) => dateKey <= date)
+              .pop()
+          ];
+        dose1Values.push((dose1Index || 0) * 10);
+
+        const dose2Index =
+          dose2History[
+            Object.keys(dose2History)
+              .filter((dateKey) => dateKey <= date)
+              .pop()
+          ];
+        dose2Values.push((dose2Index || 0) * 10);
+      });
+
+      return [
+        {
+          name: "1st dose",
+          values: dose1Values,
+          chartType: "line",
+        },
+        {
+          name: "2nd dose",
+          values: dose2Values,
+          chartType: "line",
+        },
+      ];
+    },
     chartDatasets() {
-      return this.sourceMode
+      return this.vaccineMode
+        ? this.vaccineChartDatasets
+        : this.sourceMode
         ? this.sourceChartDatasets
         : this.normalChartDatasets;
     },
@@ -555,18 +626,31 @@ export default {
         // regardless of if legend is present:
         // height: this.sourceMode ? 315 : 275,
         height: 275,
-        colors: this.sourceMode
+        colors: this.vaccineMode
+          ? // 60%, 40%: ["#6bc770", "#38943d"]
+            // 70%, 30%:
+            ["#90d594", "#2a6f2e"]
+          : this.sourceMode
           ? ["green", "orange", "dark-grey"]
           : this.newCasesMode
           ? ["light-blue", "green"]
           : ["purple"],
         valuesOverPoints:
           !this.sourceMode && !this.allTimeMode && !this.outbreakMode,
-        tooltipOptions: { formatTooltipY: (n) => n },
+        tooltipOptions: {
+          formatTooltipY: this.vaccineMode
+            ? (n) => getVaccineRangeStringFromIndex(n / 10)
+            : (n) => n,
+        },
         lineOptions: {
           regionFill: 1,
           hideDots:
-            this.allTimeMode || this.outbreakMode || this.newCasesMode ? 1 : 0,
+            this.allTimeMode ||
+            this.outbreakMode ||
+            this.newCasesMode ||
+            this.vaccineMode
+              ? 1
+              : 0,
         },
         axisOptions: {
           xIsSeries: true,
@@ -584,10 +668,14 @@ export default {
         // https://github.com/frappe/charts/issues/86#issuecomment-375557382
         // It'll only kick in when needed, which is when type=line (i.e. sourceMode
         // is false) and there is not already a zero value in the dataset.
-        yMarkers:
-          !this.sourceMode && !this.chartDatasets[0].values.includes(0)
+        yMarkers: [
+          ...(!this.sourceMode &&
+          !this.chartDatasets[0].values.includes(0) &&
+          !this.chartDatasets[1]?.values.includes(0)
             ? [{ label: "", value: 0 }]
-            : [],
+            : []),
+          ...(this.vaccineMode ? [{ label: "", value: 100 }] : []),
+        ],
       };
     },
   },
@@ -598,6 +686,9 @@ export default {
     },
   },
   methods: {
+    alert(str) {
+      alert(str);
+    },
     mainContentRendered() {
       console.log("mainContentRendered event");
       this.createChart();
@@ -777,7 +868,7 @@ $top-grid-small-text-breakpoint: 370px;
 
   &-row {
     &-name {
-      @media screen and (max-width: 520px) {
+      @media screen and (max-width: 560px) {
         display: block;
         margin-bottom: 0.5rem;
         font-size: 0.8rem;
