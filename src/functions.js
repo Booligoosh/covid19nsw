@@ -1,33 +1,12 @@
 import councilNames from "@/data/built/councilNames.json";
 import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
-const RANGE_STARTS = [
-  "0",
-  "10",
-  "20",
-  "30",
-  "40",
-  "50",
-  "60",
-  "70",
-  "80",
-  "90",
-];
 
+// Returns 0 for 0-9%, 1 for 10-19%, 8 for 80-89%, 9 for 90%+ or 95%+, etc.
+// Also works for exact council percentages, eg. Math.floor(85.6/10) is still 8
 export function getVaccineRangeIndex(rangeString) {
   if (!rangeString) return -1;
-  if (rangeString === "95%+") return 9;
-  const rangeStart = rangeString.match(/.+?\d*/)?.[0]; // Matches the first number and any characters before
-  let index = RANGE_STARTS.indexOf(rangeStart);
-
-  if (index === -1) {
-    // Assume it's a full percentage rather than a range
-    const num = Number(rangeString.replace("%", ""));
-    const rangeStart = (Math.floor(num / 10) * 10).toString();
-    console.log({ rangeStart });
-    index = RANGE_STARTS.indexOf(rangeStart);
-  }
-
-  return index;
+  const rangeStart = rangeString.match(/^\d*/)?.[0]; // Matches the first number before non-digit characters
+  return Math.floor(Number(rangeStart) / 10);
 }
 
 export function getCouncilDisplayName(councilNameIndex) {
