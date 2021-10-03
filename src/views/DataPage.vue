@@ -85,7 +85,7 @@
           @click="$store.commit('setChartVaccineMode', true)"
           :class="{ active: !newCasesMode && vaccineMode }"
         >
-          Vaccination 🆕
+          Vaccinations
         </button>
         <label v-show="!vaccineMode">
           <input type="checkbox" v-model="$store.state.sourceMode" />
