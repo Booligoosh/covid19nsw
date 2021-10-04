@@ -456,10 +456,17 @@ function uniqSortedByFreq(array) {
 
 function processVaccinePct(str) {
   if (!str || str === "suppressed") return null;
-  // - Replace "20%-30%" with "20-30%" etc
-  // - Replace "<10%" with "0-9%"
-  // - Replace ">95%" with "95%+"
-  return str.replace("%-", "-").replace("<10%", "0-9%").replace(">95%", "95%+");
+  return (
+    str
+      // - Replace "20%-30%" with "20-30%" etc
+      .replace("%-", "-")
+      // - Replace "<10%" with "0-9%"
+      .replace("<10%", "0-9%")
+      // - Replace ">95%" with "95%+"
+      .replace(">95%", "95%+")
+      // - Replace "95.0%" with "95%+" as "95%+" implies inclusivity
+      .replace("95.0%", "95%+")
+  );
 }
 
 function getPostcodePctsFromDateObj(dateObj) {
