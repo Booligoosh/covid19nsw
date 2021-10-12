@@ -210,6 +210,30 @@
       </div>
       <div
         class="other-content-card"
+        v-if="!isCouncil && censusData && population"
+      >
+        <h2 class="other-content-card-title">About this postcode</h2>
+        <table class="census-data-table">
+          <tr>
+            <td>Population</td>
+            <td>{{ formatNum(population) }}</td>
+          </tr>
+          <tr>
+            <td>Median age</td>
+            <td>{{ censusData[0] }} yrs</td>
+          </tr>
+          <tr>
+            <td>Avg people per household</td>
+            <td>{{ censusData[1] }}</td>
+          </tr>
+        </table>
+        <div class="census-data-note">
+          Population data from ABS 2020 estimated populations, all other data
+          from the 2016 Census
+        </div>
+      </div>
+      <div
+        class="other-content-card"
         v-if="
           isCouncil &&
           postcodesInCouncil &&
@@ -280,6 +304,9 @@ import postcodeCounts from "@/data/built/postcodeCounts.json";
 import councilCounts from "@/data/built/councilCounts.json";
 import postcodesForCouncil from "@/data/built/postcodesForCouncil.json";
 import councilsForPostcode from "@/data/built/councilsForPostcode.json";
+import populationByPostcode from "@/data/population/populationByPostcode.json";
+import populationByCouncil from "@/data/population/populationByCouncil.json";
+import censusDataByPostcode from "@/data/census/censusDataByPostcode.json";
 
 const AVG_PERIOD = 5;
 
@@ -357,6 +384,9 @@ export default {
         .map((cn) => cn.replace(/ /g, "-").toLowerCase())
         .indexOf(this.$route.params.councilSlug);
     },
+    councilName() {
+      return councilNames[this.councilNameIndex];
+    },
     councilDisplayName() {
       return getCouncilDisplayName(this.councilNameIndex);
     },
@@ -381,6 +411,15 @@ export default {
           councilNames[councilIndex].replace(/ /g, "-").toLowerCase()
         ) || []
       );
+    },
+    population() {
+      return this.isCouncil
+        ? populationByCouncil[this.councilName]
+        : populationByPostcode[this.postcodeNumber];
+    },
+    censusData() {
+      if (this.isCouncil) return null;
+      return censusDataByPostcode[this.postcodeNumber];
     },
     vaccinePercentages() {
       if (this.isCouncil)
@@ -705,6 +744,9 @@ export default {
   methods: {
     alert(str) {
       alert(str);
+    },
+    formatNum(num) {
+      return num.toLocaleString("en-AU");
     },
     mainContentRendered() {
       console.log("mainContentRendered event");
@@ -1088,6 +1130,44 @@ $top-grid-small-text-breakpoint: 370px;
       font-size: 0.9rem;
       opacity: 0.9;
     }
+  }
+}
+
+.census-data {
+  &-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    td {
+      border: 1px solid hsl(0, 0%, 75%);
+      padding: 0.5rem;
+
+      &:first-child {
+        font-weight: 500;
+        border-left: none;
+        padding-left: 0;
+      }
+
+      &:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+    }
+
+    tr {
+      &:first-child td {
+        border-top: none;
+      }
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &-note {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    opacity: 0.5;
   }
 }
 

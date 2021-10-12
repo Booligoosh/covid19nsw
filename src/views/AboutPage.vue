@@ -69,6 +69,14 @@
             ABS 2020 Regional population by age and sex
           </a>
         </li>
+        <li>
+          <a
+            href="https://datapacks.censusdata.abs.gov.au/datapacks/"
+            target="_blank"
+          >
+            ABS 2016 Census data
+          </a>
+        </li>
       </ul>
       <p class="bottom-note">
         <a href="https://github.com/Booligoosh/covid19nsw" target="_blank">
