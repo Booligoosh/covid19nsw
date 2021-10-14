@@ -242,7 +242,7 @@
       >
         <h2 class="other-content-card-title">Postcodes in this council</h2>
         <div class="council-postcodes-note">
-          Postcodes with 0 cases are not shown.
+          Postcodes with 0 cases are not shown. Postcodes that span multiple councils are assigned a single council by NSW Health.
         </div>
         <div class="council-postcodes">
           <router-link
