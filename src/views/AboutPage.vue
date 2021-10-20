@@ -11,8 +11,8 @@
         affiliated with the NSW government.
       </p>
       <p>
-        If you have any questions, feedback, or ideas (or job opportunities!),
-        you can <a href="mailto:me@ethan.link">email me</a>.
+        If you have any questions, feedback, or ideas, you can
+        <a href="mailto:me@ethan.link">email me</a>.
       </p>
       <h2>Data sources</h2>
       <ul>
