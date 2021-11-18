@@ -87,6 +87,7 @@ async function fetchData() {
         : [
             "Locally acquired - no links to known case or cluster",
             "Locally acquired - investigation ongoing",
+            "Under initial investigation",
           ].includes(source)
         ? 1 // Unlinked local
         : ["Interstate", "Overseas"].includes(source)
