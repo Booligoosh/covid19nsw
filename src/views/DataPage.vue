@@ -87,6 +87,10 @@
         >
           Vaccinations
         </button>
+        <label v-show="!vaccineMode && $store.state.showSourceCheckbox">
+          <input type="checkbox" @input="sourceCheckboxClickHandler" />
+          By source
+        </label>
       </div>
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph time period: &nbsp;</span>
@@ -689,6 +693,12 @@ export default {
     },
     formatNum(num) {
       return num.toLocaleString("en-AU");
+    },
+    sourceCheckboxClickHandler() {
+      this.$store.commit("hideSourceCheckbox");
+      alert(
+        `NSW Health has discontinued the source of infection dataset, meaning COVID-19 NSW can no longer show graphs by source. NSW Health's reason for discontinuation is below: \n\n"This dataset has been discontinued from 19 November 2021. NSW Health now reports daily COVID-19 cases as a total of local and overseas cases. With quarantine-free international travel, overseas origin of cases can no longer be determined immediately, but will be included in the COVID-19 weekly surveillance reports. The NSW COVID-19 cases by location dataset will continue to be published."`
+      );
     },
     mainContentRendered() {
       console.log("mainContentRendered event");
