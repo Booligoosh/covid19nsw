@@ -21,7 +21,7 @@
             href="https://data.nsw.gov.au/nsw-covid-19-data/cases"
             target="_blank"
           >
-            NSW COVID-19 cases by location and likely source of infection
+            NSW COVID-19 cases by location
           </a>
         </li>
         <li>

@@ -10,7 +10,7 @@ import PageNotFound from "@/views/PageNotFound.vue";
 Vue.use(VueRouter);
 
 const LIST_PAGE_DESCRIPTION_SUFFIX =
-  " including new cases today, cases this week, total cases, and cases by source (local/overseas/interstate).";
+  " including new cases today, cases this week and total cases.";
 
 const routes = [
   // Redirects

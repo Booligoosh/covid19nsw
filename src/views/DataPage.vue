@@ -87,10 +87,6 @@
         >
           Vaccinations
         </button>
-        <label v-show="!vaccineMode">
-          <input type="checkbox" v-model="$store.state.sourceMode" />
-          By source
-        </label>
       </div>
       <div class="chart-config-row">
         <span class="chart-config-row-name">Graph time period: &nbsp;</span>
@@ -277,7 +273,6 @@
 import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
-  SOURCE_STRINGS,
   ALL_TIME_START_DATE,
   OUTBREAK_START_DATE,
   OUTBREAK_START_DATE_FORMATTED,
@@ -338,9 +333,6 @@ export default {
     },
     newCasesMode() {
       return !this.vaccineMode && this.$store.state.newCasesMode;
-    },
-    sourceMode() {
-      return !this.vaccineMode && this.$store.state.sourceMode;
     },
     isCouncil() {
       return this.$route.name === "CouncilPage";
@@ -452,22 +444,16 @@ export default {
         return (lastSegmentValue * 10).toFixed(0) + "%";
       });
     },
-    allCases() {
-      // Case schema from fetchData: [postcodeIndex, dateIndex, sourceIndex, councilNameIndex]
+    allCasesRawDates() {
+      // Case schema from fetchData: [postcodeIndex, dateIndex, councilNameIndex]
       const filterFn = this.isCouncil
-        ? (caseMin) => caseMin[3] === this.councilNameIndex
+        ? (caseMin) => caseMin[2] === this.councilNameIndex
         : (caseMin) => caseMin[0] === this.postcodeIndex;
-      return cases.filter(filterFn).map((c) => [c[1], c[2]]);
-      // Returned case schema: [dateIndex, sourceIndex]
+      return cases.filter(filterFn).map((c) => dates[c[1]]);
+      // Returns array of dates for each case
     },
     allCasesLength() {
-      return this.allCases.length;
-    },
-    allCasesRawDates() {
-      return this.allCases.map((c) => dates[c[0]]);
-    },
-    allCasesSources() {
-      return this.allCases.map((c) => c[1]);
+      return this.allCasesRawDates.length;
     },
     caseCounts() {
       const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
@@ -586,45 +572,6 @@ export default {
       console.timeEnd("Calculate normalChartDatasets");
       return normalChartDatasets;
     },
-    sourceChartDatasets() {
-      console.time("Calculate sourceChartDatasets");
-
-      const cumulative = !this.newCasesMode;
-      // Creates an array of length <SOURCE_STRINGS.length>, filled with arrays of length <this.chartNumDays>.
-      // Done in this way to avoid all the nested arrays mutating each other, see https://stackoverflow.com/a/35578536
-      let values = new Array(SOURCE_STRINGS.length)
-        .fill()
-        .map(() => Array(this.chartNumDays).fill(0));
-
-      const caseRawDates = this.allCasesRawDates;
-      const caseSources = this.allCasesSources;
-
-      this.rawDates
-        // Remove the first avgPeriod-1 days
-        .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
-        // Interate through each date
-        .forEach((date, dateIndex) => {
-          // Iterate through the sources corresponding to each case
-          caseSources.forEach((source, i) => {
-            if (
-              ((cumulative && caseRawDates[i] <= date) ||
-                (!cumulative && caseRawDates[i] === date)) &&
-              values[source]
-            )
-              values[source][dateIndex]++;
-          });
-        });
-
-      const sourceChartDatasets = SOURCE_STRINGS.map(
-        (sourceName, sourceIndex) => ({
-          name: sourceName,
-          values: values[sourceIndex],
-        })
-      );
-
-      console.timeEnd("Calculate sourceChartDatasets");
-      return sourceChartDatasets;
-    },
     vaccineChartDatasets() {
       const [dose1History, dose2History] = this.isCouncil
         ? councilVaccinationHistory[this.councilNameIndex]
@@ -669,13 +616,11 @@ export default {
     chartDatasets() {
       return this.vaccineMode
         ? this.vaccineChartDatasets
-        : this.sourceMode
-        ? this.sourceChartDatasets
         : this.normalChartDatasets;
     },
     chartOptions() {
       return {
-        type: this.sourceMode ? "bar" : "axis-mixed",
+        type: "axis-mixed",
         // Possibly todo later - make graphs line up
         // regardless of if legend is present:
         // height: this.sourceMode ? 315 : 275,
@@ -684,13 +629,10 @@ export default {
           ? // 60%, 40%: ["#6bc770", "#38943d"]
             // 70%, 30%:
             ["#90d594", "#2a6f2e"]
-          : this.sourceMode
-          ? ["green", "orange", "dark-grey"]
           : this.newCasesMode
           ? ["light-blue", "green"]
           : ["purple"],
-        valuesOverPoints:
-          !this.sourceMode && !this.allTimeMode && !this.outbreakMode,
+        valuesOverPoints: !this.allTimeMode && !this.outbreakMode,
         tooltipOptions: {
           formatTooltipY: this.vaccineMode
             ? this.isCouncil
@@ -713,7 +655,7 @@ export default {
           xIsSeries: true,
           xAxisMode: this.allTimeMode || this.outbreakMode ? "tick" : "span",
         },
-        barOptions: { stacked: this.sourceMode ? 1 : 0, spaceRatio: 0.25 },
+        barOptions: { spaceRatio: 0.25 },
         animate: false,
       };
     },
@@ -723,11 +665,10 @@ export default {
         datasets: this.chartDatasets,
         // Workaround so Y-axis starts at zero, see:
         // https://github.com/frappe/charts/issues/86#issuecomment-375557382
-        // It'll only kick in when needed, which is when type=line (i.e. sourceMode
-        // is false) and there is not already a zero value in the dataset.
+        // It'll only kick in when needed, which is when type=line and there
+        // is not already a zero value in the dataset.
         yMarkers: [
-          ...(!this.sourceMode &&
-          !this.chartDatasets[0].values.includes(0) &&
+          ...(!this.chartDatasets[0].values.includes(0) &&
           !this.chartDatasets[1]?.values.includes(0)
             ? [{ label: "", value: 0 }]
             : []),

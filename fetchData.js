@@ -8,9 +8,9 @@ const OUTBREAK_START_DATE = "2021-06-16";
 const SOURCE_TIMEZONE = "Australia/Sydney";
 
 const CASES_URL =
-  "https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv";
+  "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv";
 const CASES_META_URL =
-  "https://data.nsw.gov.au/data/api/3/action/package_show?id=97ea2424-abaf-4f3e-a9f2-b5c883f42b6a";
+  "https://data.nsw.gov.au/data/api/3/action/package_show?id=aefcde60-3b0c-4bc0-9af1-6fe652944ec2";
 
 async function fetchData() {
   console.time("Fetch cases endpoints");
@@ -79,23 +79,6 @@ async function fetchData() {
     // DATE STUFF
     const dateIndex = dates.indexOf(getMinifiedDate(caseRow));
 
-    // SOURCE STUFF
-    const source = caseRow.likely_source_of_infection;
-    const sourceIndex =
-      source === "Locally acquired - linked to known case or cluster"
-        ? 0 // Linked local
-        : [
-            "Locally acquired - no links to known case or cluster",
-            "Locally acquired - investigation ongoing",
-            "Under initial investigation",
-          ].includes(source)
-        ? 1 // Unlinked local
-        : ["Interstate", "Overseas"].includes(source)
-        ? 2 // Outside NSW
-        : -1; // Unknown string;
-    if (sourceIndex === -1)
-      console.warn("[WARNING] Unknown source string:", source);
-
     // COUNCIL STUFF
     const councilName = processCouncilName(caseRow.lga_name19);
     const councilNameIndex = councilNames.indexOf(councilName);
@@ -118,7 +101,7 @@ async function fetchData() {
       councilsForPostcode[postcodeIndex].add(councilNameIndex);
 
     // RETURN
-    return [postcodeIndex, dateIndex, sourceIndex, councilNameIndex];
+    return [postcodeIndex, dateIndex, councilNameIndex];
   });
   fs.writeFileSync("./src/data/built/cases.json", JSON.stringify(casesMin));
   fs.writeFileSync(
