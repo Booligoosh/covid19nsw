@@ -196,7 +196,7 @@
           {{ VACCINATIONS_NOTE }}
         </div>
       </div>
-      <div class="other-content-card" v-if="!isCouncil">
+      <!-- <div class="other-content-card" v-if="!isCouncil">
         <h2 class="other-content-card-title">Alerts</h2>
         <router-link
           class="alerts-link"
@@ -207,7 +207,7 @@
         >
           See alerts near {{ postcodeNumber }} →
         </router-link>
-      </div>
+      </div> -->
       <div
         class="other-content-card"
         v-if="!isCouncil && censusData && population"
