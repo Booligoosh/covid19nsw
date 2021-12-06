@@ -26,7 +26,8 @@ module.exports = () => {
     .forEach((row) => {
       const state = row[STATE_NAME_HEADER];
       if (state === STATE_NAME) {
-        const lgaName = row[LGA_NAME_HEADER];
+        // Todo: Display caveat that warrants "*"
+        const lgaName = row[LGA_NAME_HEADER].replace('*','');
         const firstDosePct = row[DOSE_1_HEADER];
         const secondDosePct = row[DOSE_2_HEADER];
 
