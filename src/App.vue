@@ -1,5 +1,13 @@
 <template>
   <div id="app">
+    <div
+      v-if="$store.state.metadataModified.format('YYYY-MM-DD') === '2021-12-07'"
+      style="background: #eee; padding: 1rem; font-size: 0.8rem"
+    >
+      ⚠️ This site is still being updated as normal! However, NSW Health hasn't
+      released new case location data since Tuesday. Once they do, this site
+      will update automatically within 10 minutes.
+    </div>
     <div class="nav">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
