@@ -7,7 +7,7 @@
   />
   <div class="data-page" v-else>
     <RenderDetector @created="mainContentRendered" />
-    <div class="top-grid">
+    <div class="top-grid" v-if="!$store.state.isEmbed">
       <h1 v-if="isCouncil">
         <span
           ><span class="not-bold">Cases in</span> {{ councilDisplayName }}</span
@@ -81,7 +81,7 @@
           New cases
         </button>
         <button
-          v-if="vaccinePercentages"
+          v-if="!$store.state.isEmbed && vaccinePercentages"
           @click="$store.commit('setChartVaccineMode', true)"
           :class="{ active: !newCasesMode && vaccineMode }"
         >
@@ -127,7 +127,7 @@
         </button>
       </div>
     </div>
-    <div class="other-content">
+    <div class="other-content" v-if="!$store.state.isEmbed">
       <div class="other-content-card" v-if="vaccinePercentages">
         <h2 class="other-content-card-title">Vaccinations</h2>
         <div class="vaccinations">
@@ -448,9 +448,18 @@ export default {
         return (lastSegmentValue * 10).toFixed(0) + "%";
       });
     },
+    embedPostcodeIndices() {
+      if (!this.$store.state.isEmbed) return [];
+      const queriedPostcodes = new URLSearchParams(window.location.search)
+        .get("postcodes")
+        .split(",");
+      return queriedPostcodes.map((p) => postcodes.indexOf(Number(p)));
+    },
     allCasesRawDates() {
       // Case schema from fetchData: [postcodeIndex, dateIndex, councilNameIndex]
-      const filterFn = this.isCouncil
+      const filterFn = this.$store.state.isEmbed
+        ? (caseMin) => this.embedPostcodeIndices.includes(caseMin[0])
+        : this.isCouncil
         ? (caseMin) => caseMin[2] === this.councilNameIndex
         : (caseMin) => caseMin[0] === this.postcodeIndex;
       return cases.filter(filterFn).map((c) => dates[c[1]]);

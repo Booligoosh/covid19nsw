@@ -110,6 +110,12 @@ const routes = [
     meta: { showSearch: true },
   },
   {
+    path: "/embed",
+    name: "Embed",
+    component: () =>
+      import(/* webpackChunkName: "dataPage" */ "../views/DataPage.vue"),
+  },
+  {
     path: "/alerts",
     name: "AlertsPage",
     component: () =>
@@ -190,6 +196,8 @@ router.afterEach((to) => {
   document
     .querySelector("link[rel=canonical]")
     .setAttribute("href", "https://covid19nsw.ethan.link" + to.path);
+
+  store.commit("setIsEmbed", to.name === "Embed");
 });
 
 export default router;

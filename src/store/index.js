@@ -53,6 +53,7 @@ const store = new Vuex.Store({
     listPageCasesSort: "newCasesThisWeek",
     listPageVaccinationsSort: "dose2",
     listPagePerPopMode: false,
+    isEmbed: false,
   },
   getters: {
     canGoBack(state) {
@@ -116,6 +117,9 @@ const store = new Vuex.Store({
     hideSourceCheckbox(state) {
       state.showSourceCheckbox = false;
       delete localStorage.showSourceCheckbox;
+    },
+    setIsEmbed(state, isEmbed) {
+      state.isEmbed = isEmbed;
     },
   },
   actions: {},
