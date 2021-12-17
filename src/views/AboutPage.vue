@@ -26,14 +26,6 @@
         </li>
         <li>
           <a
-            href="https://data.nsw.gov.au/nsw-covid-19-data/case-locations"
-            target="_blank"
-          >
-            NSW COVID-19 case locations
-          </a>
-        </li>
-        <li>
-          <a
             href="https://www.nsw.gov.au/covid-19/stay-safe/data-and-statistics#toc-map-of-nsw-vaccinations-by-home-postcode-and-lga"
             target="_blank"
           >
