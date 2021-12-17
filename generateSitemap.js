@@ -9,13 +9,11 @@ sitemap +=
   "<url><loc>https://covid19nsw.ethan.link/cases/by-council</loc><changefreq>daily</changefreq></url>";
 sitemap +=
   "<url><loc>https://covid19nsw.ethan.link/vaccines/by-council</loc><changefreq>daily</changefreq></url>";
-sitemap += "<url><loc>https://covid19nsw.ethan.link/alerts</loc></url>";
 sitemap += "<url><loc>https://covid19nsw.ethan.link/about</loc></url>";
 
 const postcodes = require("./src/data/built/postcodes.json");
 for (const postcode of postcodes) {
   sitemap += `<url><loc>https://covid19nsw.ethan.link/postcode/${postcode}</loc><changefreq>daily</changefreq></url>`;
-  sitemap += `<url><loc>https://covid19nsw.ethan.link/alerts/postcode/${postcode}</loc><changefreq>daily</changefreq></url>`;
 }
 
 const councilNames = require("./src/data/built/councilNames.json");

@@ -21,9 +21,6 @@ import {
   councilVaccinationsAsOf,
 } from "@/data/built/vaccinationsAsOf.json";
 
-const CASE_LOCATIONS_URL =
-  "https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/venue-data-2020-dec-22-v3.json";
-
 // Determine whether to display source checkbox with deprecation message
 if (localStorage.lastVisit <= "2021-11-22T03:43:57.446Z")
   localStorage.showSourceCheckbox = true;
@@ -121,51 +118,11 @@ const store = new Vuex.Store({
       delete localStorage.showSourceCheckbox;
     },
   },
-  actions: {
-    async getCaseLocations({ commit }) {
-      try {
-        const json = await fetch(CASE_LOCATIONS_URL).then((r) => r.json());
-
-        const caseLocations = json.data.monitor.map((caseLocation) => ({
-          ...caseLocation,
-          // For some reason Data NSW puts everything
-          // in the monitor array now, so get type
-          // manually from alert text
-          type: getTypeFromAlert(caseLocation.Alert),
-          id: Math.random(),
-        }));
-
-        commit("setCaseLocations", caseLocations);
-      } catch (err) {
-        console.log("CASE LOCATIONS ERROR:", err);
-        commit("setError", err.toString());
-      }
-    },
-  },
+  actions: {},
   modules: {},
 });
 
 export default store;
-
-function getTypeFromAlert(alertText) {
-  switch (alertText) {
-    case "Get tested immediately and self-isolate for 14 days":
-    case "Get tested immediately and self-isolate for 14 days.":
-    case "Get tested immediately and self-isolate until you receive further advice from NSW Health":
-    case "Get tested immediately and self-isolate until you receive further advice.":
-      return "isolate";
-    case "Get tested immediately. Self-isolate until you get a negative result.":
-    case "Get tested immediately and self-isolate until you get a negative result":
-    case "Get tested and immediately self-isolate until you receive a negative result":
-      return "negative";
-    case "Monitor for symptoms":
-    case "Monitor for symptoms.":
-      return "monitor";
-    default:
-      console.warn("COULD NOT DETERMINE TYPE:", alertText);
-      return "no-type";
-  }
-}
 
 function calculateDefaultChartNumDays() {
   if (window.innerWidth < 587) return 14;
