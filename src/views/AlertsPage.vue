@@ -7,17 +7,16 @@
       </b>
       <br />
       <br />
-      The rest of this site will continue to function though!
-      <br />
-      <br />
+      The rest of this site will continue to function though! You can
       <a
         href="https://www.nsw.gov.au/covid-19/stay-safe/case-locations/exposure-sites"
         target="_blank"
-        >Learn more about the NSW Government's decision here.</a
-      >
+        >learn more about the NSW Government's decision</a
+      >.
       <br />
       <br />
-      I'll remove this particular page completely in a week or two.
+      <br />
+      <router-link to="/">← Back to home page</router-link>
     </p>
   </div>
 </template>
@@ -34,14 +33,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.17rem;
-    margin-bottom: 0.5rem;
-  }
 }
 </style>

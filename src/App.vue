@@ -63,22 +63,7 @@
               $route.name === 'CouncilsVaccinationsPage',
           }"
         >
-          Vaccines
-        </router-link>
-        <router-link
-          :to="{ name: 'AlertsPage' }"
-          :class="{
-            active:
-              $route.name === 'AlertsPage' ||
-              $route.name === 'PostcodeAlertsPage',
-          }"
-        >
-          Alerts
-          <!-- <span class="beta"
-          ><span class="bracket">(</span>beta<span class="bracket"
-            >)</span
-          ></span
-        > -->
+          Vaccinations
         </router-link>
       </nav>
       <GlobalChooser v-if="$route.meta.showSearch" />
@@ -249,7 +234,7 @@ body,
       // display: none;
       font-size: 0.9rem;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       grid-gap: 0.5rem;
       width: max-content;
       margin: 0 auto;
