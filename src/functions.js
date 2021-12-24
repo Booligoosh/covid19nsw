@@ -1,5 +1,6 @@
 import councilNames from "@/data/built/councilNames.json";
 import cityCouncilIndices from "@/data/built/cityCouncilIndices.json";
+import { SPECIAL_COUNCILS } from "./constants";
 
 // Also in fetchData.js, make sure to update both at once.
 // Returns 0 for 0-9%, 1 for 10-19%, 8 for 80-89%, 9 for 90%+ or 95%+, etc.
@@ -19,7 +20,7 @@ export function getVaccineRangeStringFromIndex(rangeIndex) {
 
 export function getCouncilDisplayName(councilNameIndex) {
   const councilName = councilNames[councilNameIndex];
-  if (councilName === "Correctional settings") return councilName;
+  if (SPECIAL_COUNCILS.includes(councilName)) return councilName;
   return `${councilName}${
     cityCouncilIndices.includes(councilNameIndex) ? " City" : ""
   } Council`;

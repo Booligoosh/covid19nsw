@@ -4,9 +4,11 @@ const parse = require("csv-parse/lib/sync");
 const dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/utc"));
 dayjs.extend(require("dayjs/plugin/timezone"));
+// Constants copied from src/constants.js
 const OUTBREAK_START_DATE = "2021-06-16";
 const SOURCE_TIMEZONE = "Australia/Sydney";
-
+const SPECIAL_COUNCILS = ["Correctional settings", "Hotel Quarantine"];
+// Other constants
 const CASES_URL =
   "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv";
 const CASES_META_URL =
@@ -96,7 +98,7 @@ async function fetchData() {
     if (
       postcodeIndex !== -1 &&
       councilNameIndex !== -1 &&
-      councilName !== "Correctional settings"
+      !SPECIAL_COUNCILS.includes(councilName)
     )
       councilsForPostcode[postcodeIndex].add(councilNameIndex);
 

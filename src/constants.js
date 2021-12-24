@@ -10,3 +10,4 @@ export const SOURCE_TIMEZONE = "Australia/Sydney";
 export const VACCINATIONS_NOTE =
   "Based on address at time of vaccination, using ABS 2019 estimated population aged 15+";
 export const ALL_TIME_FLAG = "ALL_TIME";
+export const SPECIAL_COUNCILS = ["Correctional settings", "Hotel Quarantine"];

@@ -237,7 +237,7 @@
         v-if="
           isCouncil &&
           postcodesInCouncil &&
-          councilDisplayName !== 'Correctional settings'
+          !SPECIAL_COUNCILS.includes(councilDisplayName)
         "
       >
         <h2 class="other-content-card-title">Postcodes in this council</h2>
@@ -284,6 +284,7 @@ import {
   COUNCIL_VACCINATIONS_START_DATE,
   VACCINATIONS_NOTE,
   ALL_TIME_FLAG,
+  SPECIAL_COUNCILS,
 } from "@/constants.js";
 import {
   getVaccineRangeIndex,
@@ -321,6 +322,7 @@ export default {
       OUTBREAK_START_DATE_FORMATTED,
       VACCINATIONS_NOTE,
       ALL_TIME_FLAG,
+      SPECIAL_COUNCILS,
     };
   },
   computed: {
