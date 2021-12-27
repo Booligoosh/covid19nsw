@@ -3,13 +3,14 @@
     <div
       v-if="
         !$store.state.isEmbed &&
-        $store.state.metadataModified.format('YYYY-MM-DD') === '2021-12-07'
+        $store.state.metadataModified.format('YYYY-MM-DD') === '2021-12-24'
       "
       style="background: #eee; padding: 1rem; font-size: 0.8rem"
     >
-      ⚠️ This site is still being updated as normal! However, NSW Health hasn't
-      released new case location data since Tuesday. Once they do, this site
-      will update automatically within 10 minutes.
+      ⚠️ I&rsquo;m not sure what NSW Health&rsquo;s data release schedule around
+      New Years will be. Currently, the most recent data is from 24 Dec. This
+      site will update automatically when new data comes through. Happy New
+      Years! 🎆
     </div>
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
