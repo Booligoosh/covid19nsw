@@ -13,7 +13,7 @@
     <div class="overall-vaccinations-metrics">
       <div class="overall-vaccinations-metrics-metric">
         <span class="overall-vaccinations-metrics-metric-num">
-          {{ secondDose16Plus }}%
+          {{ secondDose16Plus.toFixed(2) }}%
         </span>
         <span class="overall-vaccinations-metrics-metric-label">
           2nd dose
@@ -21,7 +21,7 @@
       </div>
       <div class="overall-vaccinations-metrics-metric">
         <span class="overall-vaccinations-metrics-metric-num">
-          {{ firstDose16Plus }}%
+          {{ firstDose16Plus.toFixed(2) }}%
         </span>
         <span class="overall-vaccinations-metrics-metric-label">
           1st dose
