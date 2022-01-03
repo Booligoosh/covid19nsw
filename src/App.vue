@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="!$store.state.isEmbed" class="top-banner">
-      📵 I am offline until 9th Jan. All updates will be fully automated.
+      📵 I am offline until 9th Jan, all updates will be fully automated.
       Hopefully nothing breaks, but if it does, you&rsquo;ll have to wait until
       then!
     </div>
