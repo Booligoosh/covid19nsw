@@ -353,7 +353,8 @@ export default {
           })
         : postcodes.map((postcodeNumber, i) => {
             const multiplier = this.perPopMode
-              ? this.PER_POPULATION / populationByPostcode[postcodeNumber]
+              ? this.PER_POPULATION /
+                (populationByPostcode[postcodeNumber] || NaN) // If population is zero, make multiplier NaN rather than Infinity
               : 1;
             return {
               postcodeNumber,
