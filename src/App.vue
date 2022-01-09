@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div v-if="!$store.state.isEmbed" class="top-banner">
+    <!-- <div v-if="!$store.state.isEmbed" class="top-banner">
       📵 I am offline until 9th Jan, all updates will be fully automated.
       Hopefully nothing breaks, but if it does, you&rsquo;ll have to wait until
       then!
-    </div>
+    </div> -->
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
