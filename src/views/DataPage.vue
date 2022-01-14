@@ -266,9 +266,6 @@
       </div>
     </div>
     <!-- <button class="add-to-home-screen">Add to home screen</button> -->
-    <!-- <pre style="text-align: left">{{
-      JSON.stringify(allCases, null, 2)
-    }}</pre> -->
     <!-- <pre>{{ JSON.stringify(chartData, null, 2) }}</pre> -->
   </div>
 </template>
@@ -293,8 +290,8 @@ import {
 } from "@/functions.js";
 import { Chart } from "frappe-charts";
 import RenderDetector from "../components/RenderDetector.vue";
-import cases from "@/data/built/cases.json";
-import dates from "@/data/built/dates.json";
+import postcodeDailyCases from "@/data/built/postcodeDailyCases.json";
+import councilDailyCases from "@/data/built/councilDailyCases.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
 import councilVaccinationHistory from "@/data/built/councilVaccinationHistory.json";
 import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
@@ -349,20 +346,9 @@ export default {
     postcodeIndex() {
       return postcodes.indexOf(this.postcodeNumber);
     },
-    avgPeriod() {
-      return this.newCasesMode ? AVG_PERIOD : 1;
-    },
-    allTimeDays() {
-      return this.vaccineMode
-        ? this.daysSinceVaccinationStart
-        : this.$store.state.temporalCoverageTo.diff(
-            ALL_TIME_START_DATE,
-            "day"
-          ) + 1;
-    },
-    outbreakDays() {
+    daysSinceCasesStart() {
       return (
-        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
+        this.$store.state.temporalCoverageTo.diff(ALL_TIME_START_DATE, "day") +
         1
       );
     },
@@ -371,6 +357,17 @@ export default {
         ? COUNCIL_VACCINATIONS_START_DATE
         : POSTCODE_VACCINATIONS_START_DATE;
       return this.$store.state.temporalCoverageTo.diff(startDate, "day") + 1;
+    },
+    allTimeDays() {
+      return this.vaccineMode
+        ? this.daysSinceVaccinationStart
+        : this.daysSinceCasesStart;
+    },
+    outbreakDays() {
+      return (
+        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
+        1
+      );
     },
     suburbsText() {
       return (
@@ -457,19 +454,6 @@ export default {
         .split(",");
       return queriedPostcodes.map((p) => postcodes.indexOf(Number(p)));
     },
-    allCasesRawDates() {
-      // Case schema from fetchData: [postcodeIndex, dateIndex, councilNameIndex]
-      const filterFn = this.$store.state.isEmbed
-        ? (caseMin) => this.embedPostcodeIndices.includes(caseMin[0])
-        : this.isCouncil
-        ? (caseMin) => caseMin[2] === this.councilNameIndex
-        : (caseMin) => caseMin[0] === this.postcodeIndex;
-      return cases.filter(filterFn).map((c) => dates[c[1]]);
-      // Returns array of dates for each case
-    },
-    allCasesLength() {
-      return this.allCasesRawDates.length;
-    },
     caseCounts() {
       const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
         .isCouncil
@@ -486,8 +470,7 @@ export default {
     },
     lastXDays() {
       if (!this.$store.state.temporalCoverageTo) return [];
-      // Add avgPeriod-1 days before the period
-      return Array(this.chartNumDays + this.avgPeriod - 1)
+      return Array(this.chartNumDays)
         .fill(0)
         .map((_, i) => this.$store.state.temporalCoverageTo.subtract(i, "days"))
         .reverse();
@@ -503,6 +486,21 @@ export default {
           .replace(/-/g, "")
       );
     },
+    rawDatesSinceCasesStart() {
+      return Array(this.daysSinceCasesStart)
+        .fill(0)
+        .map((_, i) =>
+          this.$store.state.temporalCoverageTo
+            .subtract(i, "days")
+            .format("YYYY-MM-DD")
+            // Emulates getMinifiedDate function in fetchData.js:
+            // - "2020" replaced with "0", "2021" replaced with "1" etc.
+            // - Dashes removed
+            .substr(3)
+            .replace(/-/g, "")
+        )
+        .reverse();
+    },
     lastUpdatedString() {
       return this.$store.state.temporalCoverageTo.format("D MMMM");
     },
@@ -514,73 +512,70 @@ export default {
     },
     chartLabels() {
       const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
-      return (
-        this.lastXDays
-          // Remove the first avgPeriod-1 days
-          .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
-          .map((date) => date.format(format))
+      return this.lastXDays.map((date) => date.format(format));
+    },
+    dailyCases() {
+      const key = this.isCouncil ? this.councilNameIndex : this.postcodeIndex;
+      const obj = this.isCouncil ? councilDailyCases : postcodeDailyCases;
+      const dailyCasesInObjForm = obj[key] || {};
+      const dailyCasesInArrayForm = this.rawDatesSinceCasesStart.map(
+        (rawDate) => dailyCasesInObjForm[rawDate] || 0
       );
+      return dailyCasesInArrayForm;
+    },
+    dailyCaseDatasets() {
+      console.time("Calculate dailyCaseDatasets");
+
+      const emptyArray = new Array(this.daysSinceCasesStart).fill(0);
+      const newCases = this.dailyCases;
+      const totalCases = [].concat(emptyArray);
+      const avgNewCases = [].concat(emptyArray);
+
+      let runningTotal = 0;
+      // Interate through each date
+      newCases.forEach((casesValue, i) => {
+        // TOTAL CASES
+        runningTotal += casesValue;
+        totalCases[i] = runningTotal;
+
+        // AVG-OF-X CASES
+        // Last (AVG_PERIOD-1) days' cases. We will add today's
+        // cases to the sum to get the average over the full period.
+        const prevCasesForAvg = newCases.slice(i - AVG_PERIOD + 1, i);
+        let sum = casesValue;
+        for (let j = 0; j < prevCasesForAvg.length; j++)
+          sum += prevCasesForAvg[j];
+
+        avgNewCases[i] = sum / AVG_PERIOD;
+      });
+
+      console.timeEnd("Calculate dailyCaseDatasets");
+      return { newCases, totalCases, avgNewCases };
     },
     normalChartDatasets() {
       console.time("Calculate normalChartDatasets");
 
-      console.log(
-        this.chartNumDays,
-        this.allCasesLength,
-        "Requires",
-        this.chartNumDays * this.allCasesLength,
-        "operations"
-      );
+      const { newCases, totalCases, avgNewCases } = this.dailyCaseDatasets;
+      const normalChartDatasets = [];
 
-      const cumulative = !this.newCasesMode;
-      // Add avgPeriod-1 days BEFORE the period
-      const newCaseValues = new Array(
-        this.chartNumDays + this.avgPeriod - 1
-      ).fill(0);
-      // Add avgPeriod-1 days AFTER the period
-      const prevPeriodTotals = new Array(
-        this.chartNumDays + this.avgPeriod - 1
-      ).fill(0);
-      const caseRawDates = this.allCasesRawDates;
+      if (this.newCasesMode)
+        normalChartDatasets.push(
+          {
+            name: "New cases",
+            values: newCases.slice(-this.chartNumDays),
+            chartType: "bar",
+          },
+          {
+            name: `${AVG_PERIOD} day avg`,
+            values: avgNewCases.slice(-this.chartNumDays),
+            chartType: "line",
+          }
+        );
 
-      // Interate through each date
-      this.rawDates.forEach((date, i) => {
-        let casesValue = 0;
-
-        // Iterate through the dates corresponding to each case
-        caseRawDates.forEach((rawDate) => {
-          if (
-            (cumulative && rawDate <= date) ||
-            (!cumulative && rawDate === date)
-          )
-            casesValue++;
-        });
-
-        newCaseValues[i] = casesValue;
-
-        for (let j = 0; j < this.avgPeriod; j++)
-          prevPeriodTotals[i + j] += casesValue;
-      });
-
-      const normalChartDatasets = [
-        {
-          name: `${cumulative ? "Total" : "New"} cases`,
-          // Remove the first avgPeriod-1 days
-          values: newCaseValues.slice(
-            this.avgPeriod - 1,
-            this.chartNumDays + this.avgPeriod - 1
-          ),
-          chartType: cumulative ? "line" : "bar",
-        },
-      ];
-      if (this.avgPeriod !== 1)
+      if (!this.newCasesMode)
         normalChartDatasets.push({
-          name: `${this.avgPeriod} day avg`,
-          // Remove the first avgPeriod-1 days, and the last avgPeriod-1 days
-          // after period added by the for loop, which will be NaN (null + num)
-          values: prevPeriodTotals
-            .slice(this.avgPeriod - 1, this.chartNumDays + this.avgPeriod - 1)
-            .map((n) => n / this.avgPeriod),
+          name: "Total cases",
+          values: totalCases.slice(-this.chartNumDays),
           chartType: "line",
         });
 
@@ -736,9 +731,9 @@ export default {
           "setPageDescription",
           `As of ${this.$store.state.temporalCoverageTo.format(
             "D MMMM YYYY"
-          )}, there are ${this.allCasesLength} cases of COVID-19 in ${
+          )}, there are ${this.caseCounts.thisWeek} cases of COVID-19 in ${
             this.councilDisplayName
-          }. Click to see the latest data for your area.`
+          } this week. Click to see the latest data for your area.`
         );
       } else {
         this.$store.commit(
@@ -751,10 +746,10 @@ export default {
           `As of ${this.$store.state.temporalCoverageTo.format(
             "D MMMM YYYY"
           )}, there are ${
-            this.allCasesLength
+            this.caseCounts.thisWeek
           } cases of COVID-19 in the postcode ${
             this.$route.params.postcode
-          }. Click to see the latest data for your postcode.`
+          } this week. Click to see the latest data for your postcode.`
         );
       }
     },
