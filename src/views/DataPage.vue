@@ -539,13 +539,10 @@ export default {
         totalCases[i] = runningTotal;
 
         // AVG-OF-X CASES
-        // Last (AVG_PERIOD-1) days' cases. We will add today's
-        // cases to the sum to get the average over the full period.
-        const prevCasesForAvg = newCases.slice(i - AVG_PERIOD + 1, i);
+        // Sum today's new cases with the last AVG_PERIOD-1 day's cases
+        // to get the total sum over the AVG_PERIOD, then find the avg
         let sum = casesValue;
-        for (let j = 0; j < prevCasesForAvg.length; j++)
-          sum += prevCasesForAvg[j];
-
+        for (let j = AVG_PERIOD - 1; j > 0; j--) sum += newCases[i - j] || 0;
         avgNewCases[i] = sum / AVG_PERIOD;
       });
 
