@@ -477,9 +477,9 @@ export default {
       const key = this.isCouncil ? this.councilNameIndex : this.postcodeIndex;
 
       return {
-        today: newCasesToday[key] || 0,
-        thisWeek: newCasesThisWeek[key] || 0,
-        total: totalCases[key] || 0,
+        today: (newCasesToday[key] || 0).toLocaleString("en-AU"),
+        thisWeek: (newCasesThisWeek[key] || 0).toLocaleString("en-AU"),
+        total: (totalCases[key] || 0).toLocaleString("en-AU"),
       };
     },
     lastXDays() {
