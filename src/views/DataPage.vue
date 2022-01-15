@@ -48,13 +48,8 @@
           <div class="stat-numbers-item-label">this week</div>
         </div>
         <div class="stat-numbers-item">
-          <div class="stat-numbers-item-num">{{ caseCounts.thisOutbreak }}</div>
-          <div class="stat-numbers-item-label">
-            since
-            <span style="white-space: nowrap">
-              {{ OUTBREAK_START_DATE_FORMATTED }}
-            </span>
-          </div>
+          <div class="stat-numbers-item-num">{{ caseCounts.total }}</div>
+          <div class="stat-numbers-item-label">total cases</div>
         </div>
       </div>
     </div>
@@ -276,7 +271,6 @@ import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
   ALL_TIME_START_DATE,
   OUTBREAK_START_DATE,
-  OUTBREAK_START_DATE_FORMATTED,
   POSTCODE_VACCINATIONS_START_DATE,
   COUNCIL_VACCINATIONS_START_DATE,
   VACCINATIONS_NOTE,
@@ -316,7 +310,6 @@ export default {
   },
   data() {
     return {
-      OUTBREAK_START_DATE_FORMATTED,
       VACCINATIONS_NOTE,
       ALL_TIME_FLAG,
       SPECIAL_COUNCILS,
@@ -455,8 +448,7 @@ export default {
       return queriedPostcodes.map((p) => postcodes.indexOf(Number(p)));
     },
     caseCounts() {
-      const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
-        .isCouncil
+      const { totalCases, newCasesThisWeek, newCasesToday } = this.isCouncil
         ? councilCounts
         : postcodeCounts;
 
@@ -465,7 +457,7 @@ export default {
       return {
         today: newCasesToday[key] || 0,
         thisWeek: newCasesThisWeek[key] || 0,
-        thisOutbreak: outbreakTotalCases[key] || 0,
+        total: totalCases[key] || 0,
       };
     },
     lastXDays() {

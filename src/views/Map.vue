@@ -14,10 +14,10 @@
         Cases this week
       </button>
       <button
-        @click="property = 'outbreakTotalCases'"
-        :class="{ active: property === 'outbreakTotalCases' }"
+        @click="property = 'totalCases'"
+        :class="{ active: property === 'totalCases' }"
       >
-        Cases since {{ OUTBREAK_START_DATE_FORMATTED }}
+        Total cases
       </button>
     </div>
     <div id="map"></div>
@@ -31,7 +31,6 @@ import geojson from "@/data/spatial/postcodes/geojson.json";
 import postcodes from "@/data/built/postcodes.json";
 import postcodeCounts from "@/data/built/postcodeCounts.json";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
-import { OUTBREAK_START_DATE_FORMATTED } from "@/constants";
 
 export default {
   data() {
@@ -40,7 +39,6 @@ export default {
       map: null,
       geojsonLayer: null,
       info: null,
-      OUTBREAK_START_DATE_FORMATTED,
     };
   },
   watch: {
@@ -118,16 +116,14 @@ export default {
         const i = postcodes.indexOf(props?.p);
         const today = postcodeCounts.newCasesToday[i] || 0;
         const thisWeek = postcodeCounts.newCasesThisWeek[i] || 0;
-        const total = postcodeCounts.outbreakTotalCases[i] || 0;
+        const total = postcodeCounts.totalCases[i] || 0;
         const suburbs = suburbsForPostcode[props?.p]?.join(", ");
 
         this._div.innerHTML = props
           ? `<h3>${props.p}</h3>
             <hr/>${today} case${today !== 1 ? "s" : ""} today
             <br/>${thisWeek} case${thisWeek !== 1 ? "s" : ""} this week
-            <br/>${total} case${
-              total !== 1 ? "s" : ""
-            } since ${OUTBREAK_START_DATE_FORMATTED}
+            <br/>${total} total cases
             <hr/>
             <h4><b>Suburbs:</b> ${suburbs}</h4>`
           : "Hover over a postcode";

@@ -136,14 +136,9 @@
                 @click.prevent="
                   $store.commit('setListPageCasesSort', 'totalCases')
                 "
-                :title="`Sort by cases since ${OUTBREAK_START_DATE_FORMATTED}`"
+                :title="`Sort by total cases`"
               >
-                <span>
-                  Since
-                  <span style="white-space: nowrap">{{
-                    OUTBREAK_START_DATE_FORMATTED
-                  }}</span>
-                </span>
+                <span> Total cases </span>
                 <div v-if="sort === 'totalCases'">▼</div>
               </a>
             </th>
@@ -256,7 +251,7 @@ import postcodeVaccinations from "@/data/built/postcodeVaccinations.json";
 import councilVaccinations from "@/data/built/councilVaccinations.json";
 import populationByPostcode from "@/data/population/populationByPostcode.json";
 import populationByCouncil from "@/data/population/populationByCouncil.json";
-import { OUTBREAK_START_DATE_FORMATTED, VACCINATIONS_NOTE } from "@/constants";
+import { VACCINATIONS_NOTE } from "@/constants";
 import OverallVaccinations from "../components/OverallVaccinations.vue";
 
 const postcodesLength = postcodes.length;
@@ -269,7 +264,6 @@ export default {
     return {
       TRUNCATE_SIZE: 60,
       truncate: true,
-      OUTBREAK_START_DATE_FORMATTED,
       VACCINATIONS_NOTE,
       PER_POPULATION: 100,
     };
@@ -328,8 +322,7 @@ export default {
     },
     postcodeRows() {
       console.time("Calculate postcodeRows");
-      const { outbreakTotalCases, newCasesThisWeek, newCasesToday } = this
-        .councilMode
+      const { totalCases, newCasesThisWeek, newCasesToday } = this.councilMode
         ? councilCounts
         : postcodeCounts;
 
@@ -343,8 +336,7 @@ export default {
               councilName,
               col1Sort: councilName,
               councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
-              // totalCases: totalCases[i] || 0,
-              totalCases: (outbreakTotalCases[i] || 0) * multiplier,
+              totalCases: (totalCases[i] || 0) * multiplier,
               newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
               newCasesToday: (newCasesToday[i] || 0) * multiplier,
               dose1: councilVaccinations[i]?.[0],
@@ -359,8 +351,7 @@ export default {
             return {
               postcodeNumber,
               col1Sort: postcodeNumber,
-              // totalCases: totalCases[i] || 0,
-              totalCases: (outbreakTotalCases[i] || 0) * multiplier,
+              totalCases: (totalCases[i] || 0) * multiplier,
               newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
               newCasesToday: (newCasesToday[i] || 0) * multiplier,
               suburbs: suburbsForPostcode[postcodeNumber]?.join(", "),

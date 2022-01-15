@@ -5,7 +5,6 @@ const dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/utc"));
 dayjs.extend(require("dayjs/plugin/timezone"));
 // Constants copied from src/constants.js
-const OUTBREAK_START_DATE = "2021-06-16";
 const SOURCE_TIMEZONE = "Australia/Sydney";
 const SPECIAL_COUNCILS = ["Correctional settings", "Hotel Quarantine"];
 // Other constants
@@ -412,8 +411,7 @@ function getCounts(
     .startOf("day")
     .subtract(1, "day");
   // Initialise objects
-  // const totalCases = {};
-  const outbreakTotalCases = {};
+  const totalCases = {};
   const newCasesThisWeek = {};
   const newCasesToday = {};
 
@@ -429,8 +427,9 @@ function getCounts(
       identifierKey === "councilName"
         ? councilNames.indexOf(processCouncilName(caseRow.lga_name19))
         : postcodes.indexOf(Number(caseRow.postcode));
+
     // Add the case to its postcode/council's total cases
-    // totalCases[identifier] = (totalCases[identifier] || 0) + 1;
+    totalCases[identifier] = (totalCases[identifier] || 0) + 1;
 
     // If the case is today, add to Today col
     if (caseRow.notification_date === today)
@@ -439,13 +438,8 @@ function getCounts(
     // If the case is this week, add to This Week col
     if (caseRow.notification_date > oneWeekAgo)
       newCasesThisWeek[identifier] = (newCasesThisWeek[identifier] || 0) + 1;
-
-    // If the case is this outbreak, Add to Outbreak col
-    if (caseRow.notification_date > OUTBREAK_START_DATE)
-      outbreakTotalCases[identifier] =
-        (outbreakTotalCases[identifier] || 0) + 1;
   });
-  return { outbreakTotalCases, newCasesThisWeek, newCasesToday };
+  return { totalCases, newCasesThisWeek, newCasesToday };
 }
 
 function uniqSortedByFreq(array) {
