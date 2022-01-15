@@ -7,7 +7,10 @@
         '--second-pct': secondDose16Plus + '%',
       }"
     ></div>
-    <div class="overall-vaccinations-title">All of NSW</div>
+    <div class="overall-vaccinations-title">
+      All of NSW
+      <div class="overall-vaccinations-title-note">age 16+</div>
+    </div>
     <div class="overall-vaccinations-metrics">
       <div class="overall-vaccinations-metrics-metric">
         <span class="overall-vaccinations-metrics-metric-num">
@@ -92,11 +95,14 @@ export default {
     padding: 0 0.4rem;
     padding-right: 0.75rem;
     margin-right: 0.75rem;
-    text-align: center;
     font-size: 0.8rem;
     font-weight: 600;
     opacity: 0.5;
     border-right: 1.5px solid hsl(0, 0%, 50%);
+
+    &-note {
+      font-size: 0.7rem;
+    }
   }
 
   &-metrics {
