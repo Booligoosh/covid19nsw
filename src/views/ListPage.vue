@@ -46,9 +46,8 @@
       </div>
     </div>
     <div class="table-subtitle" v-else>
-      Last updated <mark>{{ lastUpdatedString }}</mark> by NSW Health, data up
-      to <mark>{{ temporalCoverageString }}</mark
-      >.
+      Updated <mark>{{ lastUpdatedString }}</mark> by NSW Health. Data includes
+      results from PCR tests only.
       <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t added by NSW Health within 1 day, so
         today&rsquo;s numbers are less than final values.
