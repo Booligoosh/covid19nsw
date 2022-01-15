@@ -106,11 +106,22 @@
           >
         </button>
         <button
-          @click="$store.commit('setChartNumDays', [outbreakDays, vaccineMode])"
-          :class="{ active: outbreakMode }"
+          @click="
+            $store.commit('setChartNumDays', [omicronOutbreakDays, vaccineMode])
+          "
+          :class="{ active: chartNumDays === omicronOutbreakDays }"
           v-if="!vaccineMode"
         >
-          This wave
+          Since Omicron
+        </button>
+        <button
+          @click="
+            $store.commit('setChartNumDays', [deltaOutbreakDays, vaccineMode])
+          "
+          :class="{ active: chartNumDays === deltaOutbreakDays }"
+          v-if="!vaccineMode"
+        >
+          Since Delta
         </button>
         <button
           @click="
@@ -270,7 +281,8 @@ import PageNotFound from "@/views/PageNotFound.vue";
 import suburbsForPostcode from "@/data/suburbsForPostcode.json";
 import {
   ALL_TIME_START_DATE,
-  OUTBREAK_START_DATE,
+  DELTA_OUTBREAK_START_DATE,
+  OMICRON_OUTBREAK_START_DATE,
   POSTCODE_VACCINATIONS_START_DATE,
   COUNCIL_VACCINATIONS_START_DATE,
   VACCINATIONS_NOTE,
@@ -356,10 +368,20 @@ export default {
         ? this.daysSinceVaccinationStart
         : this.daysSinceCasesStart;
     },
-    outbreakDays() {
+    deltaOutbreakDays() {
       return (
-        this.$store.state.temporalCoverageTo.diff(OUTBREAK_START_DATE, "day") +
-        1
+        this.$store.state.temporalCoverageTo.diff(
+          DELTA_OUTBREAK_START_DATE,
+          "day"
+        ) + 1
+      );
+    },
+    omicronOutbreakDays() {
+      return (
+        this.$store.state.temporalCoverageTo.diff(
+          OMICRON_OUTBREAK_START_DATE,
+          "day"
+        ) + 1
       );
     },
     suburbsText() {
@@ -500,7 +522,10 @@ export default {
       return this.chartNumDays === this.allTimeDays;
     },
     outbreakMode() {
-      return this.chartNumDays === this.outbreakDays;
+      return (
+        this.chartNumDays === this.deltaOutbreakDays ||
+        this.chartNumDays === this.omicronOutbreakDays
+      );
     },
     chartLabels() {
       const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
@@ -874,7 +899,7 @@ $top-grid-small-text-breakpoint: 370px;
 
   &-row {
     &-name {
-      @media screen and (max-width: 560px) {
+      @media screen and (max-width: 675px) {
         display: block;
         margin-bottom: 0.5rem;
         font-size: 0.8rem;
@@ -898,11 +923,11 @@ $top-grid-small-text-breakpoint: 370px;
         margin-right: 0;
       }
 
-      @media screen and (max-width: 365px) {
-        .non-compact {
-          display: none;
-        }
-      }
+      // @media screen and (max-width: 525px) {
+      //   .non-compact {
+      //     display: none;
+      //   }
+      // }
 
       &:hover,
       &:focus {
