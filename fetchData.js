@@ -175,6 +175,10 @@ async function fetchData() {
     asAt: mostRecentAirData.DATE_AS_AT,
     firstDose16Plus: mostRecentAirData.AIR_NSW_16_PLUS_FIRST_DOSE_PCT,
     secondDose16Plus: mostRecentAirData.AIR_NSW_16_PLUS_SECOND_DOSE_PCT,
+    thirdDose16Plus:
+      (mostRecentAirData.AIR_NSW_18_PLUS_THIRD_DOSE_COUNT /
+        mostRecentAirData.AIR_NSW_16_PLUS_POPULATION) *
+      100,
   };
   fs.writeFileSync(
     "./src/data/built/overallVaccinations.json",

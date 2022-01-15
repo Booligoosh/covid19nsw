@@ -7,9 +7,7 @@
         '--second-pct': secondDose16Plus + '%',
       }"
     ></div>
-    <div class="overall-vaccinations-title">
-      Total vaccinations in NSW (age 16+)
-    </div>
+    <div class="overall-vaccinations-title">All of NSW</div>
     <div class="overall-vaccinations-metrics">
       <div class="overall-vaccinations-metrics-metric">
         <span class="overall-vaccinations-metrics-metric-num">
@@ -27,6 +25,14 @@
           2nd dose
         </span>
       </div>
+      <div class="overall-vaccinations-metrics-metric">
+        <span class="overall-vaccinations-metrics-metric-num">
+          {{ thirdDose16Plus.toFixed(2) }}%
+        </span>
+        <span class="overall-vaccinations-metrics-metric-label">
+          3rd dose
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +41,7 @@
 import {
   firstDose16Plus,
   secondDose16Plus,
+  thirdDose16Plus,
 } from "../data/built/overallVaccinations.json";
 
 export default {
@@ -43,6 +50,7 @@ export default {
     return {
       firstDose16Plus,
       secondDose16Plus,
+      thirdDose16Plus,
     };
   },
 };
@@ -50,15 +58,19 @@ export default {
 
 <style lang="scss">
 .overall-vaccinations {
-  border: 1px solid hsl(0, 0%, 80%);
+  border: 1px solid hsl(0, 0%, 85%);
   border-radius: 7px;
   overflow: hidden;
   width: 500px;
   max-width: 100%;
   margin: 0 auto;
   margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &-bar {
+    display: none;
     height: 4px;
     width: 100%;
     flex-shrink: 0;
@@ -77,25 +89,32 @@ export default {
   }
 
   &-title {
-    padding: 0.4rem;
+    padding: 0 0.4rem;
+    padding-right: 0.75rem;
+    margin-right: 0.75rem;
     text-align: center;
     font-size: 0.8rem;
-    padding-bottom: 0;
-    margin-bottom: -0.1rem;
+    font-weight: 600;
+    opacity: 0.5;
+    border-right: 1.5px solid hsl(0, 0%, 50%);
   }
 
   &-metrics {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     text-align: center;
     justify-content: center;
     align-items: center;
     padding: 0.4rem;
+    padding-left: 0;
     grid-gap: 1rem;
     width: max-content;
-    margin: 0 auto;
 
     &-metric {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
       &-num {
         font-weight: bold;
       }
