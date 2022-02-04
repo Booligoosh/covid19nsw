@@ -381,11 +381,16 @@ export default {
   },
   methods: {
     formatCasesValue(value) {
-      if (!this.perPopMode) return value;
-      if (isNaN(value)) return "-";
-      if (value === 0) return 0;
-      // if (value < 0.01) return "<0.01";
-      return value.toFixed(2);
+      if (this.perPopMode) {
+        if (isNaN(value)) return "-";
+        if (value === 0) return 0;
+        // if (value < 0.01) return "<0.01";
+        return value.toFixed(2);
+      } else {
+        return value < 1000
+          ? value
+          : (value / 1000).toFixed(value < 10000 ? 1 : 0) + "K";
+      }
     },
     suburbsSeeMoreClickHandler(event) {
       event.preventDefault();
