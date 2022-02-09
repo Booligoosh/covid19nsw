@@ -23,6 +23,9 @@ async function fetchData() {
   ]);
   console.timeEnd("Fetch cases endpoints");
 
+  // Emergency hotfix for bad data
+  modified = modified.replace("2022-02-09", "2022-02-08");
+
   console.time("Generate metadataModified.json + cases_modified.txt");
   fs.writeFileSync(
     "./src/data/built/metadataModified.json",
