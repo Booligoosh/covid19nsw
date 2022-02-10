@@ -15,7 +15,10 @@ import {
   SOURCE_TIMEZONE,
   ALL_TIME_FLAG,
 } from "../constants";
-import metadataModified from "@/data/built/metadataModified.json";
+import {
+  metadataModified,
+  temporalCoverageTo,
+} from "@/data/built/casesAsOf.json";
 import {
   postcodeVaccinationsAsOf,
   councilVaccinationsAsOf,
@@ -31,10 +34,7 @@ const store = new Vuex.Store({
   state: {
     error: null,
     metadataModified: dayjs(metadataModified).tz(SOURCE_TIMEZONE),
-    temporalCoverageTo: dayjs(metadataModified)
-      .tz(SOURCE_TIMEZONE)
-      .startOf("day")
-      .subtract(1, "day"),
+    temporalCoverageTo: dayjs(temporalCoverageTo).tz(SOURCE_TIMEZONE),
     postcodeVaccinationsAsOf: dayjs(postcodeVaccinationsAsOf).tz(
       SOURCE_TIMEZONE
     ),

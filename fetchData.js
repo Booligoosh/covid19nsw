@@ -23,16 +23,20 @@ async function fetchData() {
   ]);
   console.timeEnd("Fetch cases endpoints");
 
-  // Emergency hotfix for bad data
-  modified = modified.replace("2022-02-09", "2022-02-08");
+  console.time("Generate casesAsOf.json + cases_modified.txt");
 
-  console.time("Generate metadataModified.json + cases_modified.txt");
+  const temporalCoverageTo = dayjs(modified)
+    .tz(SOURCE_TIMEZONE)
+    .startOf("day")
+    .subtract(1, "day");
+
   fs.writeFileSync(
-    "./src/data/built/metadataModified.json",
-    JSON.stringify(modified)
+    "./src/data/built/casesAsOf.json",
+    JSON.stringify({ metadataModified: modified, temporalCoverageTo })
   );
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
-  console.timeEnd("Generate metadataModified.json + cases_modified.txt");
+
+  console.timeEnd("Generate casesAsOf.json + cases_modified.txt");
 
   console.time("Parse cases CSV");
   const parsed = parse(csv, {
@@ -152,7 +156,7 @@ async function fetchData() {
   fs.writeFileSync(
     "./src/data/built/postcodeCounts.json",
     JSON.stringify(
-      getCounts("postcode", modified, cases, postcodes, councilNames)
+      getCounts("postcode", temporalCoverageTo, cases, postcodes, councilNames)
     )
   );
   console.timeEnd("Generate postcodeCounts.json");
@@ -161,7 +165,13 @@ async function fetchData() {
   fs.writeFileSync(
     "./src/data/built/councilCounts.json",
     JSON.stringify(
-      getCounts("councilName", modified, cases, postcodes, councilNames)
+      getCounts(
+        "councilName",
+        temporalCoverageTo,
+        cases,
+        postcodes,
+        councilNames
+      )
     )
   );
   console.timeEnd("Generate councilCounts.json");
@@ -408,15 +418,11 @@ function minifyDate(dateString) {
 
 function getCounts(
   identifierKey,
-  metadataModified,
+  temporalCoverageTo,
   cases,
   postcodes,
   councilNames
 ) {
-  const temporalCoverageTo = dayjs(metadataModified)
-    .tz(SOURCE_TIMEZONE)
-    .startOf("day")
-    .subtract(1, "day");
   // Initialise objects
   const totalCases = {};
   const newCasesThisWeek = {};
