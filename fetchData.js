@@ -23,12 +23,18 @@ async function fetchData() {
   ]);
   console.timeEnd("Fetch cases endpoints");
 
+  console.time("Parse cases CSV");
+  const parsed = parse(csv, {
+    columns: true,
+  });
+  const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
+  console.timeEnd("Parse cases CSV");
+
   console.time("Generate casesAsOf.json + cases_modified.txt");
 
-  const temporalCoverageTo = dayjs(modified)
-    .tz(SOURCE_TIMEZONE)
-    .startOf("day")
-    .subtract(1, "day");
+  const temporalCoverageTo = dayjs(
+    cases.map((c) => c.notification_date).sort()[cases.length - 1]
+  ).tz(SOURCE_TIMEZONE);
 
   fs.writeFileSync(
     "./src/data/built/casesAsOf.json",
@@ -37,13 +43,6 @@ async function fetchData() {
   fs.writeFileSync("./public/data/cases_modified.txt", modified);
 
   console.timeEnd("Generate casesAsOf.json + cases_modified.txt");
-
-  console.time("Parse cases CSV");
-  const parsed = parse(csv, {
-    columns: true,
-  });
-  const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
-  console.timeEnd("Parse cases CSV");
 
   // Calculate postcodes
   console.time("Generate postcodes.json");
