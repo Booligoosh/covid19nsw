@@ -8,32 +8,50 @@ dayjs.extend(require("dayjs/plugin/timezone"));
 const SOURCE_TIMEZONE = "Australia/Sydney";
 const SPECIAL_COUNCILS = ["Correctional settings", "Hotel Quarantine"];
 // Other constants
-const CASES_URL =
+const NEW_CASES_DATASET_START_DATE = "2022-01-20";
+const LEGACY_CASES_URL =
   "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv";
+const CASES_URL =
+  "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/5d63b527-e2b8-4c42-ad6f-677f14433520/download/confirmed_cases_table1_location_agg.csv";
 const CASES_META_URL =
   "https://data.nsw.gov.au/data/api/3/action/package_show?id=aefcde60-3b0c-4bc0-9af1-6fe652944ec2";
 
 async function fetchData() {
   console.time("Fetch cases endpoints");
-  let [modified, csv] = await Promise.all([
+  let [modified, csv, legacyCsv] = await Promise.all([
     fetch(CASES_META_URL)
       .then((r) => r.json())
       .then(({ result }) => result.metadata_modified + "Z"),
     fetch(CASES_URL).then((r) => r.text()),
+    fetch(LEGACY_CASES_URL).then((r) => r.text()),
   ]);
   console.timeEnd("Fetch cases endpoints");
 
   console.time("Parse cases CSV");
-  const parsed = parse(csv, {
-    columns: true,
-  });
-  const cases = parsed.filter(({ postcode }) => postcodeIsValid(postcode));
+  const rows =
+    // Add rows from new CSV after start date (to prevent duplicate cases if NSW Health ever decides to backdate all cases into the new CSV)
+    parse(csv, { columns: true })
+      .filter(
+        (row) =>
+          row.notification_date >= NEW_CASES_DATASET_START_DATE &&
+          postcodeIsValid(row.postcode)
+      )
+      // Add legacy rows pre-dating new CSV, converted to new row format
+      .concat(
+        parse(legacyCsv, { columns: true })
+          .filter(
+            (row) =>
+              row.notification_date < NEW_CASES_DATASET_START_DATE &&
+              postcodeIsValid(row.postcode)
+          )
+          .map((row) => ({ ...row, confirmed_cases_count: 1 }))
+      );
   console.timeEnd("Parse cases CSV");
 
   console.time("Generate casesAsOf.json + cases_modified.txt");
 
   const temporalCoverageTo = dayjs(
-    cases.map((c) => c.notification_date).sort()[cases.length - 1]
+    rows.map((c) => c.notification_date).sort()[rows.length - 1]
   ).tz(SOURCE_TIMEZONE);
 
   fs.writeFileSync(
@@ -46,7 +64,7 @@ async function fetchData() {
 
   // Calculate postcodes
   console.time("Generate postcodes.json");
-  const postcodes = uniqSortedByFreq(cases.map((c) => c.postcode)).map((p) =>
+  const postcodes = uniqSortedByFreq(rows.map((c) => c.postcode)).map((p) =>
     Number(p)
   );
   // Write postcodes.json at end of file, after appending during vaccinations step
@@ -55,7 +73,7 @@ async function fetchData() {
   // Calculate councilNames
   console.time("Generate councilNames.json");
   const councilNames = uniqSortedByFreq(
-    cases.map((c) => processCouncilName(c.lga_name19))
+    rows.map((c) => processCouncilName(c.lga_name19))
   );
   // Write councilNames.json at end of file, after appending during vaccinations step
   console.timeEnd("Generate councilNames.json");
@@ -74,18 +92,21 @@ async function fetchData() {
   const postcodeDailyCases = {};
   const councilDailyCases = {};
 
-  cases.forEach((caseRow) => {
+  rows.forEach((row) => {
+    // COUNT STUFF
+    const count = Number(row.confirmed_cases_count);
+
     // POSTCODE STUFF
-    const postcode = Number(caseRow.postcode);
+    const postcode = Number(row.postcode);
     const postcodeIndex = postcodes.indexOf(postcode);
 
     // DATE STUFF
-    const dateMin = getMinifiedDate(caseRow);
+    const dateMin = getMinifiedDate(row);
 
     // COUNCIL STUFF
-    const councilName = processCouncilName(caseRow.lga_name19);
+    const councilName = processCouncilName(row.lga_name19);
     const councilNameIndex = councilNames.indexOf(councilName);
-    const councilIsCityCouncil = caseRow.lga_name19.includes("(C)");
+    const councilIsCityCouncil = row.lga_name19.includes("(C)");
 
     // Quest: add to postcode & council daily counts
     if (postcodeIndex !== -1) {
@@ -93,14 +114,14 @@ async function fetchData() {
         postcodeDailyCases[postcodeIndex] = {};
 
       postcodeDailyCases[postcodeIndex][dateMin] =
-        (postcodeDailyCases[postcodeIndex][dateMin] || 0) + 1;
+        (postcodeDailyCases[postcodeIndex][dateMin] || 0) + count;
     }
     if (councilNameIndex !== -1) {
       if (!councilDailyCases[councilNameIndex])
         councilDailyCases[councilNameIndex] = {};
 
       councilDailyCases[councilNameIndex][dateMin] =
-        (councilDailyCases[councilNameIndex][dateMin] || 0) + 1;
+        (councilDailyCases[councilNameIndex][dateMin] || 0) + count;
     }
 
     // Side quest: add to cityCouncilIndices.json
@@ -155,7 +176,7 @@ async function fetchData() {
   fs.writeFileSync(
     "./src/data/built/postcodeCounts.json",
     JSON.stringify(
-      getCounts("postcode", temporalCoverageTo, cases, postcodes, councilNames)
+      getCounts("postcode", temporalCoverageTo, rows, postcodes, councilNames)
     )
   );
   console.timeEnd("Generate postcodeCounts.json");
@@ -167,7 +188,7 @@ async function fetchData() {
       getCounts(
         "councilName",
         temporalCoverageTo,
-        cases,
+        rows,
         postcodes,
         councilNames
       )
@@ -418,7 +439,7 @@ function minifyDate(dateString) {
 function getCounts(
   identifierKey,
   temporalCoverageTo,
-  cases,
+  rows,
   postcodes,
   councilNames
 ) {
@@ -434,22 +455,25 @@ function getCounts(
     .format("YYYY-MM-DD");
 
   // Iterate through each case
-  cases.forEach((caseRow) => {
+  rows.forEach((row) => {
     const identifier =
       identifierKey === "councilName"
-        ? councilNames.indexOf(processCouncilName(caseRow.lga_name19))
-        : postcodes.indexOf(Number(caseRow.postcode));
+        ? councilNames.indexOf(processCouncilName(row.lga_name19))
+        : postcodes.indexOf(Number(row.postcode));
+
+    const count = Number(row.confirmed_cases_count);
 
     // Add the case to its postcode/council's total cases
-    totalCases[identifier] = (totalCases[identifier] || 0) + 1;
+    totalCases[identifier] = (totalCases[identifier] || 0) + count;
 
     // If the case is today, add to Today col
-    if (caseRow.notification_date === today)
-      newCasesToday[identifier] = (newCasesToday[identifier] || 0) + 1;
+    if (row.notification_date === today)
+      newCasesToday[identifier] = (newCasesToday[identifier] || 0) + count;
 
     // If the case is this week, add to This Week col
-    if (caseRow.notification_date > oneWeekAgo)
-      newCasesThisWeek[identifier] = (newCasesThisWeek[identifier] || 0) + 1;
+    if (row.notification_date > oneWeekAgo)
+      newCasesThisWeek[identifier] =
+        (newCasesThisWeek[identifier] || 0) + count;
   });
   return { totalCases, newCasesThisWeek, newCasesToday };
 }
