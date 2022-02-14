@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <!-- <div v-if="!$store.state.isEmbed" class="top-banner">
-      📵 I am offline until 9th Jan, all updates will be fully automated.
-      Hopefully nothing breaks, but if it does, you&rsquo;ll have to wait until
-      then!
-    </div> -->
+    <div v-if="!$store.state.isEmbed" class="top-banner">
+      It appears that NSW Health has stopped updating their old data file, hence
+      the data here is out of date. They've moved over to a new data file, which
+      I will get working when I have some time this evening. Sorry for the
+      wait!!
+    </div>
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
