@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div v-if="!$store.state.isEmbed" class="top-banner">
-      It appears that NSW Health has stopped updating their old data file, hence
-      the data here is out of date. They've moved over to a new data file, which
-      I will get working when I have some time this evening. Sorry for the
-      wait!!
+      I've updated the code to use the new data file format from NSW Health.
+      Everything should be completely up to date now. I was waiting for the past
+      few days as there was no official statement that the old data format was
+      being discontinued. Sorry for the inconvenience!!
     </div>
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
