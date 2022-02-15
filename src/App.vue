@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <div v-if="!$store.state.isEmbed" class="top-banner">
+    <!-- <div v-if="!$store.state.isEmbed" class="top-banner">
       I've updated the code to use the new data file format from NSW Health.
       Everything should be completely up to date now. I was waiting for the past
       few days as there was no official statement that the old data format was
       being discontinued. Sorry for the inconvenience!!
-    </div>
+    </div> -->
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
