@@ -12,6 +12,8 @@ const CASES_URL =
   "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/5d63b527-e2b8-4c42-ad6f-677f14433520/download/confirmed_cases_table1_location_agg.csv";
 const CASES_META_URL =
   "https://data.nsw.gov.au/data/api/3/action/package_show?id=aefcde60-3b0c-4bc0-9af1-6fe652944ec2";
+// For testing - Setting TO_DATE to a YYYY-MM-DD string allows us to teleport back in time to then
+const TO_DATE = null;
 
 async function fetchData() {
   console.time("Fetch cases endpoints");
@@ -24,8 +26,10 @@ async function fetchData() {
   console.timeEnd("Fetch cases endpoints");
 
   console.time("Parse cases CSV");
-  const rows = parse(csv, { columns: true }).filter((row) =>
-    postcodeIsValid(row.postcode)
+  const rows = parse(csv, { columns: true }).filter(
+    (row) =>
+      postcodeIsValid(row.postcode) &&
+      (!TO_DATE || row.notification_date <= TO_DATE)
   );
   console.timeEnd("Parse cases CSV");
 
