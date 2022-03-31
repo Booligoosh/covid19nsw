@@ -4,6 +4,8 @@ const parse = require("csv-parse/lib/sync");
 const dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/utc"));
 dayjs.extend(require("dayjs/plugin/timezone"));
+const populationByPostcode = require("./src/data/population/populationByPostcode.json");
+const populationByCouncil = require("./src/data/population/populationByCouncil.json");
 // Constants copied from src/constants.js
 const SOURCE_TIMEZONE = "Australia/Sydney";
 const SPECIAL_COUNCILS = ["Correctional settings", "Hotel Quarantine"];
@@ -157,29 +159,53 @@ async function fetchData() {
     "Generate postcodeDailyCases.json, councilDailyCases.json, cityCouncilIndices.json, postcodesForCouncil.json & councilsForPostcode.json"
   );
 
-  console.time("Generate postcodeCounts.json");
+  console.time("Generate postcodeCounts.json + postcodeTable.csv");
+  const postcodeCounts = getCounts(
+    "postcode",
+    temporalCoverageTo,
+    rows,
+    postcodes,
+    councilNames
+  );
   fs.writeFileSync(
     "./src/data/built/postcodeCounts.json",
-    JSON.stringify(
-      getCounts("postcode", temporalCoverageTo, rows, postcodes, councilNames)
+    JSON.stringify(postcodeCounts)
+  );
+  fs.writeFileSync(
+    "./public/data/postcodeTable.csv",
+    countsToCsv(
+      postcodeCounts,
+      "Postcode",
+      postcodes,
+      populationByPostcode,
+      temporalCoverageTo
     )
   );
-  console.timeEnd("Generate postcodeCounts.json");
+  console.timeEnd("Generate postcodeCounts.json + postcodeTable.csv");
 
-  console.time("Generate councilCounts.json");
+  console.time("Generate councilCounts.json + councilTable.csv");
+  const councilCounts = getCounts(
+    "councilName",
+    temporalCoverageTo,
+    rows,
+    postcodes,
+    councilNames
+  );
   fs.writeFileSync(
     "./src/data/built/councilCounts.json",
-    JSON.stringify(
-      getCounts(
-        "councilName",
-        temporalCoverageTo,
-        rows,
-        postcodes,
-        councilNames
-      )
+    JSON.stringify(councilCounts)
+  );
+  fs.writeFileSync(
+    "./public/data/councilTable.csv",
+    countsToCsv(
+      councilCounts,
+      "Council",
+      councilNames,
+      populationByCouncil,
+      temporalCoverageTo
     )
   );
-  console.timeEnd("Generate councilCounts.json");
+  console.timeEnd("Generate councilCounts.json + councilTable.csv");
 
   // Calculate overall vaccinations
   console.time("Fetch AIR vaccinations endpoint");
@@ -461,6 +487,53 @@ function getCounts(
         (newCasesThisWeek[identifier] || 0) + count;
   });
   return { totalCases, newCasesThisWeek, newCasesToday };
+}
+
+function countsToCsv(
+  counts,
+  identifierHeader,
+  identifiers,
+  populationByIdentifier,
+  temporalCoverageTo
+) {
+  const PER_POPULATION = 100;
+
+  // Headers
+  let csv =
+    [
+      identifierHeader,
+      `Today [${temporalCoverageTo.format("YYYY-MM-DD")}]`,
+      "This week",
+      "Total cases",
+      `Today (per ${PER_POPULATION} ppl)`,
+      `This week (per ${PER_POPULATION} ppl)`,
+      `Total cases (per ${PER_POPULATION} ppl)`,
+    ].join(",") + "\n";
+
+  // Rows
+  csv += identifiers
+    .map((identifier, index) => {
+      const population = populationByIdentifier[identifier];
+      const multiplier = PER_POPULATION / population;
+      const today = counts.newCasesToday[index] || 0;
+      const thisWeek = counts.newCasesThisWeek[index] || 0;
+      const total = counts.totalCases[index] || 0;
+      // Return cells
+      return [
+        identifier,
+        today,
+        thisWeek,
+        total,
+        ...(isNaN(multiplier)
+          ? new Array(3).fill("No population")
+          : [today * multiplier, thisWeek * multiplier, total * multiplier]),
+      ];
+    })
+    .sort((a, b) => a[0] - b[0]) // Sort by col1
+    .map((cells) => cells.join(",")) // Join cells to form row
+    .join("\n");
+
+  return csv;
 }
 
 function uniqSortedByFreq(array) {
