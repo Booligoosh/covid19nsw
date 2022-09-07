@@ -235,7 +235,7 @@
         </table>
         <div class="census-data-note">
           Population data from ABS 2020 estimated populations, all other data
-          from the 2016 Census
+          from the 2021 Census
         </div>
       </div>
       <div

@@ -66,7 +66,7 @@
             href="https://datapacks.censusdata.abs.gov.au/datapacks/"
             target="_blank"
           >
-            ABS 2016 Census data
+            ABS 2021 Census data
           </a>
         </li>
       </ul>

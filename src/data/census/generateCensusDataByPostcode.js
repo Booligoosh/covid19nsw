@@ -1,7 +1,7 @@
 const fs = require("fs");
 const parse = require("csv-parse/lib/sync");
 
-const csv = fs.readFileSync(__dirname + "/sources/2016Census_G02_NSW_POA.csv");
+const csv = fs.readFileSync(__dirname + "/sources/2021Census_G02_NSW_POA.csv");
 const table = parse(csv, {
   columns: true,
 });
@@ -9,7 +9,7 @@ const table = parse(csv, {
 const stats = {};
 
 table.forEach((row) => {
-  const postcode = Number(row.POA_CODE_2016.substr(3));
+  const postcode = Number(row.POA_CODE_2021.substr(3));
   // [median age,average household size]
   stats[postcode] = [
     Number(row.Median_age_persons),
