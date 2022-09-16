@@ -46,8 +46,9 @@
       </div>
     </div>
     <div class="table-subtitle" v-else>
-      Updated <mark>{{ lastUpdatedString }}</mark> by NSW Health. Cases are from
-      both RAT and PCR tests.
+      Updated <mark>{{ lastUpdatedString }}</mark
+      >, data up to <mark>{{ temporalCoverageString }}</mark
+      >. Includes both RAT & PCR results.
       <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t added by NSW Health within 1 day, so
         today&rsquo;s numbers are less than final values.
