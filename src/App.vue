@@ -1,10 +1,9 @@
 <template>
   <div id="app">
     <div v-if="!$store.state.isEmbed" class="top-banner">
-      In light of recent announcements, I'm unsure what the future of the
-      postcodes dataset is. For now, Data NSW is updating it daily but with no
-      new data - we'll see if new data comes in on Friday. I've also sent them
-      an email to see what their plans are.
+      New postcode data has come through, yay! It seems like Data NSW will still
+      be publishing cases by day (see the charts), just releasing the
+      information weekly each Fri/Sat.
     </div>
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
