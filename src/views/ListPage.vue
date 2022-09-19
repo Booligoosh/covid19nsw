@@ -47,7 +47,7 @@
     </div>
     <div class="table-subtitle" v-else>
       Data up to <mark>{{ temporalCoverageString }}</mark
-      >, updated weekly. Cases are from both RAT and PCR tests.
+      >, updated each Fri/Sat. Includes both RAT and PCR tests.
       <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t added by NSW Health within 1 day, so
         today&rsquo;s numbers are less than final values.
