@@ -560,7 +560,7 @@ export default {
         // to get the total sum over the AVG_PERIOD, then find the avg
         let sum = casesValue;
         for (let j = AVG_PERIOD - 1; j > 0; j--) sum += newCases[i - j] || 0;
-        avgNewCases[i] = sum / AVG_PERIOD;
+        avgNewCases[i] = (sum / AVG_PERIOD).toFixed(1);
       });
 
       console.timeEnd("Calculate dailyCaseDatasets");
