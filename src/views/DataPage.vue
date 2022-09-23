@@ -312,7 +312,7 @@ import populationByPostcode from "@/data/population/populationByPostcode.json";
 import populationByCouncil from "@/data/population/populationByCouncil.json";
 import censusDataByPostcode from "@/data/census/censusDataByPostcode.json";
 
-const AVG_PERIOD = 5;
+const AVG_PERIOD = 7;
 
 export default {
   name: "DataPage",
