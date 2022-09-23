@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div v-if="!$store.state.isEmbed" class="top-banner">
+    <!-- <div v-if="!$store.state.isEmbed" class="top-banner">
       New postcode data has come through, yay! It seems like Data NSW will still
       be publishing cases by day (see the charts), just releasing the
       information weekly each Fri/Sat.
-    </div>
+    </div> -->
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
