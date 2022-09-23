@@ -40,8 +40,10 @@
       </h1>
       <div class="stat-numbers">
         <div class="stat-numbers-item">
-          <div class="stat-numbers-item-num">{{ caseCounts.today }}</div>
-          <div class="stat-numbers-item-label">today</div>
+          <div class="stat-numbers-item-num">
+            {{ Math.round(caseCounts.thisWeek / 7) }}
+          </div>
+          <div class="stat-numbers-item-label">7 day avg</div>
         </div>
         <div class="stat-numbers-item">
           <div class="stat-numbers-item-num">{{ caseCounts.thisWeek }}</div>
@@ -470,14 +472,13 @@ export default {
       return queriedPostcodes.map((p) => postcodes.indexOf(Number(p)));
     },
     caseCounts() {
-      const { totalCases, newCasesThisWeek, newCasesToday } = this.isCouncil
+      const { totalCases, newCasesThisWeek } = this.isCouncil
         ? councilCounts
         : postcodeCounts;
 
       const key = this.isCouncil ? this.councilNameIndex : this.postcodeIndex;
 
       return {
-        today: (newCasesToday[key] || 0).toLocaleString("en-AU"),
         thisWeek: (newCasesThisWeek[key] || 0).toLocaleString("en-AU"),
         total: (totalCases[key] || 0).toLocaleString("en-AU"),
       };

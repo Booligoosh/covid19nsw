@@ -2,12 +2,6 @@
   <div>
     <div class="metric-switcher">
       <button
-        @click="property = 'newCasesToday'"
-        :class="{ active: property === 'newCasesToday' }"
-      >
-        Cases today
-      </button>
-      <button
         @click="property = 'newCasesThisWeek'"
         :class="{ active: property === 'newCasesThisWeek' }"
       >
@@ -114,14 +108,12 @@ export default {
       };
       this.info.update = function (props) {
         const i = postcodes.indexOf(props?.p);
-        const today = postcodeCounts.newCasesToday[i] || 0;
         const thisWeek = postcodeCounts.newCasesThisWeek[i] || 0;
         const total = postcodeCounts.totalCases[i] || 0;
         const suburbs = suburbsForPostcode[props?.p]?.join(", ");
 
         this._div.innerHTML = props
           ? `<h3>${props.p}</h3>
-            <hr/>${today} case${today !== 1 ? "s" : ""} today
             <br/>${thisWeek} case${thisWeek !== 1 ? "s" : ""} this week
             <br/>${total} total cases
             <hr/>
@@ -158,7 +150,7 @@ $border-radius: 7px;
 
 .metric-switcher {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-gap: 1px;
   background: $border-color;
   border: 1px solid $border-color;

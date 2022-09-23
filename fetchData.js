@@ -457,10 +457,8 @@ function getCounts(
   // Initialise objects
   const totalCases = {};
   const newCasesThisWeek = {};
-  const newCasesToday = {};
 
   // Calculate dates to compare to
-  const today = temporalCoverageTo.format("YYYY-MM-DD");
   const oneWeekAgo = temporalCoverageTo
     .subtract(7, "days")
     .format("YYYY-MM-DD");
@@ -477,16 +475,12 @@ function getCounts(
     // Add the case to its postcode/council's total cases
     totalCases[identifier] = (totalCases[identifier] || 0) + count;
 
-    // If the case is today, add to Today col
-    if (row.notification_date === today)
-      newCasesToday[identifier] = (newCasesToday[identifier] || 0) + count;
-
     // If the case is this week, add to This Week col
     if (row.notification_date > oneWeekAgo)
       newCasesThisWeek[identifier] =
         (newCasesThisWeek[identifier] || 0) + count;
   });
-  return { totalCases, newCasesThisWeek, newCasesToday };
+  return { totalCases, newCasesThisWeek };
 }
 
 function countsToCsv(
@@ -502,10 +496,8 @@ function countsToCsv(
   let csv =
     [
       identifierHeader,
-      `Today [${temporalCoverageTo.format("YYYY-MM-DD")}]`,
       "This week",
       "Total cases",
-      `Today (per ${PER_POPULATION} ppl)`,
       `This week (per ${PER_POPULATION} ppl)`,
       `Total cases (per ${PER_POPULATION} ppl)`,
     ].join(",") + "\n";
@@ -515,18 +507,16 @@ function countsToCsv(
     .map((identifier, index) => {
       const population = populationByIdentifier[identifier];
       const multiplier = PER_POPULATION / population;
-      const today = counts.newCasesToday[index] || 0;
       const thisWeek = counts.newCasesThisWeek[index] || 0;
       const total = counts.totalCases[index] || 0;
       // Return cells
       return [
         identifier,
-        today,
         thisWeek,
         total,
         ...(isNaN(multiplier)
-          ? new Array(3).fill("No population")
-          : [today * multiplier, thisWeek * multiplier, total * multiplier]),
+          ? new Array(2).fill("No population")
+          : [thisWeek * multiplier, total * multiplier]),
       ];
     })
     .sort((a, b) => a[0] - b[0]) // Sort by col1

@@ -48,10 +48,10 @@
     <div class="table-subtitle" v-else>
       Data up to <mark>{{ temporalCoverageString }}</mark
       >, updated each Fri/Sat. Includes both RAT and PCR tests.
-      <div class="table-subtitle-disclaimer">
+      <!-- <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t added by NSW Health within 1 day, so
         today&rsquo;s numbers are less than final values.
-      </div>
+      </div> -->
     </div>
     <label v-if="!vaccineMode" class="per-pop-toggle">
       <button
@@ -109,12 +109,12 @@
               <a
                 href="#"
                 @click.prevent="
-                  $store.commit('setListPageCasesSort', 'newCasesToday')
+                  $store.commit('setListPageCasesSort', 'weeklyAvg')
                 "
-                title="Sort by cases today"
+                title="Sort by 7 day avg"
               >
-                <span>Today<span style="font-weight: normal">*</span></span>
-                <div v-if="sort === 'newCasesToday'">▼</div>
+                <span><span style="white-space: nowrap">7 day</span> avg</span>
+                <div v-if="sort === 'weeklyAvg'">▼</div>
               </a>
             </th>
             <th class="num-col" v-if="!vaccineMode">
@@ -208,7 +208,7 @@
               <div>{{ value.suburbs }}</div>
             </td>
             <td v-if="!vaccineMode">
-              {{ formatCasesValue(value.newCasesToday) }}
+              {{ formatCasesValue(value.weeklyAvg) }}
             </td>
             <td v-if="!vaccineMode">
               {{ formatCasesValue(value.newCasesThisWeek) }}
@@ -321,7 +321,7 @@ export default {
     },
     postcodeRows() {
       console.time("Calculate postcodeRows");
-      const { totalCases, newCasesThisWeek, newCasesToday } = this.councilMode
+      const { totalCases, newCasesThisWeek } = this.councilMode
         ? councilCounts
         : postcodeCounts;
 
@@ -337,7 +337,7 @@ export default {
               councilSlug: councilName.replace(/ /g, "-").toLowerCase(),
               totalCases: (totalCases[i] || 0) * multiplier,
               newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
-              newCasesToday: (newCasesToday[i] || 0) * multiplier,
+              weeklyAvg: ((newCasesThisWeek[i] || 0) * multiplier) / 7,
               dose1: councilVaccinations[i]?.[0],
               dose2: councilVaccinations[i]?.[1],
             };
@@ -352,7 +352,7 @@ export default {
               col1Sort: postcodeNumber,
               totalCases: (totalCases[i] || 0) * multiplier,
               newCasesThisWeek: (newCasesThisWeek[i] || 0) * multiplier,
-              newCasesToday: (newCasesToday[i] || 0) * multiplier,
+              weeklyAvg: ((newCasesThisWeek[i] || 0) * multiplier) / 7,
               suburbs: suburbsForPostcode[postcodeNumber]?.join(", "),
               dose1: postcodeVaccinations[postcodeNumber]?.[0],
               dose2: postcodeVaccinations[postcodeNumber]?.[1],
@@ -388,7 +388,7 @@ export default {
         return value.toFixed(2);
       } else {
         return value < 1000
-          ? value
+          ? Math.round(value)
           : (value / 1000).toFixed(value < 10000 ? 1 : 0) + "K";
       }
     },
