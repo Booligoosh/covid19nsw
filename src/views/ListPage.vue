@@ -109,18 +109,6 @@
               <a
                 href="#"
                 @click.prevent="
-                  $store.commit('setListPageCasesSort', 'newCasesToday')
-                "
-                title="Sort by cases today"
-              >
-                <span>Today<span style="font-weight: normal">*</span></span>
-                <div v-if="sort === 'newCasesToday'">▼</div>
-              </a>
-            </th>
-            <th class="num-col" v-if="!vaccineMode">
-              <a
-                href="#"
-                @click.prevent="
                   $store.commit('setListPageCasesSort', 'newCasesThisWeek')
                 "
                 title="Sort by cases this week"
@@ -206,9 +194,6 @@
                 >{{ value.postcodeNumber }}</router-link
               >&nbsp;
               <div>{{ value.suburbs }}</div>
-            </td>
-            <td v-if="!vaccineMode">
-              {{ formatCasesValue(value.newCasesToday) }}
             </td>
             <td v-if="!vaccineMode">
               {{ formatCasesValue(value.newCasesThisWeek) }}
@@ -387,9 +372,7 @@ export default {
         // if (value < 0.01) return "<0.01";
         return value.toFixed(2);
       } else {
-        return value < 1000
-          ? value
-          : (value / 1000).toFixed(value < 10000 ? 1 : 0) + "K";
+        return value.toLocaleString();
       }
     },
     suburbsSeeMoreClickHandler(event) {
