@@ -528,7 +528,7 @@ export default {
       );
     },
     chartLabels() {
-      const format = this.allTimeMode ? "D MMM YYYY" : "D MMM";
+      const format = "D MMM YYYY";
       return this.lastXDays.map((date) => date.format(format));
     },
     dailyCases() {
