@@ -39,15 +39,14 @@
     </h1>
     <div class="table-subtitle" v-if="vaccineMode">
       Data up to <mark>{{ vaccineTemporalCoverageString }}</mark
-      >, updated weekly by
-      {{ councilMode ? "Department of Health" : "NSW Health" }}.
+      >, from {{ councilMode ? "Department of Health" : "NSW Health" }}.
       <div class="table-subtitle-disclaimer">
         {{ VACCINATIONS_NOTE }}
       </div>
     </div>
     <div class="table-subtitle" v-else>
       Data up to <mark>{{ temporalCoverageString }}</mark
-      >, updated each Fri/Sat. Includes both RAT and PCR tests.
+      >. Includes both RAT and PCR tests.
       <div class="table-subtitle-disclaimer">
         *Many cases aren&rsquo;t added by NSW Health within 1 day, so
         today&rsquo;s numbers are less than final values.
@@ -366,7 +365,7 @@ export default {
       return this.councilMode ? councilNamesLength : postcodesLength;
     },
     temporalCoverageString() {
-      return this.$store.state.temporalCoverageTo?.format("ddd D MMM");
+      return this.$store.state.temporalCoverageTo?.format("ddd D MMM YYYY");
     },
     lastUpdatedString() {
       return this.$store.state.metadataModified?.format("ddd D MMM @ ha");
@@ -376,7 +375,7 @@ export default {
         this.councilMode
           ? this.$store.state.councilVaccinationsAsOf
           : this.$store.state.postcodeVaccinationsAsOf
-      )?.format("ddd D MMM");
+      )?.format("ddd D MMM YYYY");
     },
   },
   methods: {

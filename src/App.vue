@@ -1,10 +1,24 @@
 <template>
   <div id="app">
-    <!-- <div v-if="!$store.state.isEmbed" class="top-banner">
-      New postcode data has come through, yay! It seems like Data NSW will still
-      be publishing cases by day (see the charts), just releasing the
-      information weekly each Fri/Sat.
-    </div> -->
+    <div v-if="!$store.state.isEmbed" class="top-banner">
+      The NSW Government stopped publishing COVID-19 data by postcode on 20 Oct
+      2023.
+      <br /><br />
+      This site remains available as an archive of the spread of the COVID-19
+      pandemic. For ongoing data, see the fortnightly
+      <a
+        href="https://www.health.nsw.gov.au/Infectious/covid-19/Pages/reports.aspx"
+        target="_blank"
+        >NSW Respiratory Surveillance Report</a
+      >. <br /><br />
+      Providing the data to you all through the height of the pandemic was so
+      incredibly rewarding, so thanks for coming! My next project is focused on
+      <a
+        href="https://property.carto.au/sydney/house-prices/by-suburb/map"
+        target="_blank"
+        >mapping Sydney&rsquo;s house prices</a
+      >, much less important, but if it interests you, check it out!
+    </div>
     <div class="nav" v-if="!$store.state.isEmbed">
       <!-- Image source: https://commons.wikimedia.org/wiki/File:Virus_green.svg -->
       <div class="nav-top">
@@ -316,7 +330,5 @@ input {
   background: #eee;
   padding: 1rem 1.5rem;
   font-size: 0.8rem;
-  display: flex;
-  justify-content: center;
 }
 </style>
