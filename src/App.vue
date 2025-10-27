@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div v-if="!$store.state.isEmbed" class="top-banner">
-      The NSW Government stopped publishing COVID-19 data by postcode on 20 Oct
-      2023.
+      The NSW Government stopped publishing COVID-19 data by postcode/council on
+      20 Oct 2023.
       <br /><br />
       This site remains available as an archive of the spread of the COVID-19
       pandemic. For ongoing data, see the fortnightly
