@@ -2,9 +2,9 @@
 node_modules
 /dist
 /public/sitemap.xml
-/public/data/**
+# /public/data/**
 !/public/data/.gitkeep
-/src/data/built/**
+# /src/data/built/**
 !/src/data/built/.gitkeep
 
 # local env files

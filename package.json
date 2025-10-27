@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "node fetchData.js && node generateSitemap.js && vue-cli-service build --modern && node prerender.js",
+    "build": "node generateSitemap.js && vue-cli-service build --modern && node prerender.js",
     "lint": "vue-cli-service lint",
     "update-browserslist": "npx browserslist@latest --update-db"
   },
